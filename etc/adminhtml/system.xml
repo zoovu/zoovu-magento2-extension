@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="semknox_productsearch" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+           
+            <class>separator-top</class>
+            <label>SEMKNOX Product Search</label>
+            <tab>catalog</tab>
+
+            <resource>Semknox_Productsearch::config</resource>
+
+            <group id="semknox_productsearch_settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+
+                <field id="sxProjectId" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Project ID</label>
+                </field>
+
+                <field id="sxApiKey" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>API Key</label>
+                </field>
+
+                <field id="sxIsSandbox" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sandbox-Mode active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxFrontendActive" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Produktsearch in frontend active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxUploadActive" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Produktupload to SEMKNOX active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxIncrementalUpdatesActive" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>incremental Productupdates to SEMKNOX active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxAnswerActive" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>display SEMKNOX search interpretation sentence</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxFilterOptionCounterActive" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>show expected number of results behind filter options</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxCollectBatchSize" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Number of products per package (upload)</label>
+                </field>
+
+                <field id="sxUploadBatchSize" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Number of products per package (reading)</label>
+                </field>
+
+                <field id="sxRequestTimeout" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Request timeout</label>
+                </field>
+
+            </group>
+
+            <group id="semknox_productsearch_cronjob" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Time of Daily product upload</label>
+
+                <field id="sxCronjobHour" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Hour</label>
+                </field>
+
+                <field id="sxCronjobMinute" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Minute</label>
+                </field>
+            </group>
+            
+        </section>
+    </system>
+</config>
