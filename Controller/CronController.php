@@ -1,6 +1,6 @@
 <?php
 
-namespace Semknox\Productsearch\Application\Controller;
+namespace Semknox\Productsearch\Controller;
 
 class CronController 
 {
