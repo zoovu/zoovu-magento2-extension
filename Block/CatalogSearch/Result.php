@@ -7,6 +7,7 @@ use Magento\Catalog\Model\Layer\Resolver as LayerResolver;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\CatalogSearch\Helper\Data;
 use Magento\Search\Model\QueryFactory;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 
 use Semknox\Productsearch\Helper\SxHelper;
 
@@ -27,9 +28,12 @@ class Result extends CatalogSearchResult
         Data $catalogSearchData,
         QueryFactory $queryFactory,
         array $data = [],
-        SxHelper $helper
+        SxHelper $helper,
+        CollectionFactory $productCollectionFactory
     ) {
-        $this->_helper = $helper;
+        $this->_sxHelper = $helper;
+        $this->_productCollectionFactory = $productCollectionFactory;
+
         parent::__construct($context, $layerResolver, $catalogSearchData,$queryFactory, $data);
     }
 
@@ -41,9 +45,27 @@ class Result extends CatalogSearchResult
      */
     public function getSearchQueryText()
     {
-        $prefix = $this->_helper->get('sxRequestTimeout', 'test');
+        $prefix = $this->_sxHelper->get('sxRequestTimeout', 'test');
 
         return $prefix.': ' .parent::getSearchQueryText();
     }
+
+
+    /**
+     * Retrieve loaded category collection
+     *
+     * @return Collection
+     */
+    protected function _getProductCollection()
+    {
+        $collection = $this->_productCollectionFactory->create();
+        $collection->addAttributeToSelect('*');
+        $collection->setPageSize(3); 
+        
+        return $collection;
+
+        return parent::_getProductCollection();
+    }
+
 
 }

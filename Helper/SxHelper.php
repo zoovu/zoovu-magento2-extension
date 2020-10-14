@@ -5,13 +5,15 @@ namespace Semknox\Productsearch\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Filesystem\DirectoryList;
 
-use Semknox\Core\Services\Search\Sorting\SortingOption;
+use Psr\Log\LoggerInterface;
+
 
 class SxHelper extends AbstractHelper
 {
 
-    protected $_sxFolder = "var/semknox/";
+    protected $_sxFolder = "semknox/";
 
     protected $_sxUploadBatchSize = 200;
     protected $_sxCollectBatchSize = 100;
@@ -27,23 +29,17 @@ class SxHelper extends AbstractHelper
     protected $_sxUpdateQueuePath = "update-queue/";
 
 
-    public function __construct(ScopeConfigInterface $scopeConfig)
+    public function __construct(
+        ScopeConfigInterface $scopeConfig, 
+        LoggerInterface $logger,
+        DirectoryList $dir
+    )
     {
-        $this->scopeConfig = $scopeConfig;
+        $this->_scopeConfig = $scopeConfig;
+        $this->_logger = $logger;
+        $this->_dir = $dir;
 
-        /*
-        $this->_oxRegistry = new Registry();
-        $this->_oxConfig = $this->_oxRegistry->getConfig();
-
-        $workingDir = $this->_oxConfig->getLogsDir().'../'. $this->_sxFolder;
-
-        //$this->_sxFolder = $logsDir . $this->_sxFolder;
-
-        $this->_sxMasterConfigPath = $workingDir . $this->_sxMasterConfigPath;
-
-        $this->_sxDeleteQueuePath = $workingDir . $this->_sxDeleteQueuePath;
-        $this->_sxUpdateQueuePath = $workingDir . $this->_sxUpdateQueuePath;
-        */
+        $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
     }
 
@@ -56,14 +52,22 @@ class SxHelper extends AbstractHelper
      *
      * @return mixed|null
      */
-    public function get($key, $default = null)
+    public function get($key, $storeId = null, $default = null)
     {
+        $configGroupsToCheck = [
+            'semknox_productsearch/semknox_productsearch_settings/',
+            'semknox_productsearch/semknox_productsearch_cronjob/'
+        ];
 
-        $value = $this->scopeConfig->getValue(
-            'semknox_productsearch/semknox_productsearch_settings/'.$key,
-            ScopeInterface::SCOPE_STORE
-        );
-        if ($value) return $value;
+        foreach($configGroupsToCheck as $group){
+            $value = $this->_scopeConfig->getValue(
+                $group . $key,
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            );
+
+            if ($value) return $value;
+        }
 
         // check preset values or take default
         $sxKey = '_' . $key;
@@ -71,9 +75,14 @@ class SxHelper extends AbstractHelper
         return isset($this->$sxKey)
             ? $this->$sxKey
             : $default;
-            
+          
     }
 
 
+    public function log($message)
+    {
+        // todo: improve
+        $this->_logger->info($message);
+    }
 
 }

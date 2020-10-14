@@ -2,7 +2,7 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="semknox_productsearch">
-        <job name="SemknoxProductsearchCronjob" instance="Semknox\Productsearch\Controller\CronController" method="execute">
+        <job name="SemknoxProductsearchCronjob" instance="Semknox\Productsearch\Controller\CronController" method="cronRunner">
             <schedule>* * * * *</schedule>
         </job>
     </group>
