@@ -1,0 +1,17 @@
+
+usefull cli commands
+********************
+
+compile:
+bin/magento setup:di:compile
+
+empty cache:
+bin/magento c:c
+OR
+bin/magento cache:clean
+
+run specific cronjob:
+bin/magento cron:run --group=semknox_productsearch
+
+
+

@@ -12,7 +12,9 @@ use Semknox\Core\Exceptions\DuplicateInstantiationException;
 
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Framework\UrlInterface;
 
 class UploadController {
 
@@ -23,12 +25,15 @@ class UploadController {
     public function __construct(
         SxHelper $helper,
         StoreManagerInterface $storeManagerInterface,
-        CollectionFactory $collectionFactory
-
+        CollectionFactory $collectionFactory,
+        ProductRepository $productRepository,
+        CategoryCollectionFactory $categoryCollectionFactory
     ){
         $this->_sxHelper = $helper;
         $this->_storeManager = $storeManagerInterface;
         $this->_collectionFactory = $collectionFactory;
+        $this->_productRepository = $productRepository;
+        $this->_categoryCollectionFactory = $categoryCollectionFactory;
     }
 
 
@@ -87,16 +92,25 @@ class UploadController {
         if ($this->_sxUploader->isCollecting()) {
 
             // collecting
-            $shopId = $this->_sxConfig->get('shopId');
-            $CollectBatchSize = $this->_sxConfig->get('collectBatchSize');
+            $storeId = $this->_sxConfig->get('shopId');
+            $collectBatchSize = $this->_sxConfig->get('collectBatchSize');
+            $page = ((int) $this->_sxUploader->getNumberOfCollected() / $collectBatchSize) + 1;
 
             $productCollection = $this->_collectionFactory->create();
             $productCollection->addAttributeToSelect('*');
-            $productCollection->addStoreFilter($shopId);        
+            $productCollection->addStoreFilter($storeId);
+            $productCollection->setPageSize($collectBatchSize);
+            $productCollection->setCurPage($page);
 
+            $transformerArgs = [
+                'categoryCollectionFactory' => $this->_categoryCollectionFactory,
+                'sxConfig' => $this->_sxConfig
+            ];
 
-            foreach ($productCollection as $mageProduct) {
-                $this->_sxUploader->addProduct($mageProduct);
+            foreach ($productCollection as $product) {
+
+                $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
+                $this->_sxUploader->addProduct($mageProduct, $transformerArgs);
             } 
 
         } else {
@@ -211,6 +225,7 @@ class UploadController {
                 'requestTimeout' => (int) $this->_sxHelper->get('sxRequestTimeout', $storeId),
 
                 'storeIdentifier' => $storeIdentifier,
+                'storeRootCategory' => $store->getRootCategoryId(),
 
                 // shopsystem settings
                 'sxFrontendActive' => $this->_sxHelper->get('sxFrontendActive', $storeId, true),

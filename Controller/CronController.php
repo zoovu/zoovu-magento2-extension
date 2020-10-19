@@ -6,7 +6,7 @@ use Semknox\Productsearch\Helper\SxHelper;
 use Semknox\Productsearch\Controller\UploadControllerFactory;
 
 use Magento\Framework\Stdlib\DateTime\DateTime;
-
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
 
 class CronController 
 {
@@ -68,7 +68,7 @@ class CronController
             if ($shopUploader->isReadyToUpload()) continue;
 
             // !!!COLLECTING!!!
-            //$shopUploader->continueFullUpload();
+            $shopUploader->continueFullUpload();
             $flags['collecting'] = true;
             break; // (always just one job per cronrun!)
         }
