@@ -51,9 +51,9 @@ class CronController
             if ($shopUploader->start_upload && !$shopUploader->isRunning()) {
                 $shopUploader->startFullUpload();
                 unset($sxShopUloads[$key]);
-                $flags['running'] = true;
+                $flags['running'] = true; // needed for queue action desicion
             } elseif ($shopUploader->isRunning()) {
-                $flags['running'] = true;
+                $flags['running'] = true; // needed for queue action desicion
             }
         }
 
@@ -74,8 +74,41 @@ class CronController
         }
 
 
+        // [-4-] uploading for all shops
+        // >>>> check if !!!UPLOADING!!! needs to be continued (always just one job per cronrun!)
+        if (!isset($flags['collecting'])) {
+
+            foreach ($sxShopUloads as $key => $shopUploader) {
+
+                if (!$shopUploader->isReadyToUpload() || $shopUploader->isReadyToFinalize()) continue;
+
+                // !!!UPLOADING!!!
+                $shopUploader->continueFullUpload();
+                $flags['uploading'] = true;
+                break; // (always just one job per cronrun!)
+
+            }
+        }
 
 
+        // [-5-] finalizing for all shops !!!AT ONCE!!!
+        // >>> check if !!!FINALIZE UPLOADING!!! needs to be continued (always just one job per cronrun!)
+        if (!isset($flags['collecting']) && !isset($flags['uploading'])) {
+
+            $signalSent = true;
+
+            foreach ($sxShopUloads as $key => $shopUploader) {
+
+                if (!$shopUploader->isReadyToUpload() || !$shopUploader->isReadyToFinalize()) continue;
+
+                // !!!FINALIZE UPLOADING!!!
+                $shopUploader->finalizeFullUpload($signalSent);
+
+                if (isset($shopUploader->config['userGroup'])) {
+                    $signalSent = false;
+                };
+            }
+        }
 
         return $this;
 

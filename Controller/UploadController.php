@@ -12,9 +12,9 @@ use Semknox\Core\Exceptions\DuplicateInstantiationException;
 
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
-use Magento\Framework\UrlInterface;
 
 class UploadController {
 
@@ -27,13 +27,15 @@ class UploadController {
         StoreManagerInterface $storeManagerInterface,
         CollectionFactory $collectionFactory,
         ProductRepository $productRepository,
-        CategoryCollectionFactory $categoryCollectionFactory
+        CategoryCollectionFactory $categoryCollectionFactory,
+        Product $productModel
     ){
         $this->_sxHelper = $helper;
         $this->_storeManager = $storeManagerInterface;
         $this->_collectionFactory = $collectionFactory;
         $this->_productRepository = $productRepository;
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
+        $this->_productModel = $productModel;
     }
 
 
@@ -52,7 +54,7 @@ class UploadController {
             $this->_sxUploader = $this->_sxCore->getInitialUploader();
             $this->_sxUpdater = $this->_sxCore->getProductUpdater();
         } catch (DuplicateInstantiationException $e) {
-            $this->_sxHelper->log('Duplicate instantiation of uploader. Cronjob execution to close?');
+            $this->_sxHelper->log('Duplicate instantiation of uploader. Cronjob execution to close?', 'error');
             exit();
         }
 
@@ -102,26 +104,76 @@ class UploadController {
             $productCollection->setPageSize($collectBatchSize);
             $productCollection->setCurPage($page);
 
+            $store = $this->_storeManager->getStore($storeId);
+
             $transformerArgs = [
                 'categoryCollectionFactory' => $this->_categoryCollectionFactory,
-                'sxConfig' => $this->_sxConfig
+                'sxConfig' => $this->_sxConfig,
+                'mediaUrl' => $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
+                'currency' => $store->getCurrentCurrency()->getCode(),
+                'productModel' => $this->_productModel
             ];
 
+            $productCounter = 0;
             foreach ($productCollection as $product) {
-
                 $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
                 $this->_sxUploader->addProduct($mageProduct, $transformerArgs);
-            } 
+                $productCounter++;
+            }
+
+            // if ready, start uploading
+            if ($productCounter < $collectBatchSize) {
+
+                $response = $this->_sxUploader->startUploading();
+                if ($response['status'] !== 'success') {
+                    $this->_sxHelper->log($response['satus'] . ': ' . $response['message'], 'error');
+                }
+            }
 
         } else {
 
             // uploading
 
+            // continue uploading...
+            $response = $this->_sxUploader->sendUploadBatch(true);
+
+            $message = isset($response['message']) ? $response['message'] : 'Uploading';
+
+            if (isset($response['validation'][0]['schemaErrors'][0])) {
+                $message .= ' (' . $response['validation'][0]['schemaErrors'][0] . ')';
+            }
+
+            $this->_sxHelper->log($response['status'] . ':' . $message);
 
         }
 
     }
 
+    /**
+     * finalize running product upload
+     * 
+     */
+    public function finalizeFullUpload($signalApi = true)
+    {
+        $response = $this->_sxUploader->finalizeUpload($signalApi);
+
+        if ($response['status'] !== 'success') {
+            $message = isset($response['message']) ? $response['message'] : 'Finalizing failed';
+            $this->_sxHelper->log($message, 'error');
+        }
+    }
+
+    /**
+     * stop running product upload
+     * 
+     */
+    public function stopFullUpload()
+    {
+        if ($this->isRunning()) {
+            $this->_sxUploader->abort();
+        }
+    }
+    
 
     /**
      * is currently an upload running for this config
@@ -167,13 +219,12 @@ class UploadController {
      */
     public function getCurrentShopStatus()
     {
-        $shopId = $this->_sxConfig->get('shopId');
-        $lang = $this->_sxConfig->get('lang');
+        $storeIdentifier = $this->_sxConfig->get('storeIdentifier');
 
         $status = $this->getStatus();
 
-        if ($shopId && $lang && isset($status[$shopId . '-' . $lang])) {
-            return $status[$shopId . '-' . $lang];
+        if ($storeIdentifier && isset($status[$storeIdentifier])) {
+            return $status[$storeIdentifier];
         }
 
         return false;
@@ -187,9 +238,6 @@ class UploadController {
     public function getStatus()
     {
         $uploadOverview = $this->_sxCore->getInitialUploadOverview();
-
-        $this->_sxHelper->log(json_encode($uploadOverview));
-
         return $uploadOverview->getRunningUploads();
     }
 
@@ -232,6 +280,7 @@ class UploadController {
                 'sxUploadActive' => $this->_sxHelper->get('sxUploadActive', $storeId, true),
                 'sxIncrementalUpdatesActive' => $this->_sxHelper->get('sxIncrementalUpdatesActive', $storeId, true),
                 'sxAnswerActive' => $this->_sxHelper->get('sxAnswerActive', $storeId, true),
+
             ];
 
             if($projectId && $apiKey){

@@ -52,6 +52,8 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['images'] = $this->_getImages($transformerArgs);
 
+        $sxArticle['attributes'] = $this->_getAttributes($transformerArgs);
+
         return $sxArticle;
 
     }
@@ -59,10 +61,7 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * get categories of product
      * 
-     * @return array sssss
-     * @throws DatabaseConnectionException 
-     * @throws DatabaseErrorException 
-     * @throws InvalidArgumentException 
+     * @return array $categories
      */
     protected function _getCategories($transformerArgs)
     {
@@ -111,77 +110,95 @@ class ArticleTransformer extends AbstractProductTransformer
     protected function _getImages($transformerArgs = array())
     {
         $mageImages= $this->_product->getMediaGalleryEntries();
-
         $images = array();
         foreach($mageImages as $image){
 
-            $images[] = [
-                'url' => $image->getUrl(),
-                'type' => $image->getTypes()
-            ];
+            if((bool) $image->isDisabled() || $image->getMediaType() != 'image') continue;
 
-        }
+            foreach($image->getTypes() as $type){
 
-        /*
-        $imageSuffix = '';
-        $imageTypeSuffix = array();
-        if (isset($transformerArgs['imageUrlSuffix'])) {
-            if (!is_array($transformerArgs['imageUrlSuffix'])) {
-                $imageSuffix = (string) $transformerArgs['imageUrlSuffix'];
-            } else {
-                $imageTypeSuffix = $transformerArgs['imageUrlSuffix'];
-            }
-        }
+                if(stripos($type, 'video') !== false) continue;
 
-        if (isset($sxImages['Pics'])) {
+                switch($type){
+                    case 'small_image':
+                        $type = 'SMALL';
+                        break;
+                    case 'thumbnail':
+                        $type = 'THUMB';
+                        break;
+                    case 'swatch_image':
+                        $type = 'THUMB';
+                        break;
+                    default:
+                        $type = 'LARGE';
+                        break;
+                }
 
-            foreach ($sxImages['Pics'] as $image) {
                 $images[] = [
-                    'url' => $image,
-                    'type' => 'SMALL'
+                    'url' => trim($transformerArgs['mediaUrl'],'/').$image->getFile(),
+                    'type' => $type
                 ];
+
             }
+        
         }
 
-        if (isset($sxImages['ZoomPics'])) {
+        return $images;
+    }
 
-            foreach ($sxImages['ZoomPics'] as $image) {
-                $images[] = [
-                    'url' => $image['file'],
-                    'type' => 'LARGE'
-                ];
+
+    /**
+     * get attributes of product
+     */
+    protected function _getAttributes($transformerArgs = array())
+    {
+        $attribtesToExclude = ['image', 'thumbnail', 'media', 'gallery', 'category'];
+ 
+        $attributes = [];
+
+        foreach($this->_product->getData() as $code => $value){
+
+            $doNotAdd = false;
+            foreach($attribtesToExclude as $needle){
+                if(stripos($code,$needle) !== false){
+                    $doNotAdd = true;
+                    continue;
+                }
             }
+
+            if($doNotAdd) continue;
+
+            $attributes = $this->_transformAttribute($code, $value, $transformerArgs, $attributes);
         }
 
-        if (isset($sxImages['Icons'])) {
+        return array_values($attributes);
 
-            foreach ($sxImages['Icons'] as $image) {
-                $images[] = [
-                    'url' => $image,
-                    'type' => 'THUMB'
-                ];
+    }
+
+
+    protected function _transformAttribute($code, $value, $transformerArgs, $attributes)
+    {
+        $productModel = $transformerArgs['productModel'];
+
+        if(is_array($value) || is_object($value)){
+
+            foreach($value as $c => $v){
+                $attributes = $this->_transformAttribute($c, $v, $transformerArgs, $attributes);
             }
+            return $attributes;
         }
 
-        //check for correct file type
-        foreach ($images as $key => $image) {
+        $key = $productModel->getAttribute($code) ? $productModel->getAttribute($code)->getStoreLabel() : $code;
+        if(!$key) $key = $code;
 
-            $fileExtension = strtolower(pathinfo($image['url'], PATHINFO_EXTENSION));
+        if($code == 'price') $value .= ' '. $transformerArgs['currency'];
 
-            if (!in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
-                unset($images[$key]);
-                continue;
-            }
+        $attributes[$code] = [
+            'key' => $key,
+            'value' => (string) $value 
+        ];
 
-            if (isset($imageTypeSuffix[$image['type']])) {
-                $images[$key]['url'] .= (string) $imageTypeSuffix[$image['type']];
-            } else {
-                $images[$key]['url'] .= $imageSuffix;
-            }
-        }
-        */
-
-        return array_values($images);
+        return $attributes;
     }
 
 }

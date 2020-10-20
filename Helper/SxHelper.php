@@ -15,12 +15,12 @@ class SxHelper extends AbstractHelper
 
     protected $_sxFolder = "semknox/";
 
-    protected $_sxUploadBatchSize = 200;
-    protected $_sxCollectBatchSize = 100;
+    protected $_sxUploadBatchSize = 1000;
+    protected $_sxCollectBatchSize = 500;
     protected $_sxRequestTimeout = 15;
 
-    protected $_sxSandboxApiUrl = "https://stage-oxid-v3.semknox.com/";
-    protected $_sxApiUrl = "https://api-oxid-v3.semknox.com/";
+    protected $_sxSandboxApiUrl = "https://stage-magento-v3.semknox.com/";
+    protected $_sxApiUrl = "https://api-magento-v3.semknox.com/";
 
     protected $_sxMasterConfig = false;
     protected $_sxMasterConfigPath = "masterConfig%s.json";
@@ -66,7 +66,7 @@ class SxHelper extends AbstractHelper
                 $storeId
             );
 
-            if ($value) return $value;
+            if ($value) return trim($value);
         }
 
         // check preset values or take default
@@ -79,7 +79,7 @@ class SxHelper extends AbstractHelper
     }
 
 
-    public function log($message)
+    public function log($message, $logLevel = 'info')
     {
         // todo: improve
         $this->_logger->info($message);
