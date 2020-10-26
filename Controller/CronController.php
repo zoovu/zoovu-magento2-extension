@@ -35,7 +35,7 @@ class CronController
 
         $sxShopUloads = array();
 
-        foreach($sxUpload->getShopConfigs() as $key => $shopConfig){
+        foreach($this->_sxHelper->getShopConfigs() as $key => $shopConfig){
 
             $uploadController = $this->_uploadControllerFactoy->create();
             $uploadController->setConfig($shopConfig);

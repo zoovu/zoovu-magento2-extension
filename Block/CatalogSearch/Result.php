@@ -45,9 +45,14 @@ class Result extends CatalogSearchResult
      */
     public function getSearchQueryText()
     {
+        $productList = $this->getListBlock();
+        return $productList->sxSearch->getSearchInterpretation();
+
+        /*
         $prefix = $this->_sxHelper->get('sxRequestTimeout', 'test');
 
         return $prefix.': ' .parent::getSearchQueryText();
+        */
     }
 
 
@@ -56,16 +61,18 @@ class Result extends CatalogSearchResult
      *
      * @return Collection
      */
+    /*
     protected function _getProductCollection()
     {
         $collection = $this->_productCollectionFactory->create();
         $collection->addAttributeToSelect('*');
-        $collection->setPageSize(3); 
+        $collection->setPageSize(1); 
         
         return $collection;
 
         return parent::_getProductCollection();
     }
+    */
 
 
 }

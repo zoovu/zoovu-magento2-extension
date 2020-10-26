@@ -125,8 +125,9 @@ class UploadController {
             if ($productCounter < $collectBatchSize) {
 
                 $response = $this->_sxUploader->startUploading();
-                if ($response['status'] !== 'success') {
-                    $this->_sxHelper->log($response['satus'] . ': ' . $response['message'], 'error');
+
+                if (isset($response['status']) && $response['status'] !== 'success') {
+                    $this->_sxHelper->log($response['status'] . ' - ' . $response['message'], 'error');
                 }
             }
 
@@ -137,13 +138,14 @@ class UploadController {
             // continue uploading...
             $response = $this->_sxUploader->sendUploadBatch(true);
 
-            $message = isset($response['message']) ? $response['message'] : 'Uploading';
-
+            
             if (isset($response['validation'][0]['schemaErrors'][0])) {
-                $message .= ' (' . $response['validation'][0]['schemaErrors'][0] . ')';
+                $this->_sxHelper->log(json_encode($response), 'error');
             }
 
-            $this->_sxHelper->log($response['status'] . ':' . $message);
+            if (isset($response['status']) && $response['status'] !== 'success') {
+                $this->_sxHelper->log(json_encode($response), 'error');
+            }
 
         }
 
@@ -157,9 +159,8 @@ class UploadController {
     {
         $response = $this->_sxUploader->finalizeUpload($signalApi);
 
-        if ($response['status'] !== 'success') {
-            $message = isset($response['message']) ? $response['message'] : 'Finalizing failed';
-            $this->_sxHelper->log($message, 'error');
+        if (isset($response['status']) && $response['status'] !== 'success') {
+            $this->_sxHelper->log(json_encode($response), 'error');
         }
     }
 
@@ -240,60 +241,6 @@ class UploadController {
         $uploadOverview = $this->_sxCore->getInitialUploadOverview();
         return $uploadOverview->getRunningUploads();
     }
-
-
-    /**
-     * get the configs of all shops
-     * 
-     * @return array
-     */
-    public function getShopConfigs()
-    {
-        $sxShopConfigs = array();
-
-        foreach($this->_storeManager->getStores() as $storeId => $store){
-
-            $projectId = $this->_sxHelper->get('sxProjectId', $storeId, null);
-            $apiKey = $this->_sxHelper->get('sxApiKey', $storeId, null);
-
-            $storeIdentifier = $storeId . '-' . $store['code'];
-            
-            $currentShopConfig = [
-                'projectId' => $projectId,
-                'apiKey' => $apiKey,
-                'sandbox' => $this->_sxHelper->get('sxIsSandbox', $storeId),
-
-                'apiUrl' => $this->_sxHelper->get('sxIsSandbox', $storeId) ? $this->_sxHelper->get( 'sxSandboxApiUrl', $storeId) : $this->_sxHelper->get( 'sxApiUrl', $storeId),
-                'shopId' => $storeId,
-                'cronjobHour' => (int) $this->_sxHelper->get('sxCronjobHour', $storeId),
-                'cronjobMinute' => (int) $this->_sxHelper->get('sxCronjobMinute', $storeId),
-
-                'collectBatchSize' => (int) $this->_sxHelper->get('sxCollectBatchSize', $storeId),
-                'uploadBatchSize' => (int) $this->_sxHelper->get('sxUploadBatchSize', $storeId),
-                'requestTimeout' => (int) $this->_sxHelper->get('sxRequestTimeout', $storeId),
-
-                'storeIdentifier' => $storeIdentifier,
-                'storeRootCategory' => $store->getRootCategoryId(),
-
-                // shopsystem settings
-                'sxFrontendActive' => $this->_sxHelper->get('sxFrontendActive', $storeId, true),
-                'sxUploadActive' => $this->_sxHelper->get('sxUploadActive', $storeId, true),
-                'sxIncrementalUpdatesActive' => $this->_sxHelper->get('sxIncrementalUpdatesActive', $storeId, true),
-                'sxAnswerActive' => $this->_sxHelper->get('sxAnswerActive', $storeId, true),
-
-            ];
-
-            if($projectId && $apiKey){
-                $sxShopConfigs[$storeIdentifier] = $currentShopConfig;
-            }
-
-        }
-
-        return $sxShopConfigs;
-    
-    }
-
-    
 
 
 }

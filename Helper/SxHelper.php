@@ -6,6 +6,7 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Filesystem\DirectoryList;
+use Magento\Store\Model\StoreManagerInterface;
 
 use Psr\Log\LoggerInterface;
 
@@ -32,12 +33,14 @@ class SxHelper extends AbstractHelper
     public function __construct(
         ScopeConfigInterface $scopeConfig, 
         LoggerInterface $logger,
-        DirectoryList $dir
+        DirectoryList $dir,
+        StoreManagerInterface $storeManagerInterface
     )
     {
         $this->_scopeConfig = $scopeConfig;
         $this->_logger = $logger;
         $this->_dir = $dir;
+        $this->_storeManager = $storeManagerInterface;
 
         $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
@@ -84,5 +87,78 @@ class SxHelper extends AbstractHelper
         // todo: improve
         $this->_logger->info($message);
     }
+
+
+
+    /**
+     * get the configs of all shops
+     * 
+     * @return array
+     */
+    public function getShopConfigs()
+    {
+        $sxShopConfigs = array();
+
+        foreach ($this->_storeManager->getStores() as $store) {
+
+            if($storeConfig = $this->getConfig($store)){
+                $storeIdentifier = $storeConfig['storeIdentifier'];
+                $sxShopConfigs[$storeIdentifier] = $storeConfig;
+            }
+
+        }
+
+        return $sxShopConfigs;
+    }
+
+
+    /**
+     * get the config of one/current store
+     * 
+     * @return array
+     */
+    public function getConfig($store = null)
+    {
+        if(!$store){
+            $store = $this->_storeManager->getStore();
+        }
+
+        $storeId = $store->getId();
+
+        $projectId = $this->get('sxProjectId', $storeId, null);
+        $apiKey = $this->get('sxApiKey', $storeId, null);
+
+        if(!$projectId || !$apiKey) return false;
+
+        $storeIdentifier = $storeId . '-' . $store->getCode();
+
+        $currentShopConfig = [
+            'projectId' => $projectId,
+            'apiKey' => $apiKey,
+            'sandbox' => $this->get('sxIsSandbox', $storeId),
+
+            'apiUrl' => $this->get('sxIsSandbox', $storeId) ? $this->get('sxSandboxApiUrl', $storeId) : $this->get('sxApiUrl', $storeId),
+            'shopId' => $storeId,
+            'cronjobHour' => (int) $this->get('sxCronjobHour', $storeId),
+            'cronjobMinute' => (int) $this->get('sxCronjobMinute', $storeId),
+
+            'collectBatchSize' => (int) $this->get('sxCollectBatchSize', $storeId),
+            'uploadBatchSize' => (int) $this->get('sxUploadBatchSize', $storeId),
+            'requestTimeout' => (int) $this->get('sxRequestTimeout', $storeId),
+
+            'storeIdentifier' => $storeIdentifier,
+            'storeRootCategory' => $store->getRootCategoryId(),
+
+            // shopsystem settings
+            'sxFrontendActive' => $this->get('sxFrontendActive', $storeId, true),
+            'sxUploadActive' => $this->get('sxUploadActive', $storeId, true),
+            'sxIncrementalUpdatesActive' => $this->get('sxIncrementalUpdatesActive', $storeId, true),
+            'sxAnswerActive' => $this->get('sxAnswerActive', $storeId, true),
+
+        ];
+
+        return $currentShopConfig;
+    }
+
 
 }
