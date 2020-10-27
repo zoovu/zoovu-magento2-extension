@@ -56,15 +56,17 @@ class ListProduct extends ParentListProduct
 
     private function initializeProductCollection() 
     {
-        $toolbar = $this->getToolbarBlock();
-
         $productIds = $this->sxSearch->getArticles();
 
+        // get collection
         $collection = $this->_productCollectionFactory->create();
         $collection->addAttributeToSelect('*');
         $collection->addFieldToFilter('entity_id', array('in' => $productIds));
 
-
+        // get available orders
+        $collection->_sxAvailableOrders = $this->sxSearch->getAvailableOrders();
+        $collection->_sxResultsCount = $this->sxSearch->getResultsCount();
+        
         return $collection;
 
     }

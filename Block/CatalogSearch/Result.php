@@ -46,33 +46,9 @@ class Result extends CatalogSearchResult
     public function getSearchQueryText()
     {
         $productList = $this->getListBlock();
-        return $productList->sxSearch->getSearchInterpretation();
 
-        /*
-        $prefix = $this->_sxHelper->get('sxRequestTimeout', 'test');
-
-        return $prefix.': ' .parent::getSearchQueryText();
-        */
+        return strip_tags($productList->sxSearch->getSearchInterpretation());
     }
-
-
-    /**
-     * Retrieve loaded category collection
-     *
-     * @return Collection
-     */
-    /*
-    protected function _getProductCollection()
-    {
-        $collection = $this->_productCollectionFactory->create();
-        $collection->addAttributeToSelect('*');
-        $collection->setPageSize(1); 
-        
-        return $collection;
-
-        return parent::_getProductCollection();
-    }
-    */
 
 
 }

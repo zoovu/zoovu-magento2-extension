@@ -27,7 +27,7 @@ class SearchController
         if($this->_sxSearchResponse){
             return $this->_sxSearchResponse;
         }
-
+        
         $searchQuery = $this->_searchHelper->getEscapedQueryText();
 
         $shopConfig = $this->_sxHelper->getConfig();
@@ -63,12 +63,30 @@ class SearchController
         }
 
         return $articleIds;
+    }
 
+
+    public function getAvailableOrders()
+    {
+        $availableOrders = [];
+
+        foreach($this->_getSearchResponse()->getAvailableSortingOptions() as $option){
+            $availableOrders[$option->getKey()] = $option->getName();
+        };
+
+        if(!$availableOrders) $availableOrders = ['sxName' => 'sxName', 'sxPrice' => 'sxPrice'];
+
+        return $availableOrders;
     }
 
     public function getSearchInterpretation()
     {
         return (string) $this->_getSearchResponse()->getAnswerText();
+    }
+
+    public function getResultsCount()
+    {
+        return $this->_getSearchResponse()->getTotalProductResults();
     }
 
 }
