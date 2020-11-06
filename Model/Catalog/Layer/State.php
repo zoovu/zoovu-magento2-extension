@@ -11,13 +11,11 @@ class State extends \Magento\Catalog\Model\Layer\State
     public function __construct(
         array $data = [],
         SxHelper $sxHelper,
-        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory,
-        FilterItemAdapterFactory $filterItemAdapterFactory
+        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory
     )
     {
         $this->_sxHelper = $sxHelper;  
         $this->_filterRenderer = $filterRendererFactory; 
-        $this->_filterItemAdapter = $filterItemAdapterFactory;
         parent::__construct($data);
     }
 
@@ -31,14 +29,17 @@ class State extends \Magento\Catalog\Model\Layer\State
 
             $filter = $this->_filterRenderer->create();
             $filter->isActiveFilter = true;
-
+            
             foreach($sxFilter['values'] as $value){
-
                 $sxFilter['value'] = $value;
                 $filter->setSxFilter($sxFilter);
                 $filterList[] = $filter;
-
             }
+        }
+
+        // to make filterlist everywhere available
+        foreach($filterList as &$filter){
+            $filter->activeFilterList = $filterList;
         }
 
         return $filterList;

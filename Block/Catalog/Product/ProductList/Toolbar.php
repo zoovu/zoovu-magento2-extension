@@ -54,7 +54,10 @@ class Toolbar extends CatalogSearchToolbar
     {
         if(!$this->_isSxSearch) return parent::getAvailableOrders();
 
-        return $this->_collection->_sxAvailableOrders;           
+        $availableOrders = $this->_collection->_sxAvailableOrders;
+        $availableOrders['position'] =__('Position');
+
+        return $availableOrders;           
     }
 
 

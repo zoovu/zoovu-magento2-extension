@@ -50,6 +50,10 @@ class SearchController
             $sxSearch->addFilter($filter,[$value]);
         }
 
+        if($order = $this->_sxHelper->getSetOrder()){
+            $sxSearch->sortBy($order, $this->_sxHelper->getSetDir());
+        }
+
         try {
             // do search...
             $this->_sxSearchResponse = $sxSearch->search();
@@ -80,7 +84,7 @@ class SearchController
             $availableOrders[$option->getKey()] = $option->getName();
         };
 
-        if(!$availableOrders) $availableOrders = ['sxName' => 'sxName', 'sxPrice' => 'sxPrice'];
+        if(!$availableOrders) $availableOrders = ['sxName' => 'sxName', 'sxPrice' => 'sxPrice']; // for testing
 
         return $availableOrders;
     }

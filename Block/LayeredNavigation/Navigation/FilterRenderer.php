@@ -7,11 +7,11 @@ use Magento\Catalog\Model\Layer\Filter\FilterInterface;
 use Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterItemAdapterFactory;
 
 
-
 class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterRenderer implements FilterInterface
 {
 
     public $isActiveFilter = false;
+    public $activeFilterList = [];
 
     /**
      * Constructor
@@ -31,25 +31,11 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
         parent::__construct($context, $data);
     }
 
+
+
     public function setSxFilter($sxFilter)
     {
         $this->_sxFilter = $sxFilter;
-    }
-
-
-    /**
-     * @param FilterInterface $filter
-     * @return string
-     */
-    public function render(FilterInterface $filter)
-    {
-        //$filterList = $this->_sxHelper->getSxResponseStore('filterList');
-        // ... filter  options of ONE Filter
-        
-        $this->assign('filterItems', $filter->getItems());
-        $html = $this->_toHtml();
-        $this->assign('filterItems', []);
-        return $html;
     }
 
 
@@ -141,7 +127,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function setItems(array $items)
     {
-        return '';
+        return $items;
     }
 
     /**
@@ -151,7 +137,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function getLayer()
     {
-        return false;
+        return parent::getLayer();
     }
 
     /**
@@ -162,7 +148,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function setAttributeModel($attribute)
     {
-        return false;
+        return parent::setAttributeModel($attribute);
     }
 
     /**
@@ -173,7 +159,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function getAttributeModel()
     {
-        return false;
+        return parent::getAttributeModel();
     }
 
     /**
@@ -194,7 +180,11 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
 
     public function getActiveValue()
     {
-        return is_array($this->_sxFilter) ? $this->_sxFilter['value']['name'] : '';
+        if(is_array($this->_sxFilter)){
+            return isset($this->_sxFilter['value']['name']) ? $this->_sxFilter['value']['name'] : $this->_sxFilter['value']['value'];
+        }
+
+        return '';
     }
 
     /**
@@ -204,7 +194,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function getStoreId()
     {
-        return 0;
+        return parent::getStoreId();
     }
 
     /**
@@ -215,7 +205,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function setStoreId($storeId)
     {
-        return $this;
+        return parent::setStoreId($storeId);
     }
 
     /**
@@ -225,7 +215,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function getWebsiteId()
     {
-        return 0;
+        return parent::getWebsiteId();
     }
 
     /**
@@ -236,7 +226,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function setWebsiteId($websiteId)
     {
-        return $this;
+        return parent::setWebsiteId($websiteId);
     }
 
     /**
@@ -247,6 +237,37 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
     public function getClearLinkText()
     {
         return 'clear';
+    }
+
+
+    public function getActiveFilters()
+    {
+        return $this->activeFilterList;
+    }
+
+
+    /**
+     *
+     * @return false|string
+     */
+    public function getRemoveUrl()
+    {
+        $filterState = [];
+
+        foreach ($this->getActiveFilters() as $item) {
+            $filterState[$item->getRequestVar()] = $item->getActiveValue();
+        }
+
+        // remove this filter
+        $filterState[$this->getRequestVar()] = $this->getCleanValue();
+
+        $params['_current'] = true;
+        $params['_use_rewrite'] = true;
+        $params['_query'] = $filterState;
+        $params['_escape'] = true;
+
+        return $this->_urlBuilder->getUrl('*/*/*', $params);
+
     }
 
 }

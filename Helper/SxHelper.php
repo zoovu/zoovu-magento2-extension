@@ -189,6 +189,17 @@ class SxHelper extends AbstractHelper
         return $filters;
     }
 
+
+    public function getSetOrder()
+    {
+        return $this->_request->getParam('product_list_order', false);
+    }
+
+    public function getSetDir()
+    {
+        return $this->_request->getParam('product_list_dir', 'desc');
+    }
+    
     public function isSearch()
     {
         return ($this->_request->getFullActionName() == 'catalogsearch_result_index');
