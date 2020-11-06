@@ -34,13 +34,15 @@ class SxHelper extends AbstractHelper
         ScopeConfigInterface $scopeConfig, 
         LoggerInterface $logger,
         DirectoryList $dir,
-        StoreManagerInterface $storeManagerInterface
+        StoreManagerInterface $storeManagerInterface,
+        \Magento\Framework\App\Request\Http $request
     )
     {
         $this->_scopeConfig = $scopeConfig;
         $this->_logger = $logger;
         $this->_dir = $dir;
         $this->_storeManager = $storeManagerInterface;
+        $this->_request = $request;
 
         $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
@@ -158,6 +160,38 @@ class SxHelper extends AbstractHelper
         ];
 
         return $currentShopConfig;
+    }
+
+
+    public function setSxResponseStore($key, $value)
+    {
+        if(!$key || !$value) return; 
+        $this->_sxResponseStore[$key] = $value;
+    }
+
+    public function getSxResponseStore($key, $default = false)
+    {
+        return isset($this->_sxResponseStore[$key]) ?  $this->_sxResponseStore[$key] : $default;
+    }
+
+    public function getSetFilters()
+    {
+        $filters = array();
+        
+        foreach($this->_request->getParams() as $param => $value)
+        {
+            if(stripos($param,'sx_') === 0){
+                $param = urldecode($param);
+                $filters[substr($param,3)] = $value;
+            }
+        }
+
+        return $filters;
+    }
+
+    public function isSearch()
+    {
+        return ($this->_request->getFullActionName() == 'catalogsearch_result_index');
     }
 
 

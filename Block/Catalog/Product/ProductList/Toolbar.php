@@ -1,6 +1,6 @@
 <?php
 
-namespace Semknox\Productsearch\Block\CatalogSearch\Product\ProductList;
+namespace Semknox\Productsearch\Block\Catalog\Product\ProductList;
 
 use Magento\Catalog\Block\Product\ProductList\Toolbar as CatalogSearchToolbar;
 use Magento\Catalog\Helper\Product\ProductList;

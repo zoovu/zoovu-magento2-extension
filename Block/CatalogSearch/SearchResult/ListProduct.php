@@ -1,8 +1,7 @@
 <?php
 
-namespace Semknox\Productsearch\Block\CatalogSearch;
+namespace Semknox\Productsearch\Block\CatalogSearch\SearchResult;
 
-use Magento\Catalog\Block\Product\ListProduct as ParentListProduct;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Model\Layer\Resolver;
 use Magento\Framework\Data\Helper\PostHelper;
@@ -15,7 +14,7 @@ use Semknox\Productsearch\Helper\SxHelper;
 use Semknox\Productsearch\Controller\SearchController;
 
 
-class ListProduct extends ParentListProduct
+class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 {
         public function __construct(
         Context $context,
@@ -63,9 +62,17 @@ class ListProduct extends ParentListProduct
         $collection->addAttributeToSelect('*');
         $collection->addFieldToFilter('entity_id', array('in' => $productIds));
 
-        // get available orders
+        // mark as semknox search
+        $collection->_isSxSearch = true;
+
+        $this->_sxHelper->setSxResponseStore('filterList', $this->sxSearch->getAvailableFilters());
+        $this->_sxHelper->setSxResponseStore('activeFilters', $this->sxSearch->getActiveFilters());
+
+        // get additional data...
         $collection->_sxAvailableOrders = $this->sxSearch->getAvailableOrders();
         $collection->_sxResultsCount = $this->sxSearch->getResultsCount();
+        $collection->_sxLastPageNum = $this->sxSearch->getLastPageNum();
+        $collection->_sxCurrentPage = $this->sxSearch->getCurrentPage();
         
         return $collection;
 

@@ -44,10 +44,16 @@ class SearchController
         $sxSearch->setLimit($limit);
         $sxSearch->setPage($page);
 
+        
+        foreach($this->_sxHelper->getSetFilters() as $filter => $value)
+        {
+            $sxSearch->addFilter($filter,[$value]);
+        }
 
         try {
             // do search...
             $this->_sxSearchResponse = $sxSearch->search();
+            $this->_sxHelper->isSxSearch = true;
             return $this->_sxSearchResponse; 
         } catch (\Exception $e) {
             $this->_sxHelper->log($e->getMessage());
@@ -82,6 +88,26 @@ class SearchController
     public function getSearchInterpretation()
     {
         return (string) $this->_getSearchResponse()->getAnswerText();
+    }
+
+    public function getAvailableFilters()
+    {
+        return $this->_getSearchResponse()->getAvailableFilters();
+    }
+
+    public function getActiveFilters()
+    {
+        return $this->_getSearchResponse()->getActiveFilters();
+    }
+
+    public function getLastPageNum()
+    {
+        return ceil($this->getResultsCount() / $this->_toolbar->getLimit());
+    }
+
+    public function getCurrentPage()
+    {
+        return $this->_toolbar->getCurrentPage();
     }
 
     public function getResultsCount()
