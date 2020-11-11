@@ -15,7 +15,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
      */
     public function getLastPageNum()
     {
-        if(!$this->getCollection()->_isSxSearch) return parent::getLastNum();
+        if(!isset($this->getCollection()->_isSxSearch) || !$this->getCollection()->_isSxSearch) return parent::getLastNum();
         
         return $this->getCollection()->_sxLastPageNum;
     }
@@ -29,7 +29,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
     public function getCurrentPage()
     {
         if (is_object($this->_collection)) {
-            if (!$this->_collection->_isSxSearch){
+            if (!isset($this->_collection->_isSxSearch) || !$this->_collection->_isSxSearch){
                 return parent::getCurrentPage();
             } else {
                 return $this->getCollection()->_sxCurrentPage;
