@@ -13,5 +13,8 @@ bin/magento cache:clean
 run specific cronjob:
 bin/magento cron:run --group=semknox_productsearch
 
+php bin/magento cache:disable
+
+
 
 

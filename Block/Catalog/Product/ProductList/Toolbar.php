@@ -7,6 +7,8 @@ use Magento\Catalog\Helper\Product\ProductList;
 use Magento\Catalog\Model\Product\ProductList\Toolbar as ToolbarModel;
 use Magento\Catalog\Model\Product\ProductList\ToolbarMemorizer;
 
+use Semknox\Productsearch\Helper\SxHelper;
+
 class Toolbar extends CatalogSearchToolbar
 {
 
@@ -22,10 +24,11 @@ class Toolbar extends CatalogSearchToolbar
         ToolbarMemorizer $toolbarMemorizer = null,
         \Magento\Framework\App\Http\Context $httpContext = null,
         \Magento\Framework\Data\Form\FormKey $formKey = null,
-        \Magento\Framework\App\Request\Http $request
+        \Magento\Framework\App\Request\Http $request,
+        SxHelper $sxHelper
     ) {
-
-        $this->_isSxSearch = ($request->getFullActionName() == 'catalogsearch_result_index');
+        $this->_sxHelper = $sxHelper;
+        $this->_isSxSearch = ($request->getFullActionName() == 'catalogsearch_result_index') && $this->_sxHelper->isSxSearchFrontendActive();
         parent::__construct($context, $catalogSession, $catalogConfig, $toolbarModel, $urlEncoder, $productListHelper, $postDataHelper, $data, $toolbarMemorizer, $httpContext, $formKey);
     }
 
@@ -37,9 +40,10 @@ class Toolbar extends CatalogSearchToolbar
      */
     public function setCollection($collection)
     {
-        if(!$this->_isSxSearch) return parent::setCollection($collection);
-        
+        if(!$this->_isSxSearch || (isset($this->_collection->_isSxSearch) && !$this->_collection->_isSxSearch)) return parent::setCollection($collection);
+
         $this->_collection = $collection;
+
         return $this;
     }
 
@@ -52,7 +56,7 @@ class Toolbar extends CatalogSearchToolbar
      */
     public function getAvailableOrders()
     {
-        if(!$this->_isSxSearch) return parent::getAvailableOrders();
+        if(!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getAvailableOrders();
 
         $availableOrders = $this->_collection->_sxAvailableOrders;
         $availableOrders['position'] =__('Position');
@@ -82,7 +86,7 @@ class Toolbar extends CatalogSearchToolbar
      */
     public function getLastPageNum()
     {
-        if (!$this->_isSxSearch) return parent::getLastPageNum();
+        if (!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getLastPageNum();
 
         return (int) $this->_collection->_sxResultsCount / $this->getLimit();
     }
@@ -94,26 +98,10 @@ class Toolbar extends CatalogSearchToolbar
      */
     public function getTotalNum()
     {
-        if (!$this->_isSxSearch) return parent::getTotalNum();
+        if (!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getTotalNum();
 
         return (int) $this->_collection->_sxResultsCount;
     }
 
-
-    /**
-     * Pager number of items products finished on current page.
-     *
-     * @return int
-     */
-    /*
-    public function getLastNum()
-    {
-        if (!$this->_isSxSearch) return parent::getLastNum();
-
-        $collection = $this->getCollection();
-
-        return $collection->getPageSize() * ($this->getCurrentPage() - 1) + $this->_collection->_sxResultsCount;
-    }
-    */
 
 }

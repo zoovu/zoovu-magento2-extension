@@ -42,6 +42,8 @@ class Search extends \Magento\LayeredNavigation\Block\Navigation
      */
     public function canShowBlock()
     {
+        if(!$this->_sxHelper->isSxSearchFrontendActive()) return parent::canShowBlock();
+
         $filterList = $this->_sxHelper->getSxResponseStore('filterList');
         return $filterList && count($filterList);
     }
@@ -54,6 +56,8 @@ class Search extends \Magento\LayeredNavigation\Block\Navigation
      */
     public function getFilters()
     {
+        if (!$this->_sxHelper->isSxSearchFrontendActive()) return parent::getFilters();
+
         $filterList = [];
         
         foreach($this->_sxHelper->getSxResponseStore('filterList') as $sxFilter)

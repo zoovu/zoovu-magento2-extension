@@ -2,9 +2,25 @@
 
 namespace Semknox\Productsearch\Block\LayeredNavigation\Navigation;
 
+use Semknox\Productsearch\Helper\SxHelper;
 
 class State extends \Magento\LayeredNavigation\Block\Navigation\State
 {
+
+    /**
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Magento\Catalog\Model\Layer\Resolver $layerResolver
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Catalog\Model\Layer\Resolver $layerResolver,
+        array $data = [],
+        SxHelper $sxHelper
+    ) {
+        $this->_sxHelper = $sxHelper;
+        parent::__construct($context, $layerResolver, $data);
+    }
 
 
     /**
@@ -14,6 +30,8 @@ class State extends \Magento\LayeredNavigation\Block\Navigation\State
      */
     public function getClearUrl()
     {
+        if (!$this->_sxHelper->isSxSearchFrontendActive()) return parent::getClearUrl();
+
         $filterState = [];
 
         foreach ($this->getActiveFilters() as $item) {

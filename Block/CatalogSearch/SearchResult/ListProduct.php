@@ -44,7 +44,8 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
     }
 
 
-    protected function _getProductCollection() {
+    protected function _getProductCollection() 
+    {
 
         if ($this->_productCollection === null) {
             $this->_productCollection = $this->initializeProductCollection();
@@ -55,6 +56,12 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 
     private function initializeProductCollection() 
     {
+        if(!$this->_sxHelper->isSxSearchFrontendActive()){
+            $collection = parent::_getProductCollection();
+            $collection->_isSxSearch = false;
+            return $collection;
+        } 
+
         $productIds = $this->sxSearch->getArticles();
 
         // get collection

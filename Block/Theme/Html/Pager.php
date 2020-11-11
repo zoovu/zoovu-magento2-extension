@@ -6,8 +6,7 @@ namespace Semknox\Productsearch\Block\Theme\Html;
 class Pager extends \Magento\Theme\Block\Html\Pager
 {
 
-    // check in /var/www/semknox-magento2/vendor/magento/module-theme/view/frontend/templates/html/pager.phtml
-    // which mehtods has to be overwritten!!!!
+    // check /vendor/magento/module-theme/view/frontend/templates/html/pager.phtml
 
     /**
      * Retrieve number of last page
@@ -16,7 +15,8 @@ class Pager extends \Magento\Theme\Block\Html\Pager
      */
     public function getLastPageNum()
     {
-        if(!isset($this->getCollection()->_isSxSearch)) return parent::getLastNum();
+        if(!$this->getCollection()->_isSxSearch) return parent::getLastNum();
+        
         return $this->getCollection()->_sxLastPageNum;
     }
 
@@ -29,7 +29,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
     public function getCurrentPage()
     {
         if (is_object($this->_collection)) {
-            if (!isset($this->_collection->_isSxSearch)){
+            if (!$this->_collection->_isSxSearch){
                 return parent::getCurrentPage();
             } else {
                 return $this->getCollection()->_sxCurrentPage;
@@ -37,6 +37,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
         }
         return (int)$this->getRequest()->getParam($this->getPageVarName(), 1);
     }
+
 
     /**
      * Return page number of Next jump
@@ -88,7 +89,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
             $end = 0;
 
             $collection = $this->getCollection();
-            if (!isset($this->_collection->_isSxSearch)) return parent::_initFrame();
+            if (!isset($collection->_isSxSearch)) return parent::_initFrame();
             
             if ($this->getLastPageNum() <= $this->getFrameLength()) {
                 $start = 1;

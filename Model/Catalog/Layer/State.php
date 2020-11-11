@@ -23,6 +23,8 @@ class State extends \Magento\Catalog\Model\Layer\State
 
     public function getFilters()
     {
+        if (!$this->_sxHelper->isSxSearchFrontendActive()) return parent::getFilters();
+
         $filterList = [];
 
         foreach ($this->_sxHelper->getSxResponseStore('activeFilters', []) as $sxFilter) {

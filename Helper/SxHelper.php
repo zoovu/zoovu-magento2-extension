@@ -30,6 +30,8 @@ class SxHelper extends AbstractHelper
     protected $_sxUpdateQueuePath = "update-queue/";
 
 
+    protected $_sxShopConfigs = false;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig, 
         LoggerInterface $logger,
@@ -71,7 +73,10 @@ class SxHelper extends AbstractHelper
                 $storeId
             );
 
-            if ($value) return trim($value);
+            if ($value === '0' || $value){
+                return trim($value);
+            } 
+
         }
 
         // check preset values or take default
@@ -90,6 +95,13 @@ class SxHelper extends AbstractHelper
         $this->_logger->info($message);
     }
 
+    
+    
+    protected function _getStoreIdentifier($store)
+    {
+        $storeId = $store->getId();
+        return $storeId . '-' . $store->getCode();
+    }
 
 
     /**
@@ -100,15 +112,21 @@ class SxHelper extends AbstractHelper
     public function getShopConfigs()
     {
         $sxShopConfigs = array();
-
         foreach ($this->_storeManager->getStores() as $store) {
 
+            $storeIdentifier = $this->_getStoreIdentifier($store);
+
+            if (is_array($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier])){
+                continue;
+            }
+
             if($storeConfig = $this->getConfig($store)){
-                $storeIdentifier = $storeConfig['storeIdentifier'];
                 $sxShopConfigs[$storeIdentifier] = $storeConfig;
             }
 
         }
+
+        $this->_sxShopConfigs = $sxShopConfigs;
 
         return $sxShopConfigs;
     }
@@ -125,14 +143,21 @@ class SxHelper extends AbstractHelper
             $store = $this->_storeManager->getStore();
         }
 
-        $storeId = $store->getId();
+        $storeIdentifier = $this->_getStoreIdentifier($store);
 
+        if(is_array($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier]))
+        {
+            return $this->_sxShopConfigs[$storeIdentifier];
+        }
+
+        $storeId = $store->getId();
         $projectId = $this->get('sxProjectId', $storeId, null);
         $apiKey = $this->get('sxApiKey', $storeId, null);
 
-        if(!$projectId || !$apiKey) return false;
-
-        $storeIdentifier = $storeId . '-' . $store->getCode();
+        if(!$projectId || !$apiKey){
+            $this->_sxShopConfigs[$storeIdentifier] = false;
+            return false;
+        }
 
         $currentShopConfig = [
             'projectId' => $projectId,
@@ -152,12 +177,14 @@ class SxHelper extends AbstractHelper
             'storeRootCategory' => $store->getRootCategoryId(),
 
             // shopsystem settings
-            'sxFrontendActive' => $this->get('sxFrontendActive', $storeId, true),
-            'sxUploadActive' => $this->get('sxUploadActive', $storeId, true),
-            'sxIncrementalUpdatesActive' => $this->get('sxIncrementalUpdatesActive', $storeId, true),
-            'sxAnswerActive' => $this->get('sxAnswerActive', $storeId, true),
+            'sxFrontendActive' => $this->get('sxFrontendActive', $storeId, 1),
+            'sxUploadActive' => $this->get('sxUploadActive', $storeId, 1),
+            'sxIncrementalUpdatesActive' => $this->get('sxIncrementalUpdatesActive', $storeId, 1),
+            'sxAnswerActive' => $this->get('sxAnswerActive', $storeId, 1),
 
         ];
+
+        $this->_sxShopConfigs[$storeIdentifier] = $currentShopConfig;
 
         return $currentShopConfig;
     }
@@ -205,5 +232,14 @@ class SxHelper extends AbstractHelper
         return ($this->_request->getFullActionName() == 'catalogsearch_result_index');
     }
 
+
+    public function isSxSearchFrontendActive()
+    {
+        $setActive = is_array($this->getConfig()) && isset($this->getConfig()['sxFrontendActive']) && $this->getConfig()['sxFrontendActive'] > 0;
+
+        $isReachable = (isset($this->isSxSearchActive)) ? $this->isSxSearchActive : true;
+
+        return $setActive && $isReachable;
+    }
 
 }

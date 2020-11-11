@@ -24,6 +24,11 @@ class SearchController
 
     private function _getSearchResponse()
     {
+        if(!$this->_sxHelper->isSxSearchFrontendActive()){
+            return false;
+        }
+
+
         if($this->_sxSearchResponse){
             return $this->_sxSearchResponse;
         }
@@ -57,17 +62,26 @@ class SearchController
         try {
             // do search...
             $this->_sxSearchResponse = $sxSearch->search();
-            $this->_sxHelper->isSxSearch = true;
-            return $this->_sxSearchResponse; 
+            //$this->_sxHelper->isSxSearch = true;
+
+            $this->_sxHelper->isSxSearchActive = true;
         } catch (\Exception $e) {
+            $this->_sxSearchResponse = false;
+
             $this->_sxHelper->log($e->getMessage());
+            $this->_sxHelper->isSxSearchActive = false;
         }
+
+        return $this->_sxSearchResponse;
 
     }
 
     public function getArticles()
     {
         $articleIds = [];
+
+        if(!$this->_getSearchResponse()) return $articleIds;
+
         foreach($this->_getSearchResponse()->getProducts() as $sxArticle) {
             $articleIds[] = $sxArticle->getId();
         }
@@ -80,6 +94,8 @@ class SearchController
     {
         $availableOrders = [];
 
+        if (!$this->_getSearchResponse()) return $availableOrders;
+
         foreach($this->_getSearchResponse()->getAvailableSortingOptions() as $option){
             $availableOrders[$option->getKey()] = $option->getName();
         };
@@ -91,31 +107,43 @@ class SearchController
 
     public function getSearchInterpretation()
     {
+        if (!$this->_getSearchResponse()) return false;
+
         return (string) $this->_getSearchResponse()->getAnswerText();
     }
 
     public function getAvailableFilters()
     {
+        if (!$this->_getSearchResponse()) return false;
+
         return $this->_getSearchResponse()->getAvailableFilters();
     }
 
     public function getActiveFilters()
     {
+        if (!$this->_getSearchResponse()) return false;
+
         return $this->_getSearchResponse()->getActiveFilters();
     }
 
     public function getLastPageNum()
     {
+        if (!$this->_getSearchResponse()) return false;
+
         return ceil($this->getResultsCount() / $this->_toolbar->getLimit());
     }
 
     public function getCurrentPage()
     {
+        if (!$this->_getSearchResponse()) return false;
+
         return $this->_toolbar->getCurrentPage();
     }
 
     public function getResultsCount()
     {
+        if (!$this->_getSearchResponse()) return false;
+        
         return $this->_getSearchResponse()->getTotalProductResults();
     }
 
