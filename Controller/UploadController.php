@@ -15,6 +15,7 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 
 class UploadController {
 
@@ -28,7 +29,8 @@ class UploadController {
         CollectionFactory $collectionFactory,
         ProductRepository $productRepository,
         CategoryCollectionFactory $categoryCollectionFactory,
-        Product $productModel
+        Product $productModel,
+        Status $productStatus
     ){
         $this->_sxHelper = $helper;
         $this->_storeManager = $storeManagerInterface;
@@ -36,6 +38,7 @@ class UploadController {
         $this->_productRepository = $productRepository;
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
         $this->_productModel = $productModel;
+        $this->_productStatus = $productStatus;
     }
 
 
@@ -100,6 +103,7 @@ class UploadController {
 
             $productCollection = $this->_collectionFactory->create();
             $productCollection->addAttributeToSelect('*');
+            $productCollection->addAttributeToFilter('status', ['in' => $this->_productStatus->getVisibleStatusIds()]);
             $productCollection->addStoreFilter($storeId);
             $productCollection->setPageSize($collectBatchSize);
             $productCollection->setCurPage($page);
@@ -111,7 +115,7 @@ class UploadController {
                 'sxConfig' => $this->_sxConfig,
                 'mediaUrl' => $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
                 'currency' => $store->getCurrentCurrency()->getCode(),
-                'productModel' => $this->_productModel
+                'productResourceModel' => $this->_productModel
             ];
 
             $productCounter = 0;

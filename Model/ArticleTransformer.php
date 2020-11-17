@@ -13,7 +13,8 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * Class constructor.
      */
-    public function __construct($mageProduct)
+    public function __construct(
+        $mageProduct)
     {
         $this->_product = $mageProduct;
     }
@@ -108,36 +109,37 @@ class ArticleTransformer extends AbstractProductTransformer
      */
     protected function _getImages($transformerArgs = array())
     {
-        $mageImages = $this->_product->getMediaGalleryEntries();
+        $mageImages = $this->_product->getMediaGalleryImages();
         $images = array();
-        foreach ($mageImages as $image) {
 
-            if ((bool) $image->isDisabled() || $image->getMediaType() != 'image') continue;
-
-            foreach ($image->getTypes() as $type) {
-
-                if (stripos($type, 'video') !== false) continue;
-
-                switch ($type) {
-                    case 'small_image':
-                        $type = 'SMALL';
-                        break;
-                    case 'thumbnail':
-                        $type = 'THUMB';
-                        break;
-                    case 'swatch_image':
-                        $type = 'THUMB';
-                        break;
-                    default:
-                        $type = 'LARGE';
-                        break;
-                }
-
-                $images[] = [
-                    'url' => trim($transformerArgs['mediaUrl'], '/') . $image->getFile(),
-                    'type' => $type
-                ];
+        $imageTypes = array();
+        $imageTypeKeys = [
+            'small_image' => 'SMALL',
+            'thumbnail' => 'THUMB',
+            'swatch_image' => 'THUMB'
+        ];
+        foreach($imageTypeKeys as $key => $sxType){
+            if($image = $this->_product->getData($key)){
+                $imageTypes[$image][] = $sxType;
             }
+        }
+
+        foreach ($mageImages as $image) {
+            if(isset($imageTypes[$image->getFile()])){
+                foreach($imageTypes[$image->getFile()] as $type){
+                    $images[$image->getFile().'_'. $type] = [
+                        'url' => $image->getUrl(),
+                        'type' => $type,
+                    ];
+                }
+            }
+
+            $images = array_values($images);
+            
+            $images[] = [
+                'url' => $image->getUrl(), 
+                'type' => 'LARGE',
+            ];
         }
 
         return $images;
@@ -149,7 +151,12 @@ class ArticleTransformer extends AbstractProductTransformer
      */
     protected function _getAttributes($transformerArgs = array())
     {
-        $attribtesToExclude = ['image', 'thumbnail', 'media', 'gallery', 'category'];
+        $attribtesToExclude = [
+            'image', 'thumbnail', 'media', 'gallery', 'category', // already definded
+            'attribute_set_id', 'has_options', 'required_options', 'request_path', 'tier_price_changed',
+            'status','url_key','options_container','store_id','msrp_display_actual_price_type', 'gift_message_available',
+            'visibility' // added 16.11.2020
+        ];
 
         $attributes = [];
 
@@ -174,7 +181,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
     protected function _transformAttribute($code, $value, $transformerArgs, $attributes)
     {
-        $productModel = $transformerArgs['productModel'];
+        $productModel = $transformerArgs['productResourceModel'];
 
         if (is_array($value) || is_object($value)) {
 
@@ -184,12 +191,16 @@ class ArticleTransformer extends AbstractProductTransformer
             return $attributes;
         }
 
-        $key = $productModel->getAttribute($code) ? $productModel->getAttribute($code)->getStoreLabel() : $code;
-        if (!$key) $key = $code;
+        $key = $code;
+        if($attributeModel =$productModel->getAttribute($code)){
+            $value = $attributeModel->getFrontend()->getValue($this->_product);
+            $key = $attributeModel->getStoreLabel() ? $attributeModel->getStoreLabel() : $key;
+        }
 
-        if ($code == 'price') $value .= ' ' . $transformerArgs['currency'];
+        if (stripos($code,'price') !== false && strlen($value)>5 ) $value .= ' ' . $transformerArgs['currency'];
 
-        $attributes[$code] = [
+
+        $attributes[] = [
             'key' => $key,
             'value' => (string) $value
         ];
