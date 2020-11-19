@@ -183,7 +183,7 @@ class ArticleTransformer extends AbstractProductTransformer
     {
         $productModel = $transformerArgs['productResourceModel'];
 
-        if (is_array($value) || is_object($value)) {
+        if ((is_array($value) && !empty($value)) || is_object($value)) {
 
             foreach ($value as $c => $v) {
                 $attributes = $this->_transformAttribute($c, $v, $transformerArgs, $attributes);
@@ -197,12 +197,13 @@ class ArticleTransformer extends AbstractProductTransformer
             $key = $attributeModel->getStoreLabel() ? $attributeModel->getStoreLabel() : $key;
         }
 
-        if (stripos($code,'price') !== false && strlen($value)>5 ) $value .= ' ' . $transformerArgs['currency'];
+        if(empty($value)) return $attributes;
 
+        if (stripos($code,'price') !== false && strlen($value)>5 ) $value .= ' ' . $transformerArgs['currency'];
 
         $attributes[] = [
             'key' => $key,
-            'value' => (string) $value
+            'value' => $value
         ];
 
         return $attributes;
