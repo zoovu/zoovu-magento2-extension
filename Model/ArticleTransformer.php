@@ -199,7 +199,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
         if(empty($value)) return $attributes;
 
-        if (stripos($code,'price') !== false && strlen($value)>5 ) $value .= ' ' . $transformerArgs['currency'];
+        if (!is_array($value) && stripos($code,'price') !== false && strlen($value)>5 ) $value .= ' ' . $transformerArgs['currency'];
 
         $attributes[] = [
             'key' => $key,
