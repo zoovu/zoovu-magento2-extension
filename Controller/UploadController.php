@@ -71,12 +71,9 @@ class UploadController {
      */
     public function startFullUpload()
     {
-        $shopId = $this->_sxConfig->get('shopId') ? $this->_sxConfig->get('shopId') : null;
+        $storeId = $this->_sxConfig->get('shopId') ? $this->_sxConfig->get('shopId') : null;
 
-        $productCollection = $this->_collectionFactory->create();
-        $productCollection->addAttributeToSelect('*');
-        $productCollection->addStoreFilter($shopId);  
-
+        $productCollection = $this->getUploadProductCollection($storeId); 
         $mageArticleQty = $productCollection->getSize();
 
         if ($mageArticleQty) {
@@ -84,6 +81,19 @@ class UploadController {
                 'expectedNumberOfProducts' => $mageArticleQty
             ]);
         }
+    }
+
+    public function getUploadProductCollection($storeId = false)
+    {
+        $productCollection = $this->_collectionFactory->create();
+        $productCollection->addAttributeToSelect('*');
+        $productCollection->addAttributeToFilter('status', ['in' => $this->_productStatus->getVisibleStatusIds()]);
+
+        if($storeId){
+            $productCollection->addStoreFilter($storeId);
+        }
+
+        return $productCollection;
     }
 
 
@@ -101,10 +111,7 @@ class UploadController {
             $collectBatchSize = $this->_sxConfig->get('collectBatchSize');
             $page = ((int) $this->_sxUploader->getNumberOfCollected() / $collectBatchSize) + 1;
 
-            $productCollection = $this->_collectionFactory->create();
-            $productCollection->addAttributeToSelect('*');
-            $productCollection->addAttributeToFilter('status', ['in' => $this->_productStatus->getVisibleStatusIds()]);
-            $productCollection->addStoreFilter($storeId);
+            $productCollection = $this->getUploadProductCollection($storeId);
             $productCollection->setPageSize($collectBatchSize);
             $productCollection->setCurPage($page);
 
