@@ -8,10 +8,10 @@ class FilterItemAdapter extends \Magento\Catalog\Model\Layer\Filter\Item
 {
 
     public function __construct(
+        SxHelper $sxHelper,
         \Magento\Framework\UrlInterface $url,
         \Magento\Theme\Block\Html\Pager $htmlPagerBlock,
-        array $data = [],
-        SxHelper $sxHelper
+        array $data = []
     ) {
         $this->_sxHelper = $sxHelper;
         parent::__construct($url, $htmlPagerBlock, $data);

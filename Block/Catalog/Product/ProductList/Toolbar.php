@@ -13,6 +13,8 @@ class Toolbar extends CatalogSearchToolbar
 {
 
     public function __construct(
+        \Magento\Framework\App\Request\Http $request,
+        SxHelper $sxHelper,
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Catalog\Model\Session $catalogSession,
         \Magento\Catalog\Model\Config $catalogConfig,
@@ -23,9 +25,7 @@ class Toolbar extends CatalogSearchToolbar
         array $data = [],
         ToolbarMemorizer $toolbarMemorizer = null,
         \Magento\Framework\App\Http\Context $httpContext = null,
-        \Magento\Framework\Data\Form\FormKey $formKey = null,
-        \Magento\Framework\App\Request\Http $request,
-        SxHelper $sxHelper
+        \Magento\Framework\Data\Form\FormKey $formKey = null
     ) {
         $this->_sxHelper = $sxHelper;
         $this->_isSxSearch = ($request->getFullActionName() == 'catalogsearch_result_index') && $this->_sxHelper->isSxSearchFrontendActive();

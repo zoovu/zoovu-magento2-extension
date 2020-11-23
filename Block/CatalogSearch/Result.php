@@ -23,13 +23,13 @@ class Result extends CatalogSearchResult
      * @param array $data
      */
     public function __construct(
+        SxHelper $helper,
+        CollectionFactory $productCollectionFactory,
         Context $context,
         LayerResolver $layerResolver,
         Data $catalogSearchData,
         QueryFactory $queryFactory,
-        array $data = [],
-        SxHelper $helper,
-        CollectionFactory $productCollectionFactory
+        array $data = []
     ) {
         $this->_sxHelper = $helper;
         $this->_productCollectionFactory = $productCollectionFactory;

@@ -15,13 +15,13 @@ class Search extends \Magento\LayeredNavigation\Block\Navigation
      * @param array $data
      */
     public function __construct(
+        SxHelper $sxHelper,
+        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory,
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Catalog\Model\Layer\Resolver $layerResolver,
         \Magento\Catalog\Model\Layer\FilterList $filterList,
         \Magento\Catalog\Model\Layer\AvailabilityFlagInterface $visibilityFlag,
-        array $data = [],
-        SxHelper $sxHelper,
-        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory
+        array $data = []
     ) {
         $this->_sxHelper = $sxHelper;
         $this->_filterRenderer = $filterRendererFactory;

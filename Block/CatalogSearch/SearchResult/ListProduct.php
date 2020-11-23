@@ -16,17 +16,17 @@ use Semknox\Productsearch\Controller\SearchController;
 
 class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 {
-        public function __construct(
+    public function __construct(
+        SxHelper $helper,
+        CollectionFactory $productCollectionFactory,
+        SearchHelper $searchHelper,
+        SearchController $searchcontroller,
         Context $context,
         PostHelper $postDataHelper,
         Resolver $layerResolver,
         CategoryRepositoryInterface $categoryRepository,
         Data $urlHelper,
-        array $data = [],
-        SxHelper $helper,
-        CollectionFactory $productCollectionFactory,
-        SearchHelper $searchHelper,
-        SearchController $searchcontroller
+        array $data = []
     ) {
         $this->_sxHelper = $helper;
         $this->_productCollectionFactory = $productCollectionFactory;

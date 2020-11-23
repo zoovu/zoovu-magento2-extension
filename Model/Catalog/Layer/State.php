@@ -9,9 +9,9 @@ class State extends \Magento\Catalog\Model\Layer\State
 {
 
     public function __construct(
-        array $data = [],
         SxHelper $sxHelper,
-        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory
+        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory,
+        array $data = []
     )
     {
         $this->_sxHelper = $sxHelper;  

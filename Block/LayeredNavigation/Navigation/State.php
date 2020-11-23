@@ -13,10 +13,10 @@ class State extends \Magento\LayeredNavigation\Block\Navigation\State
      * @param array $data
      */
     public function __construct(
+        SxHelper $sxHelper,
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Catalog\Model\Layer\Resolver $layerResolver,
-        array $data = [],
-        SxHelper $sxHelper
+        array $data = []
     ) {
         $this->_sxHelper = $sxHelper;
         parent::__construct($context, $layerResolver, $data);

@@ -20,10 +20,10 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        array $data = [],
         SxHelper $sxHelper,
-        FilterItemAdapterFactory $filterItemAdapterFactory
+        FilterItemAdapterFactory $filterItemAdapterFactory,
+        \Magento\Framework\View\Element\Template\Context $context,
+        array $data = []
     )
     {
         $this->_sxHelper = $sxHelper;
