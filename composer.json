@@ -2,7 +2,7 @@
     "name": "semknox/semknox-magento2",
     "description": "This is the Semknox ProductSearch module for Magento 2",
     "homepage": "https://www.semknox.com",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "type": "magento2-module",
     "keywords": [
         "semknox",
