@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="semknox-ss360-cdn" type="host">https://cdn.sitesearch360.com</value>
+                <value id="semknox-ss360-insights" type="host">https://insights.sitesearch360.com</value>
+                <value id="semknox-api" type="host">https://api-magento-v3.semknox.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>
