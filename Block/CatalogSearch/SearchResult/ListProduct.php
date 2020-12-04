@@ -67,8 +67,14 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         // get collection
         $collection = $this->_productCollectionFactory->create();
         $collection->addAttributeToSelect('*');
-        $collection->addFieldToFilter('entity_id', array('in' => $productIds));
-        $collection->getSelect()->order(new \Zend_Db_Expr('FIELD(e.entity_id, ' . implode(',', $productIds) . ')'));
+
+        if(count($productIds)){
+            $collection->addAttributeToSelect('*');
+            $collection->addFieldToFilter('entity_id', array('in' => $productIds));
+            $collection->getSelect()->order(new \Zend_Db_Expr('FIELD(e.entity_id, ' . implode(',', $productIds) . ')'));
+        } else {
+            $collection->addFieldToFilter('entity_id',0);
+        }
 
 
         // mark as semknox search
