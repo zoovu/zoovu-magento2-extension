@@ -15,8 +15,8 @@ class Pager extends \Magento\Theme\Block\Html\Pager
      */
     public function getLastPageNum()
     {
-        if(!isset($this->getCollection()->_isSxSearch) || !$this->getCollection()->_isSxSearch) return parent::getLastNum();
-        
+        if (!isset($this->getCollection()->_isSxSearch) || !$this->getCollection()->_isSxSearch) return parent::getLastPageNum();
+
         return $this->getCollection()->_sxLastPageNum;
     }
 
@@ -29,12 +29,13 @@ class Pager extends \Magento\Theme\Block\Html\Pager
     public function getCurrentPage()
     {
         if (is_object($this->_collection)) {
-            if (!isset($this->_collection->_isSxSearch) || !$this->_collection->_isSxSearch){
+            if (!isset($this->_collection->_isSxSearch) || !$this->_collection->_isSxSearch) {
                 return parent::getCurrentPage();
-            } else {
-                return $this->getCollection()->_sxCurrentPage;
             }
+
+            return $this->getCollection()->_sxCurrentPage;
         }
+
         return (int)$this->getRequest()->getParam($this->getPageVarName(), 1);
     }
 
@@ -50,8 +51,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
 
         $frameEnd = $this->getFrameEnd();
 
-        if ($this->getLastPageNum() - $frameEnd > 1
-        ) {
+        if ($this->getLastPageNum() - $frameEnd > 1) {
             return min($this->getLastPageNum() - 1, $frameEnd + $this->getJump());
         }
 
@@ -65,7 +65,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
      */
     public function getPreviousJumpPage()
     {
-        if (!isset($this->_collection->_isSxSearch)) return parent::getNextJumpPage();
+        if (!isset($this->_collection->_isSxSearch)) return parent::getPreviousJumpPage();
 
         $frameStart = $this->getFrameStart();
 
@@ -90,7 +90,7 @@ class Pager extends \Magento\Theme\Block\Html\Pager
 
             $collection = $this->getCollection();
             if (!isset($collection->_isSxSearch)) return parent::_initFrame();
-            
+
             if ($this->getLastPageNum() <= $this->getFrameLength()) {
                 $start = 1;
                 $end = $this->getLastPageNum();
