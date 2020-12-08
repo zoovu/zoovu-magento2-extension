@@ -22,6 +22,18 @@ class Pager extends \Magento\Theme\Block\Html\Pager
 
 
     /**
+     * Retrieve last page URL
+     *
+     * @return string
+     */
+    public function getLastPageUrl()
+    {
+        if (!isset($this->getCollection()->_isSxSearch) || !$this->getCollection()->_isSxSearch) return parent::getLastPageUrl();
+
+        return $this->getPageUrl($this->getLastPageNum());
+    }
+
+    /**
      * Return current page
      *
      * @return int
