@@ -3,9 +3,14 @@
     <policies>
         <policy id="script-src">
             <values>
-                <value id="semknox-ss360-cdn" type="host">https://cdn.sitesearch360.com</value>
-                <value id="semknox-ss360-insights" type="host">https://insights.sitesearch360.com</value>
-                <value id="semknox-api" type="host">https://api-magento-v3.semknox.com</value>
+                <value id="sitesearch360-script" type="host">*.sitesearch360.com</value>
+                <value id="semknox-api" type="host">*.semknox.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="sitesearch360-connect" type="host">*.sitesearch360.com</value>
+                <value id="semknox-connect" type="host">*.semknox.com</value>
             </values>
         </policy>
     </policies>
