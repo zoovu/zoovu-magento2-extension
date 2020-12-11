@@ -1,5 +1,4 @@
-
-<?php if(1 == 1): ?>
+<?php if (1 == 1) : ?>
     <script type="text/javascript">
         /* eslint-disable */
         (function() {
@@ -30,5 +29,10 @@
             e.src = 'https://cdn.sitesearch360.com/v13/sitesearch360-v13.min.js';
             document.getElementsByTagName('body')[0].appendChild(e);
         }());
+
+        var mageAutoSuggestion = document.getElementById('search_autocomplete');
+        if (mageAutoSuggestion !== null) {
+            mageAutoSuggestion.remove();
+        }
     </script>
 <?php endif; ?>
