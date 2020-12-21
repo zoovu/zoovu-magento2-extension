@@ -96,7 +96,7 @@ class SearchController
     {
         $availableOrders = [];
 
-        if (!$this->_getSearchResponse()) return $availableOrders;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return $availableOrders;
 
         foreach($this->_getSearchResponse()->getAvailableSortingOptions() as $option){
             $availableOrders[$option->getKey()] = $option->getName();
@@ -116,14 +116,14 @@ class SearchController
 
     public function getAvailableFilters()
     {
-        if (!$this->_getSearchResponse()) return false;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return false;
 
         return $this->_getSearchResponse()->getAvailableFilters();
     }
 
     public function getActiveFilters()
     {
-        if (!$this->_getSearchResponse()) return false;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return false;
 
         return $this->_getSearchResponse()->getActiveFilters();
     }
