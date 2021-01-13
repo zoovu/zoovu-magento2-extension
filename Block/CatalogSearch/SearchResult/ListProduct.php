@@ -83,6 +83,14 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         $this->_sxHelper->setSxResponseStore('filterList', $this->sxSearch->getAvailableFilters());
         $this->_sxHelper->setSxResponseStore('activeFilters', $this->sxSearch->getActiveFilters());
 
+        foreach($this->sxSearch->getAvailableFilters() as $filter){
+            $rangeFilter = [];
+            if($filter->getType() == 'RANGE'){
+                $rangeFilter[$filter->getName()] = $filter;
+            }
+            $this->_sxHelper->setSxResponseStore('rangeFilter', $rangeFilter);
+        }
+
         // get additional data...
         $collection->_sxAvailableOrders = $this->sxSearch->getAvailableOrders();
         $collection->_sxResultsCount = $this->sxSearch->getResultsCount();

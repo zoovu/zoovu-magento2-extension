@@ -32,6 +32,34 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
     }
 
 
+    /**
+     * @param FilterInterface $filter
+     * @return string
+     */
+    public function render(FilterInterface $filter)
+    {
+        // if range.. do nouislider
+        $rangeFilter = $this->_sxHelper->getSxResponseStore('rangeFilter', []);
+        if(isset($rangeFilter[$filter->getName()])){
+
+            $sxFilter = $rangeFilter[$filter->getName()];
+
+            return  "   <input class='js-style form-control form-control-sm' data-input-type='min' value='".$sxFilter->getMin()."' min='' type='number' name='num1'>
+                        <span>-</span>
+                        <input class='js-style form-control form-control-sm' data-input-type='max' value='".$sxFilter->getMax()."' max='' type='number' name='num2'>
+                        <span class='unit'></span>
+                        <button class='js-style-btn btn btn-default btn-sm' type='button'><i class='fa fa-angle-right'></i></button>";
+
+        } else {
+            $this->assign('filterItems', $filter->getItems());
+            $html = $this->_toHtml();
+            $this->assign('filterItems', []);
+            return $html;
+        }
+
+    }
+
+
 
     public function setSxFilter($sxFilter)
     {

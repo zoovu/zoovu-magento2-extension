@@ -35,4 +35,16 @@
             mageAutoSuggestion.remove();
         }
     </script>
+    <script>
+        require([
+            'nouislider'
+        ], function($) {
+            require(["nouislider"], function() {
+                // call function to init lightgallery on single product, installed with bower and used on single product page
+                $('#productImageGallery').lightGallery({
+                    selector: 'a'
+                });
+            });
+        });
+    </script>
 <?php endif; ?>
