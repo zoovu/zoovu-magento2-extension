@@ -71,6 +71,19 @@ class Pager extends \Magento\Theme\Block\Html\Pager
     }
 
     /**
+     * Retrieve next page URL
+     *
+     * @return string
+     */
+    public function getNextPageUrl()
+    {
+        if (!isset($this->_collection->_isSxSearch)) return parent::getNextPageUrl();
+
+        return $this->getPageUrl($this->getCurrentPage() + 1);
+    }
+
+
+    /**
      * Return page number of Previous jump
      *
      * @return int|null
@@ -86,6 +99,18 @@ class Pager extends \Magento\Theme\Block\Html\Pager
         }
 
         return null;
+    }
+
+    /**
+     * Retrieve previous page URL
+     *
+     * @return string
+     */
+    public function getPreviousPageUrl()
+    {
+        if (!isset($this->_collection->_isSxSearch)) return parent::getPreviousPageUrl();
+
+        return $this->getPageUrl($this->getCurrentPage() - 1);
     }
 
 
@@ -129,5 +154,16 @@ class Pager extends \Magento\Theme\Block\Html\Pager
         }
 
         return $this;
+    }
+
+
+    /**
+     * Check if current page is a first page in collection
+     *
+     * @return bool
+     */
+    public function isFirstPage()
+    {
+        return (int) $this->getRequest()->getParam($this->getPageVarName(), 1) == 1;
     }
 }
