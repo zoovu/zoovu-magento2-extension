@@ -57,8 +57,18 @@ class CronController
             }
         }
 
-        // [-2-] check queue actions
+        // [-2-] check queue actions update
         // ... later
+        if(!isset($flags['running']) || !$flags['running']){
+            // go on with single updates
+            foreach ($sxShopUloads as $key => $shopUploader) {
+                $shopUploader->sendProductUpdates();
+                continue; // (always just one job per cronrun!)
+            }
+
+            // stop cron runner
+            return $this;
+        }
 
 
         // [-3-] collecting for all shops

@@ -22,6 +22,8 @@ class UploadController {
    
     private $_sxHelper, $_sxCore, $_sxConfig, $_sxUploader, $_sxUpdater;
 
+    private $_sxTransformerArgs = [];
+
     
     public function __construct(
         SxHelper $helper,
@@ -56,6 +58,17 @@ class UploadController {
             $this->_sxCore = new SxCore($this->_sxConfig);
             $this->_sxUploader = $this->_sxCore->getInitialUploader();
             $this->_sxUpdater = $this->_sxCore->getProductUpdater();
+
+            $storeId = $this->_sxConfig->get('shopId');
+            $store = $this->_storeManager->getStore($storeId);
+            $this->_sxTransformerArgs = [
+                'categoryCollectionFactory' => $this->_categoryCollectionFactory,
+                'sxConfig' => $this->_sxConfig,
+                'mediaUrl' => $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
+                'currency' => $store->getCurrentCurrency()->getCode(),
+                'productResourceModel' => $this->_productModel
+            ];
+
         } catch (DuplicateInstantiationException $e) {
             $this->_sxHelper->log('Duplicate instantiation of uploader. Cronjob execution to close?', 'error');
             exit();
@@ -115,20 +128,10 @@ class UploadController {
             $productCollection->setPageSize($collectBatchSize);
             $productCollection->setCurPage($page);
 
-            $store = $this->_storeManager->getStore($storeId);
-
-            $transformerArgs = [
-                'categoryCollectionFactory' => $this->_categoryCollectionFactory,
-                'sxConfig' => $this->_sxConfig,
-                'mediaUrl' => $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
-                'currency' => $store->getCurrentCurrency()->getCode(),
-                'productResourceModel' => $this->_productModel
-            ];
-
             $productCounter = 0;
             foreach ($productCollection as $product) {
                 $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
-                $this->_sxUploader->addProduct($mageProduct, $transformerArgs);
+                $this->_sxUploader->addProduct($mageProduct, $this->_sxTransformerArgs);
                 $productCounter++;
             }
 
@@ -253,5 +256,34 @@ class UploadController {
         return $uploadOverview->getRunningUploads();
     }
 
+
+    /**
+     * add single product update
+     */
+    public function addProductUpdates($productCollection = [])
+    {
+        $storeId = $this->_sxConfig->get('shopId');
+        $productCounterTotal = 0;
+
+        foreach ($productCollection as $product) {
+            $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
+            $this->_sxUpdater->addProduct($mageProduct, $this->_sxTransformerArgs);
+            $productCounterTotal++;
+        }
+
+        $this->_sxHelper->log("$productCounterTotal products added to update-queue", 'success');
+        
+    }
+
+    /**
+     * send single update product queue
+     */
+    public function sendProductUpdates()
+    {
+        $this->_sxUpdater->sendUploadBatch();
+
+        $this->_sxHelper->log("product updates from queue sent", 'success');
+
+    }
 
 }
