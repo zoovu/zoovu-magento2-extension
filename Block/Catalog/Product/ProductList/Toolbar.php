@@ -116,7 +116,7 @@ class Toolbar extends CatalogSearchToolbar
     {
         if (!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getLastNum();
 
-        $calcLastNum = $this->getFirstNum() + $this->getLimit();
+        $calcLastNum = $this->getFirstNum() + $this->getLimit() -1;
         return ($calcLastNum < $this->getTotalNum()) ? $calcLastNum : $this->getTotalNum();
     }
 
