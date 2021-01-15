@@ -166,4 +166,14 @@ class Pager extends \Magento\Theme\Block\Html\Pager
     {
         return (int) $this->getRequest()->getParam($this->getPageVarName(), 1) == 1;
     }
+
+    /**
+     * Check if current page is a last page in collection
+     *
+     * @return bool
+     */
+    public function isLastPage()
+    {
+        return (int) $this->getRequest()->getParam($this->getPageVarName(), 1) == $this->getLastPageNum();
+    }
 }
