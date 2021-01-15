@@ -103,5 +103,22 @@ class Toolbar extends CatalogSearchToolbar
         return (int) $this->_collection->_sxResultsCount;
     }
 
+    public function getFirstNum()
+    {
+        if (!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getFirstNum();
+
+        $currenPageNum = $this->getCurrentPage() - 1;
+
+        return ($currenPageNum * $this->getLimit()) + 1;
+    }
+
+    public function getLastNum()
+    {
+        if (!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getLastNum();
+
+        $calcLastNum = $this->getFirstNum() + $this->getLimit();
+        return ($calcLastNum < $this->getTotalNum()) ? $calcLastNum : $this->getTotalNum();
+    }
+
 
 }
