@@ -1,7 +1,7 @@
 var config = {
     "map": {
         "*": {
-            nouislider: "lib/nouislider/nouislider.min",
+            noUiSlider: "Semknox_Productsearch/lib/nouislider/nouislider.min",
         }
     }
 };

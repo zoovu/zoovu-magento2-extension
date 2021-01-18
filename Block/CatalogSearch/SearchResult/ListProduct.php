@@ -80,16 +80,38 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         // mark as semknox search
         $collection->_isSxSearch = true;
 
+        // availabe filters
         $this->_sxHelper->setSxResponseStore('filterList', $this->sxSearch->getAvailableFilters());
-        $this->_sxHelper->setSxResponseStore('activeFilters', $this->sxSearch->getActiveFilters());
 
-        foreach($this->sxSearch->getAvailableFilters() as $filter){
+        // availabe range filters
+        $rangeFilter = [];
+        foreach ($this->sxSearch->getAvailableFilters() as $filter) {
             $rangeFilter = [];
-            if($filter->getType() == 'RANGE'){
+            if ($filter->getType() == 'RANGE') {
                 $rangeFilter[$filter->getName()] = $filter;
             }
-            $this->_sxHelper->setSxResponseStore('rangeFilter', $rangeFilter);
         }
+        $this->_sxHelper->setSxResponseStore('rangeFilter', $rangeFilter);
+
+        // active filters
+        $activeFilters = [];
+        foreach($this->sxSearch->getActiveFilters() as $filter){
+
+            if(isset($filter['max'])){
+                //range
+                
+                $unit = isset($rangeFilter[$filter['name']]) ? $rangeFilter[$filter['name']]->getUnit() : '';
+                $filter['values'][] = [
+                    'value' => $filter['min'].'___'. $filter['max'],
+                    'key' => $filter['min'] . '___' . $filter['max'],
+                    'name' => $filter['min'] . " $unit - " . $filter['max'] . " $unit"            
+                ];
+            }
+
+            $activeFilters[] = $filter;
+        }
+        $this->_sxHelper->setSxResponseStore('activeFilters', $activeFilters);
+
 
         // get additional data...
         $collection->_sxAvailableOrders = $this->sxSearch->getAvailableOrders();

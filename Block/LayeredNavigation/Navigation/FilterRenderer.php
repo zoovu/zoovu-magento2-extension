@@ -44,11 +44,22 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
 
             $sxFilter = $rangeFilter[$filter->getName()];
 
-            return  "   <input class='js-style form-control form-control-sm' data-input-type='min' value='".$sxFilter->getMin()."' min='' type='number' name='num1'>
-                        <span>-</span>
-                        <input class='js-style form-control form-control-sm' data-input-type='max' value='".$sxFilter->getMax()."' max='' type='number' name='num2'>
-                        <span class='unit'></span>
-                        <button class='js-style-btn btn btn-default btn-sm' type='button'><i class='fa fa-angle-right'></i></button>";
+            return "<div class='slider-wrapper'>
+                        <div class='slider sxRangeFilter' id='sx_". $filter->getName(). "' 
+                            data-start='". $sxFilter->getActiveMin(). "'
+                            data-end='" . $sxFilter->getActiveMax() . "'
+                            data-range-min='" . $sxFilter->getMin() . "'
+                            data-range-max='" . $sxFilter->getMax() . "'
+                            data-url='". $filter->getRemoveUrl(). "'
+                        ></div>
+                        <div class='slider-helper'>
+                            <input class='start' value='' min='' type='number' name='num1'>
+                            <span>-</span>
+                            <input class='end' value='' max='' type='number' name='num2'>
+                            <span class='unit'>" . $sxFilter->getUnit() . "</span>
+                            <button class='' type='button'><i class='fa fa-angle-right'></i></button>
+                        </div>
+                    </div>";
 
         } else {
             $this->assign('filterItems', $filter->getItems());

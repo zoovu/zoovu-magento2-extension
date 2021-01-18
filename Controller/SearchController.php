@@ -54,7 +54,10 @@ class SearchController
         
         foreach($this->_sxHelper->getSetFilters() as $filter => $value)
         {
-            $sxSearch->addFilter($filter,[$value]);
+            $value = explode('___', $value, 2); // if its range, 2 values!
+
+            // but value is always an array!
+            $sxSearch->addFilter($filter, $value);
         }
 
         if($order = $this->_sxHelper->getSetOrder()){
@@ -97,7 +100,7 @@ class SearchController
         $availableOrders = [];
 
         if (!$this->_getSearchResponse() || !$this->getResultsCount()) return $availableOrders;
-
+        
         foreach($this->_getSearchResponse()->getAvailableSortingOptions() as $option){
             $availableOrders[$option->getKey()] = $option->getName();
         };
@@ -116,14 +119,14 @@ class SearchController
 
     public function getAvailableFilters()
     {
-        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return false;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return [];
 
         return $this->_getSearchResponse()->getAvailableFilters();
     }
 
     public function getActiveFilters()
     {
-        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return false;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return [];
 
         return $this->_getSearchResponse()->getActiveFilters();
     }
