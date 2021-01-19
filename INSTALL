@@ -3,7 +3,7 @@ Installation via composer
 *************************
 
 Step 1:
-unpack Extension archive to magento 2 root folder
+unpack Extension archive to a folder named "extensions" in magento 2 root folder
 
 Step 2:
 log in to your server via a command line and navigate to your magento 2 root folder
