@@ -32,3 +32,14 @@ bin/magento setup:di:compile
 bin/magento cache:clean
 
 
+
+Update via composer
+*******************
+
+Step 1:
+composer update semknox/semknox-magento2
+
+Step 2:
+bin/magento setup:upgrade --keep-generated
+bin/magento setup:static-content:deploy
+bin/magento cache:clean
