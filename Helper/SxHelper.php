@@ -48,6 +48,11 @@ class SxHelper extends AbstractHelper
 
         $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
+        // Quick fix
+        if(!is_dir($this->_sxFolder)){
+            mkdir($this->_sxFolder);
+        }
+
     }
 
 
