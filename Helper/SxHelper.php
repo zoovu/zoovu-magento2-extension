@@ -48,6 +48,11 @@ class SxHelper extends AbstractHelper
 
         $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
+        // Quick fix
+        if(!is_dir($this->_sxFolder)){
+            mkdir($this->_sxFolder);
+        }
+
     }
 
 
@@ -207,7 +212,7 @@ class SxHelper extends AbstractHelper
         
         foreach($this->_request->getParams() as $param => $value)
         {
-            if(stripos($param,'sx_') === 0){
+            if(stripos($param,'sx_') === 0 && $value){
                 $param = urldecode($param);
                 $filters[substr($param,3)] = $value;
             }

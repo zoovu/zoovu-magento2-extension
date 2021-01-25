@@ -32,6 +32,45 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
     }
 
 
+    /**
+     * @param FilterInterface $filter
+     * @return string
+     */
+    public function render(FilterInterface $filter)
+    {
+        // if range.. do nouislider
+        $rangeFilter = $this->_sxHelper->getSxResponseStore('rangeFilter', []);
+        if(isset($rangeFilter[$filter->getName()])){
+
+            $sxFilter = $rangeFilter[$filter->getName()];
+
+            return "<div class='slider-wrapper'>
+                        <div class='slider sxRangeFilter' id='sx_". $filter->getName(). "' 
+                            data-start='". $sxFilter->getActiveMin(). "'
+                            data-end='" . $sxFilter->getActiveMax() . "'
+                            data-range-min='" . $sxFilter->getMin() . "'
+                            data-range-max='" . $sxFilter->getMax() . "'
+                            data-url='". $filter->getRemoveUrl(). "'
+                        ></div>
+                        <div class='slider-helper'>
+                            <input class='start' value='' min='' type='number' name='num1'>
+                            <span>-</span>
+                            <input class='end' value='' max='' type='number' name='num2'>
+                            <span class='unit'>" . $sxFilter->getUnit() . "</span>
+                            <button class='' type='button'><i class='fa fa-angle-right'></i></button>
+                        </div>
+                    </div>";
+
+        } else {
+            $this->assign('filterItems', $filter->getItems());
+            $html = $this->_toHtml();
+            $this->assign('filterItems', []);
+            return $html;
+        }
+
+    }
+
+
 
     public function setSxFilter($sxFilter)
     {

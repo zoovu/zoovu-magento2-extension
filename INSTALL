@@ -3,7 +3,7 @@ Installation via composer
 *************************
 
 Step 1:
-unpack Extension archive to magento 2 root folder
+unpack Extension archive to a folder named "extensions" in magento 2 root folder
 
 Step 2:
 log in to your server via a command line and navigate to your magento 2 root folder
@@ -32,3 +32,14 @@ bin/magento setup:di:compile
 bin/magento cache:clean
 
 
+
+Update via composer
+*******************
+
+Step 1:
+composer update semknox/semknox-magento2
+
+Step 2:
+bin/magento setup:upgrade --keep-generated
+bin/magento setup:static-content:deploy
+bin/magento cache:clean

@@ -35,4 +35,49 @@
             mageAutoSuggestion.remove();
         }
     </script>
+    <script>
+        require(['noUiSlider'], function(noUiSlider) {
+
+            var sliders = document.getElementsByClassName('sxRangeFilter');
+
+            for (var i = 0; i < sliders.length; i++) {
+
+                sliders[i].parentNode.getElementsByClassName('start')[0].value = sliders[i].getAttribute('data-start');
+                sliders[i].parentNode.getElementsByClassName('end')[0].value = sliders[i].getAttribute('data-end');
+
+                noUiSlider.create(sliders[i], {
+                    start: [sliders[i].getAttribute('data-start'), sliders[i].getAttribute('data-end')],
+                    connect: true,
+                    range: {
+                        'min': parseFloat(sliders[i].getAttribute('data-range-min')),
+                        'max': parseFloat(sliders[i].getAttribute('data-range-max'))
+                    }
+                });
+
+                sliders[i].noUiSlider.on('update', function(values, handle) {
+                    //console.log(this.target);
+                    this.target.parentNode.getElementsByClassName('start')[0].value = values[0];
+                    this.target.parentNode.getElementsByClassName('end')[0].value = values[1];
+                });
+
+                sliders[i].noUiSlider.on('end', function(values, handle) {
+                    url = this.target.getAttribute('data-url') + values[0] + '___' + values[1];
+                    window.location.href = url;
+                });
+
+                sliders[i].parentNode.getElementsByTagName('button')[0].addEventListener('click', function(event) {
+
+                    sliderWrapper = event.target.parentNode.parentNode;
+
+                    min = sliderWrapper.getElementsByClassName('start')[0].value;
+                    max = sliderWrapper.getElementsByClassName('end')[0].value;
+
+                    url = sliderWrapper.getElementsByClassName('sxRangeFilter')[0].getAttribute('data-url') + min + '___' + max;
+                    window.location.href = url;
+
+                }, false);
+
+            };
+        });
+    </script>
 <?php endif; ?>
