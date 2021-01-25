@@ -18,3 +18,4 @@ php bin/magento cache:disable
 
 
 
+ php -d memory_limit=2G bin/magento setup:di:compile

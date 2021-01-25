@@ -88,7 +88,31 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         $collection->_sxResultsCount = $this->sxSearch->getResultsCount();
         $collection->_sxLastPageNum = $this->sxSearch->getLastPageNum();
         $collection->_sxCurrentPage = $this->sxSearch->getCurrentPage();
+
+
+
+        // add fake-product (content search)
+        var_dump($this->sxSearch->getContentResults());
+
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $product = $objectManager->create('Magento\Catalog\Model\Product');
+        $product->setName('Toller Blogartikel');
+        $product->setRequestPath('path/to/blog/request-path.html');
+        $product->setShortDescription('Hallo wie geht es dir?');
+        $product->setData('salable', false);
+        $product->setId('sxcontent');
+        $collection->addItem($product);
+
+
+        $product = $objectManager->create('Magento\Catalog\Model\Product');
+        $product->setName('Toller Blogartikel 2');
+        //$product->setProductUrl('/test');
+        $collection->addItem($product);
+
+        var_dump(count($collection));
         
+
+
         return $collection;
 
     }

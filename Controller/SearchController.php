@@ -149,4 +149,12 @@ class SearchController
         return $this->_getSearchResponse()->getTotalProductResults();
     }
 
+
+    public function getContentResults()
+    {
+        var_dump($this->_getSearchResponse()->getResults('other'));
+        
+        return $this->_getSearchResponse()->getResults('content');
+    }
+
 }
