@@ -119,32 +119,77 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         $collection->_sxLastPageNum = $this->sxSearch->getLastPageNum();
         $collection->_sxCurrentPage = $this->sxSearch->getCurrentPage();
 
+        $collection->_sxContentResults = $this->sxSearch->getContentResults();
 
+
+        $contentItemsPerPage = 2;
+        $firstContentIdx = $collection->_sxCurrentPage == 1 ? 0 : ($collection->_sxCurrentPage - 1)* $contentItemsPerPage;
 
         // add fake-product (content search)
-        var_dump($this->sxSearch->getContentResults());
-
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $product = $objectManager->create('Magento\Catalog\Model\Product');
-        $product->setName('Toller Blogartikel');
-        $product->setRequestPath('path/to/blog/request-path.html');
-        $product->setShortDescription('Hallo wie geht es dir?');
-        $product->setData('salable', false);
-        $product->setId('sxcontent');
-        $collection->addItem($product);
+        foreach($collection->_sxContentResults as $idx => $contentResult)
+        {
+            if($idx <= $firstContentIdx || $idx > $firstContentIdx + $contentItemsPerPage){
+                unset($collection->_sxContentResults[$idx]);
+                continue;
+            } 
 
-
-        $product = $objectManager->create('Magento\Catalog\Model\Product');
-        $product->setName('Toller Blogartikel 2');
-        //$product->setProductUrl('/test');
-        $collection->addItem($product);
-
-        var_dump(count($collection));
-        
+            $product = $objectManager->create('Magento\Catalog\Model\Product');
+            $product->setId('sxcontent-' . $idx);
+            $product->setName($idx.'_'.$contentResult->getName());
+            $product->setRequestPath($contentResult->getLink());
+            $product->setShortDescription('in '. $contentResult->getSectionName());
+            $product->setData('salable', false);
+            $collection->addItem($product);
+        }
 
 
         return $collection;
 
+    }
+
+
+    /**
+     * Retrieve additional blocks html
+     *
+     * @return string
+     */
+    public function getAdditionalHtml()
+    {
+        $collection = $this->_getProductCollection();
+
+        $productBoxesCount = count($collection) - count($collection->_sxContentResults); 
+        $contentBoxEvery = $productBoxesCount / count($collection->_sxContentResults);
+
+        $html = '<script>document.addEventListener("DOMContentLoaded", function() {';
+
+        foreach ($collection->_sxContentResults as $idx => $contentResult) {
+            $html .= "var sxContent". $idx. " = document.getElementById('product-item-info_sxcontent-" . $idx . "');";
+
+            // set Url
+            $html .= "sxContent" . $idx . ".getElementsByTagName('a')[0].href = '".$contentResult->getLink()."';";
+
+            // remove product actions
+            $html .= "sxContent" . $idx . ".getElementsByClassName('product-item-actions')[0].remove();";
+            
+            // remove price container
+            $html .= "document.getElementById('product-price-sxcontent-" . $idx . "').remove();";
+            
+            // set image
+            $html .= "sxContent" . $idx . ".getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
+
+        }
+        
+        // move boxes
+        $html .= "console.log('" . $contentBoxEvery . "');";
+
+        
+
+
+        $html .= '});</script>';
+
+
+        return $html.parent::getChildHtml('additional');
     }
 
 }
