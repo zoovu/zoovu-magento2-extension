@@ -169,34 +169,33 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 
         $html .= "var magePriceBoxes = document.getElementsByClassName('price-box');";
 
+        $html .= "var sxContent = []";
+
         foreach ($collection->_sxContentResults as $idx => $contentResult) {
             
-            $html .= "var sxContent" . $idx . ";";
             // to increase compatibility to older mage2 versions
             $html .= "
                 for(var i = 0; i < magePriceBoxes.length; i++){
                     if(magePriceBoxes[i].getAttribute('data-price-box') == 'product-id-sxcontent-". $idx. "'){
-                        sxContent" . $idx . " = magePriceBoxes[i].parentNode.parentNode;
+                        sxContent[" . $idx . "] = magePriceBoxes[i].parentNode.parentNode;
                         break;
-                    }                
-                        console.log(magePriceBoxes[i].getAttribute('data-price-box'));
-
+                    }              
                 };";
 
-            $html .= "if(sxContent" . $idx . "){";
+            $html .= "if(sxContent[" . $idx . "]){";
 
                 // set Url
-                $html .= "sxContent" . $idx . ".getElementsByTagName('a')[0].href = '".$contentResult->getLink()."';";
+                $html .= "sxContent[" . $idx . "].getElementsByTagName('a')[0].href = '".$contentResult->getLink()."';";
 
                 // remove product actions
-                $html .= "sxContent" . $idx . ".getElementsByClassName('product-item-actions')[0].remove();";
+                $html .= "sxContent[" . $idx . "].getElementsByClassName('product-item-actions')[0].remove();";
                 
                 // remove price container
                 $html .= "document.getElementById('product-price-sxcontent-" . $idx . "').remove();";
                 
                 // set image
-                $html .= "sxContent" . $idx . ".getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
-                
+                $html .= "sxContent[" . $idx . "].getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
+
             $html .= "}";
 
         }
@@ -208,8 +207,8 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                 var contentResultIdx = 0;
                 for (var i = $contentBoxesCount; i < mageProductList.length; i++) {
 
-                    if(contentBoxCounter == ".$contentBoxEvery. " && document.getElementById('product-item-info_sxcontent-' + contentResultIdx)){
-                        contentBox = document.getElementById('product-item-info_sxcontent-' + contentResultIdx);
+                    if(contentBoxCounter == ".$contentBoxEvery. " && sxContent[contentResultIdx]){
+                        contentBox = sxContent[contentResultIdx];
                         mageProductList[i].parentNode.insertBefore(contentBox.parentNode, mageProductList[i]);
                         contentBoxCounter = 0;
                         i--;
