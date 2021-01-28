@@ -1,19 +1,19 @@
 .slider-wrapper {
-	margin-top: 10px;
+    margin-top: 10px;
     color: #494949;
 }
 .sxRangeFilter.noUi-target {
-	background: #dedede;
-	height: 14px;
-	border: 1px solid #ccc;
-	box-shadow: none;
+    background: #dedede;
+    height: 14px;
+    border: 1px solid #ccc;
+    box-shadow: none;
 }
 .sxRangeFilter.noUi-target .noUi-base {
     margin: 0 16px;
     width: calc(100% - 32px);
 }
 .sxRangeFilter.noUi-target .noUi-connect {
-	background: none;
+    background: none;
 }
 .sxRangeFilter.noUi-target .noUi-handle {
     border: 1px solid #ccc;
@@ -33,22 +33,23 @@
 }
 .slider-helper input {
     color: #494949;
-
+    width: 28%;
+    padding: 0 4px;
 }
 .slider-helper span {
-	    flex: 1;
+        flex: 1;
     margin: 0 5px;
 }
 .slider-helper button {
-	padding: 6px 11px;
+    padding: 6px 11px;
     height: 32px;
 }
 .fa-angle-right { 
-	font-style: normal;
-	color: #7d7d7d;
-	font-size: 12px;
+    font-style: normal;
+    color: #7d7d7d;
+    font-size: 12px;
 }
 .fa-angle-right:before {
-	    font-family: 'luma-icons';
-	    content: '\e608';
+        font-family: 'luma-icons';
+        content: '\e608';
 }
