@@ -167,20 +167,37 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 
         $html = '<script>document.addEventListener("DOMContentLoaded", function() {';
 
+        $html .= "var magePriceBoxes = document.getElementsByClassName('price-box');";
+
         foreach ($collection->_sxContentResults as $idx => $contentResult) {
-            $html .= "var sxContent". $idx. " = document.getElementById('product-item-info_sxcontent-" . $idx . "');";
-
-            // set Url
-            $html .= "sxContent" . $idx . ".getElementsByTagName('a')[0].href = '".$contentResult->getLink()."';";
-
-            // remove product actions
-            $html .= "sxContent" . $idx . ".getElementsByClassName('product-item-actions')[0].remove();";
             
-            // remove price container
-            $html .= "document.getElementById('product-price-sxcontent-" . $idx . "').remove();";
-            
-            // set image
-            $html .= "sxContent" . $idx . ".getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
+            $html .= "var sxContent" . $idx . ";";
+            // to increase compatibility to older mage2 versions
+            $html .= "
+                for(var i = 0; i < magePriceBoxes.length; i++){
+                    if(magePriceBoxes[i].getAttribute('data-price-box') == 'product-id-sxcontent-". $idx. "'){
+                        sxContent" . $idx . " = magePriceBoxes[i].parentNode.parentNode;
+                        break;
+                    }                
+                        console.log(magePriceBoxes[i].getAttribute('data-price-box'));
+
+                };";
+
+            $html .= "if(sxContent" . $idx . "){";
+
+                // set Url
+                $html .= "sxContent" . $idx . ".getElementsByTagName('a')[0].href = '".$contentResult->getLink()."';";
+
+                // remove product actions
+                $html .= "sxContent" . $idx . ".getElementsByClassName('product-item-actions')[0].remove();";
+                
+                // remove price container
+                $html .= "document.getElementById('product-price-sxcontent-" . $idx . "').remove();";
+                
+                // set image
+                $html .= "sxContent" . $idx . ".getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
+                
+            $html .= "}";
 
         }
 
