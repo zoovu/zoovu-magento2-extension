@@ -152,7 +152,16 @@ class SearchController
 
     public function getContentResults()
     {
-        return $this->_getSearchResponse()->getResults('custom');
+        $contentResults = $this->_getSearchResponse()->getResults('custom');
+        if(!$contentResults) return $contentResults;
+
+        // sort by relevance
+        usort($contentResults, function ($first, $second) {
+            return $first->getRelevance() < $second->getRelevance();
+        });
+
+        return $contentResults;
     }
+
 
 }

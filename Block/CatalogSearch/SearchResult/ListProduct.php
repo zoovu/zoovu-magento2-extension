@@ -121,22 +121,23 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 
         $collection->_sxContentResults = $this->sxSearch->getContentResults();
 
+        $contentItemsPerPage = $this->_sxHelper->get('sxContentSearchResultsNumber',null, 0);
+        $firstContentIdx = $collection->_sxCurrentPage == 1 ? 0 : ($collection->_sxCurrentPage - 1) * $contentItemsPerPage;
 
-        $contentItemsPerPage = 2;
-        $firstContentIdx = $collection->_sxCurrentPage == 1 ? 0 : ($collection->_sxCurrentPage - 1)* $contentItemsPerPage;
+        foreach ($collection->_sxContentResults as $idx => $contentResult) {
+            if ($idx < $firstContentIdx || $idx >= $firstContentIdx + $contentItemsPerPage) {
+                unset($collection->_sxContentResults[$idx]);
+            } 
+        }
+        $collection->_sxContentResults = array_values($collection->_sxContentResults);
 
         // add fake-product (content search)
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         foreach($collection->_sxContentResults as $idx => $contentResult)
         {
-            if($idx <= $firstContentIdx || $idx > $firstContentIdx + $contentItemsPerPage){
-                unset($collection->_sxContentResults[$idx]);
-                continue;
-            } 
-
             $product = $objectManager->create('Magento\Catalog\Model\Product');
             $product->setId('sxcontent-' . $idx);
-            $product->setName($idx.'_'.$contentResult->getName());
+            $product->setName($contentResult->getName());
             $product->setRequestPath($contentResult->getLink());
             $product->setShortDescription('in '. $contentResult->getSectionName());
             $product->setData('salable', false);
@@ -158,8 +159,11 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
     {
         $collection = $this->_getProductCollection();
 
-        $productBoxesCount = count($collection) - count($collection->_sxContentResults); 
-        $contentBoxEvery = $productBoxesCount / count($collection->_sxContentResults);
+        $contentBoxesCount = count($collection->_sxContentResults);
+        if(!$contentBoxesCount) return parent::getAdditionalHtml();
+
+        $productBoxesCount = count($collection) - $contentBoxesCount; 
+        $contentBoxEvery = ceil(($productBoxesCount / $contentBoxesCount) -1);
 
         $html = '<script>document.addEventListener("DOMContentLoaded", function() {';
 
@@ -179,13 +183,26 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
             $html .= "sxContent" . $idx . ".getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
 
         }
-        
+
         // move boxes
-        $html .= "console.log('" . $contentBoxEvery . "');";
+        $html .= "var mageProductList = document.getElementsByClassName('product-item');";
+        $html .= "
+                var contentBoxCounter = 0;
+                var contentResultIdx = 0;
+                for (var i = $contentBoxesCount; i < mageProductList.length; i++) {
 
+                    if(contentBoxCounter == ".$contentBoxEvery. " && document.getElementById('product-item-info_sxcontent-' + contentResultIdx)){
+                        contentBox = document.getElementById('product-item-info_sxcontent-' + contentResultIdx);
+                        mageProductList[i].parentNode.insertBefore(contentBox.parentNode, mageProductList[i]);
+                        contentBoxCounter = 0;
+                        i--;
+                        contentResultIdx++;
+                    } else {
+                        contentBoxCounter++;
+                    }
+
+                }";
         
-
-
         $html .= '});</script>';
 
 
