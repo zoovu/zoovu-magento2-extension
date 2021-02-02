@@ -35,7 +35,7 @@
             mageAutoSuggestion.remove();
         }
     </script>
-    <script>
+    <script type="text/javascript">
         require(['noUiSlider'], function(noUiSlider) {
 
             var sliders = document.getElementsByClassName('sxRangeFilter');
@@ -79,5 +79,8 @@
 
             };
         });
+    </script>
+    <script type="text/javascript">
+        console.info('SEMKNOX ProductSearch v<?= $block->getExtensionVersion("Semknox_Productsearch") ?>');
     </script>
 <?php endif; ?>
