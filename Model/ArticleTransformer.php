@@ -107,12 +107,12 @@ class ArticleTransformer extends AbstractProductTransformer
     /**
      * get images of product
      */
-    protected function _getImages($transformerArgs = array())
+    protected function _getImages($transformerArgs = [])
     {
         $mageImages = $this->_product->getMediaGalleryImages();
-        $images = array();
+        $images = [];
 
-        $imageTypes = array();
+        $imageTypes = [];
         $imageTypeKeys = [
             'small_image' => 'SMALL',
             'thumbnail' => 'THUMB',
@@ -140,6 +140,23 @@ class ArticleTransformer extends AbstractProductTransformer
                 'url' => $image->getUrl(), 
                 'type' => 'LARGE',
             ];
+        }
+
+        // placeholder if no images set
+        if(!count($images)){
+            $imageHelper = $transformerArgs['imageHelper'];
+            $assetsRepos = $transformerArgs['assetsRepos'];
+            $appEmulation = $transformerArgs['appEmulation'];
+
+            $storeId = $transformerArgs['sxConfig']->get('shopId');
+            $appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
+
+            $imagePlaceholder = $imageHelper->create();
+            $images[] = [
+                'url' => $assetsRepos->getUrl($imagePlaceholder->getPlaceholder('image')),
+                'type' => 'LARGE',
+            ];
+            $appEmulation->stopEnvironmentEmulation();
         }
 
         return $images;

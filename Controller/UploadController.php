@@ -16,6 +16,9 @@ use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Catalog\Helper\ImageFactory as ImageHelper;
+use Magento\Framework\View\Asset\Repository as AssetRepos;
+use Magento\Store\Model\App\Emulation as AppEmulation;
 
 class UploadController {
 
@@ -26,6 +29,9 @@ class UploadController {
 
     
     public function __construct(
+        AppEmulation $appEmulation,
+        ImageHelper $imageHelper,
+        AssetRepos $assetRepos,
         SxHelper $helper,
         StoreManagerInterface $storeManagerInterface,
         CollectionFactory $collectionFactory,
@@ -34,6 +40,9 @@ class UploadController {
         Product $productModel,
         Status $productStatus
     ){
+        $this->appEmulation = $appEmulation;
+        $this->mageImageHelper = $imageHelper;
+        $this->mageAssetsRepos = $assetRepos;
         $this->_sxHelper = $helper;
         $this->_storeManager = $storeManagerInterface;
         $this->_collectionFactory = $collectionFactory;
@@ -66,7 +75,10 @@ class UploadController {
                 'sxConfig' => $this->_sxConfig,
                 'mediaUrl' => $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
                 'currency' => $store->getCurrentCurrency()->getCode(),
-                'productResourceModel' => $this->_productModel
+                'productResourceModel' => $this->_productModel,
+                'imageHelper' => $this->mageImageHelper,
+                'assetsRepos' => $this->mageAssetsRepos,
+                'appEmulation' => $this->appEmulation
             ];
 
         } catch (DuplicateInstantiationException $e) {

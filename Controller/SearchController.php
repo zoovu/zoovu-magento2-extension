@@ -116,14 +116,14 @@ class SearchController
 
     public function getAvailableFilters()
     {
-        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return false;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return [];
 
-        return $this->_getSearchResponse()->getAvailableFilters();
+        return $this->_getSearchResponse()->getAvailableFilters() ;
     }
 
     public function getActiveFilters()
     {
-        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return false;
+        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return [];
 
         return $this->_getSearchResponse()->getActiveFilters();
     }
