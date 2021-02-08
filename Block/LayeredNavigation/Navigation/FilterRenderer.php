@@ -41,7 +41,6 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
         // if range.. do nouislider
         $rangeFilter = $this->_sxHelper->getSxResponseStore('rangeFilter', []);
         if(isset($rangeFilter[$filter->getName()])){
-
             $sxFilter = $rangeFilter[$filter->getName()];
 
             return "<div class='slider-wrapper'>

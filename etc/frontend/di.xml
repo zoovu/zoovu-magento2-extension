@@ -14,4 +14,6 @@
     <preference for="Magento\Catalog\Model\Layer\State"  type="Semknox\Productsearch\Model\Catalog\Layer\State" />
     <preference for="Magento\LayeredNavigation\Block\Navigation\State"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\State" />
 
+    <preference for="Amasty\Shopby\Model\Request"  type="Semknox\Productsearch\Model\Amasty\Shopby\Request" />
+
 </config>

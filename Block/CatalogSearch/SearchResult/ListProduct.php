@@ -88,6 +88,13 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         foreach ($this->sxSearch->getAvailableFilters() as $filter) {
             $rangeFilter = [];
             if ($filter->getType() == 'RANGE') {
+
+                $activeMin = $filter->getActiveMin();
+                if(is_array($activeMin) && isset($activeMin['value'])){
+                    $activeOptions = explode('___', $filter->getActiveMin()['value'], 2);
+                    $filter->setActiveOptions($activeOptions);
+                }
+            
                 $rangeFilter[$filter->getName()] = $filter;
             }
         }
@@ -106,7 +113,7 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                     'key' => $filter['min'] . '___' . $filter['max'],
                     'name' => $filter['min'] . " $unit - " . $filter['max'] . " $unit"            
                 ];
-            }
+            } 
 
             $activeFilters[] = $filter;
         }
