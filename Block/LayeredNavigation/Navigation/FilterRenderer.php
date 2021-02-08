@@ -208,6 +208,17 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      */
     public function getLabel()
     {
+        if(is_array($this->_sxFilter)) {
+
+            $rangeFilters = $this->_sxHelper->getSxResponseStore('rangeFilter', []);
+            if (isset($rangeFilters[$this->_sxFilter['name']])) {
+                $rangeFilter = $rangeFilters[$this->_sxFilter['name']];
+                return $rangeFilter->getActiveMin() . ' - ' . $rangeFilter->getActiveMax() . ' ' . $rangeFilter->getUnit();
+            } 
+
+            return isset($this->_sxFilter['value']['name']) ? $this->_sxFilter['value']['name'] : $this->getActiveValue();
+        }
+
         return $this->isActiveFilter ? $this->getActiveValue() : $this->_sxFilter->getName();
     }
     
@@ -219,7 +230,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
     public function getActiveValue()
     {
         if(is_array($this->_sxFilter)){
-            return isset($this->_sxFilter['value']['name']) ? $this->_sxFilter['value']['name'] : $this->_sxFilter['value']['value'];
+            return $this->_sxFilter['value']['value'];
         }
 
         return '';
