@@ -2,14 +2,12 @@
 
 namespace Semknox\Productsearch\Model\Amasty\Shopby;
 
-use \Amasty\Shopby\Model\Request as AmastyRequest;
-
-if (class_exists('AmastyRequest')) {
-    class AmastyRequestBridge extends AmastyRequest
+if (class_exists('\Amasty\Shopby\Model\Request')) {
+    class AmastyRequestBridge extends \Amasty\Shopby\Model\Request
     {
     }
 } else {
-    class AmastyRequestBridge
+    class AmastyRequestBridge extends \Magento\Framework\DataObject
     {
     }
 }
@@ -20,8 +18,11 @@ class Request extends AmastyRequestBridge
      * @param $filter
      * @return mixed|string
      */
+
     public function getFilterParam($filter = null)
     {
-        return [];
-    } 
+        if (!$filter) return '';
+
+        return parent::getFilterParam($filter);
+    }
 }
