@@ -10,6 +10,6 @@ if [ -e $filename ]; then
 	rm $filename
 fi
 
-
-zip -rq $filename semknox -x 'semknox/semknox-core/examples/*' -x 'semknox/semknox-core/tests/*' -x '*/codeception.yml' -x '*/.*'
+cd ..
+zip -rq extensions/$filename extensions -x 'extensions/semknox/semknox-core/examples/*' -x 'extensions/semknox/semknox-core/tests/*' -x '*/codeception.yml' -x '*/.*' -x '*.zip'
 echo "$filename Archive created."
