@@ -4,7 +4,7 @@ namespace Semknox\Productsearch\Model\Amasty\Shopby;
 
 use \Amasty\Shopby\Model\Request as AmastyRequest;
 
-if (class_exists('Request')) {
+if (class_exists('AmastyRequest')) {
     class AmastyRequestBridge extends AmastyRequest
     {
     }
