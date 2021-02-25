@@ -33,12 +33,9 @@ class Template extends \Magento\Framework\View\Element\Template
         
     }
 
-    public function getExtensionVersion(string $moduleCode)
+    public function getExtensionVersion()
     {
-        $moduleCode = $moduleCode ? $moduleCode :'Semknox_Productsearch'; 
-
-        $moduleInfo = $this->_moduleList->getOne($moduleCode);
-        return $moduleInfo['setup_version'];
+        return $this->_sxHelper->getExtensionVersion();
     }
 
 }

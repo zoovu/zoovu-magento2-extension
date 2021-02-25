@@ -7,6 +7,9 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Module\ModuleListInterface;
 
 use Psr\Log\LoggerInterface;
 
@@ -37,7 +40,9 @@ class SxHelper extends AbstractHelper
         LoggerInterface $logger,
         DirectoryList $dir,
         StoreManagerInterface $storeManagerInterface,
-        \Magento\Framework\App\Request\Http $request
+        Http $request,
+        ProductMetadataInterface $productMetadata,
+        ModuleListInterface $moduleList
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -45,6 +50,8 @@ class SxHelper extends AbstractHelper
         $this->_dir = $dir;
         $this->_storeManager = $storeManagerInterface;
         $this->_request = $request;
+        $this->productMetadata = $productMetadata;
+        $this->_moduleList = $moduleList;
 
         $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
@@ -187,6 +194,14 @@ class SxHelper extends AbstractHelper
             'sxIncrementalUpdatesActive' => $this->get('sxIncrementalUpdatesActive', $storeId, 1),
             'sxAnswerActive' => $this->get('sxAnswerActive', $storeId, 1),
 
+            // current shopsystem 
+            'shopsystem' => 'MAGENTO',
+            // current shopsystem version
+            'shopsystemversion' => $this->productMetadata->getVersion(),
+            // current extension version
+            'extensionversion' => $this->getExtensionVersion(),
+ 
+
         ];
 
         $this->_sxShopConfigs[$storeIdentifier] = $currentShopConfig;
@@ -245,6 +260,11 @@ class SxHelper extends AbstractHelper
         $isReachable = (isset($this->isSxSearchActive)) ? $this->isSxSearchActive : true;
 
         return $setActive && $isReachable;
+    }
+
+    public function getExtensionVersion()
+    {
+        return $this->_moduleList->getOne('Semknox_Productsearch')['setup_version'];
     }
 
 }

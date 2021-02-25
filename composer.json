@@ -2,7 +2,7 @@
     "name": "semknox/semknox-magento2",
     "description": "This is the Semknox ProductSearch module for Magento 2",
     "homepage": "https://www.semknox.com",
-    "version": "3.0.8.2",
+    "version": "3.0.9",
     "type": "magento2-module",
     "keywords": [
         "semknox",
@@ -10,8 +10,8 @@
     ],
     "authors": [
         {
-            "name": "Youbility Software",
-            "email": "info@youbility.de"
+            "name": "SEMKNOX GmbH",
+            "email": "magento@sitesearch360.com"
         }
     ],
     "require": {

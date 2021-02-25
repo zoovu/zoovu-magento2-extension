@@ -1,8 +1,10 @@
 #!/bin/bash
 
-plugin=$(sed 's/.*"version": "\(.*\)".*/\1/;t;d' ./composer.json)
+pluginversion=$(sed 's/.*"version": "\(.*\)".*/\1/;t;d' ./composer.json)
 
-filename=semknox-magento2_$plugin.zip
+filename=semknox-magento2_$pluginversion.zip
+
+sed -r 's/(setup_version=")[^"]+"/\1$pluginversion"/' extensions/semknox/semknox-magento2/etc/module.xml
 
 cd ../..
 

@@ -283,7 +283,9 @@ class UploadController {
             $productCounterTotal++;
         }
 
-        $this->_sxHelper->log("$productCounterTotal products added to update-queue", 'success');
+        if($productCounterTotal){
+            $this->_sxHelper->log("$productCounterTotal products added to update-queue", 'success');
+        }
         
     }
 
@@ -292,9 +294,9 @@ class UploadController {
      */
     public function sendProductUpdates()
     {
-        $this->_sxUpdater->sendUploadBatch();
-
-        $this->_sxHelper->log("product updates from queue sent", 'success');
+        if($this->_sxUpdater->sendUploadBatch()){
+            $this->_sxHelper->log("product updates from queue sent", 'success');
+        }
 
     }
 

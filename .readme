@@ -19,3 +19,11 @@ php bin/magento cache:disable
 
 
  php -d memory_limit=2G bin/magento setup:di:compile
+
+
+
+Bei Elasticsearch Disk error:
+
+// https://stackoverflow.com/questions/50609417/elasticsearch-error-cluster-block-exception-forbidden-12-index-read-only-all
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
