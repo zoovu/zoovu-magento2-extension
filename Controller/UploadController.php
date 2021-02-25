@@ -19,6 +19,7 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Helper\ImageFactory as ImageHelper;
 use Magento\Framework\View\Asset\Repository as AssetRepos;
 use Magento\Store\Model\App\Emulation as AppEmulation;
+use Magento\Catalog\Model\Product\Visibility;
 
 class UploadController {
 
@@ -38,6 +39,7 @@ class UploadController {
         ProductRepository $productRepository,
         CategoryCollectionFactory $categoryCollectionFactory,
         Product $productModel,
+        Visibility $productVisibility,
         Status $productStatus
     ){
         $this->appEmulation = $appEmulation;
@@ -50,6 +52,7 @@ class UploadController {
         $this->_categoryCollectionFactory = $categoryCollectionFactory;
         $this->_productModel = $productModel;
         $this->_productStatus = $productStatus;
+        $this->_productVisibility = $productVisibility;
     }
 
 
@@ -113,6 +116,7 @@ class UploadController {
         $productCollection = $this->_collectionFactory->create();
         $productCollection->addAttributeToSelect('*');
         $productCollection->addAttributeToFilter('status', ['in' => $this->_productStatus->getVisibleStatusIds()]);
+        $productCollection->setVisibility($this->_productVisibility->getVisibleInSearchIds());
 
         if($storeId){
             $productCollection->addStoreFilter($storeId);

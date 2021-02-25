@@ -6,6 +6,8 @@ use Semknox\Productsearch\Helper\SxHelper;
 use Semknox\Productsearch\Controller\UploadControllerFactory;
 
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
 
 class CronController 
@@ -16,13 +18,20 @@ class CronController
     public function __construct(
         SxHelper $sxHelper,
         UploadControllerFactory $uploadControllerFactoy,
-        DateTime $dateTime
+        DateTime $dateTime,
+        DateTimeFactory $dateTimeFactory,
+        TimezoneInterface $timezoneInterface
     ){
         $this->_sxHelper = $sxHelper;
         $this->_uploadControllerFactoy = $uploadControllerFactoy;
+        $this->_dateTimeFactory = $dateTimeFactory;
+        $this->_timezoneInterface = $timezoneInterface;
 
-        $this->_currentMinute = (int) $dateTime->gmtDate('i');
-        $this->_currentHour = (int) $dateTime->gmtDate('G');
+
+        $dateTime = $this->_timezoneInterface->date();
+        $this->_currentMinute = (int) $dateTime->format('i');
+        $this->_currentHour = (int) $dateTime->format('G');
+
     }
 
 
