@@ -35,6 +35,8 @@ class ProductUpdate implements ObserverInterface
         // get shops
         foreach ($this->_sxHelper->getShopConfigs() as $key => $shopConfig) {
 
+            if (!$shopConfig['sxUploadActive'] || !$shopConfig['sxIncrementalUpdatesActive']) continue;
+
             $uploadController = $this->_uploadControllerFactoy->create();
             $uploadController->setConfig($shopConfig);
 

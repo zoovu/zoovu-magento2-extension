@@ -40,6 +40,8 @@ class CronController
 
         foreach($this->_sxHelper->getShopConfigs() as $key => $shopConfig){
 
+            if(!$shopConfig['sxUploadActive']) continue;
+
             $uploadController = $this->_uploadControllerFactoy->create();
             $uploadController->setConfig($shopConfig);
 
@@ -65,6 +67,9 @@ class CronController
         if(!isset($flags['running']) || !$flags['running']){
             // go on with single updates
             foreach ($sxShopUloads as $key => $shopUploader) {
+
+                if (!$shopConfig->config['sxIncrementalUpdatesActive']) continue;
+
                 $shopUploader->sendProductUpdates();
                 continue; // (always just one job per cronrun!)
             }
