@@ -167,7 +167,7 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
     {
         $collection = $this->_getProductCollection();
 
-        $contentBoxesCount = count($collection->_sxContentResults);
+        $contentBoxesCount = isset($collection->_sxContentResults) ? count($collection->_sxContentResults) : 0;
         if(!$contentBoxesCount) return parent::getAdditionalHtml();
 
         $productBoxesCount = count($collection) - $contentBoxesCount; 
