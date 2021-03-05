@@ -31,7 +31,7 @@
                 </field>
 
                 <field id="sxUploadActive" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Produktupload to SEMKNOX active</label>
+                    <label>Productupload to SEMKNOX active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
@@ -40,8 +40,18 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
+                <field id="sxUploadProductsWithStatusOutOfStock" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>upload/show products that are status "out of stock"</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxUploadProductsWithZeroQuantity" translate="label" type="select" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>upload/show products that are out of stock by quantity</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
                 <field id="sxAnswerActive" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>display SEMKNOX search interpretation sentence</label>
+                    <label>show SEMKNOX search interpretation sentence</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
@@ -49,10 +59,6 @@
                     <label>show expected number of results behind filter options</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field-->
-
-                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Number of Content Search Results per Page</label>
-                </field>
 
                 <field id="sxCollectBatchSize" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Number of products per package (upload)</label>

@@ -267,6 +267,16 @@ class SxHelper extends AbstractHelper
         return is_array($this->getConfig()) && isset($this->getConfig()['sxAnswerActive']) && $this->getConfig()['sxAnswerActive'] > 0;
     }
 
+    public function sxUploadProductsWithStatusOutOfStock()
+    {
+        return is_array($this->getConfig()) && isset($this->getConfig()['sxUploadProductsWithStatusOutOfStock']) && $this->getConfig()['sxUploadProductsWithStatusOutOfStock'] > 0;
+    }
+
+    public function sxUploadProductsWithZeroQuantity()
+    {
+        return is_array($this->getConfig()) && isset($this->getConfig()['sxUploadProductsWithZeroQuantity']) && $this->getConfig()['sxUploadProductsWithZeroQuantity'] > 0;
+    }
+
     public function getExtensionVersion()
     {
         return $this->_moduleList->getOne('Semknox_Productsearch')['setup_version'];

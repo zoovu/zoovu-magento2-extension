@@ -122,6 +122,15 @@ class UploadController {
             $productCollection->addStoreFilter($storeId);
         }
 
+        if($this->_sxHelper->sxUploadProductsWithStatusOutOfStock()){
+            $productCollection->setFlag('has_stock_status_filter', false);
+        }
+        
+        if(!$this->_sxHelper->sxUploadProductsWithZeroQuantity()){
+            $productCollection->joinField('qty', 'cataloginventory_stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1', 'left');
+            $productCollection->addAttributeToFilter('qty',['gt'=>0]);
+        }
+
         return $productCollection;
     }
 

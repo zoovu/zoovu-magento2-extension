@@ -6,6 +6,8 @@
                 <sxFrontendActive>1</sxFrontendActive>
                 <sxUploadActive>1</sxUploadActive>
                 <sxAnswerActive>1</sxAnswerActive>
+                <sxUploadProductsWithStatusOutOfStock>1</sxUploadProductsWithStatusOutOfStock>
+                <sxUploadProductsWithZeroQuantity>1</sxUploadProductsWithZeroQuantity>
                 <sxCollectBatchSize>200</sxCollectBatchSize>
                 <sxUploadBatchSize>200</sxUploadBatchSize>
                 <sxRequestTimeout>15</sxRequestTimeout>
