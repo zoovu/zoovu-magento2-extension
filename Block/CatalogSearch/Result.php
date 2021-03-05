@@ -45,8 +45,9 @@ class Result extends CatalogSearchResult
      */
     public function getSearchQueryText()
     {
-        $productList = $this->getListBlock();
+        if(!$this->_sxHelper->isSxAnswerActive()) return parent::getSearchQueryText();
 
+        $productList = $this->getListBlock();
         return strip_tags($productList->sxSearch->getSearchInterpretation());
     }
 

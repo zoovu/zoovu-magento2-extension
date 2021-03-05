@@ -45,9 +45,13 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxFilterOptionCounterActive" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <!--field id="sxFilterOptionCounterActive" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>show expected number of results behind filter options</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field-->
+
+                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of Content Search Results per Page</label>
                 </field>
 
                 <field id="sxCollectBatchSize" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -60,10 +64,6 @@
 
                 <field id="sxRequestTimeout" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Request timeout</label>
-                </field>
-
-                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Number of Content Search Results per Page</label>
                 </field>
 
             </group>

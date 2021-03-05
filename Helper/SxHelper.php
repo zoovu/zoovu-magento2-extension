@@ -262,6 +262,11 @@ class SxHelper extends AbstractHelper
         return $setActive && $isReachable;
     }
 
+    public function isSxAnswerActive()
+    {
+        return is_array($this->getConfig()) && isset($this->getConfig()['sxAnswerActive']) && $this->getConfig()['sxAnswerActive'] > 0;
+    }
+
     public function getExtensionVersion()
     {
         return $this->_moduleList->getOne('Semknox_Productsearch')['setup_version'];

@@ -1,4 +1,4 @@
-<?php if (1 == 1) : ?>
+<?php if ($block->getConfigValue("sxFrontendActive")) : ?>
     <script type="text/javascript">
         /* eslint-disable */
         (function() {
@@ -80,7 +80,7 @@
             };
         });
     </script>
-    <script type="text/javascript">
-        console.info('SEMKNOX SiteSearch360 Magento2-Module <?= $block->getExtensionVersion() ?>');
-    </script>
 <?php endif; ?>
+<script type="text/javascript">
+    console.info('SEMKNOX SiteSearch360 Magento2-Module <?= $block->getExtensionVersion() ?>');
+</script>
