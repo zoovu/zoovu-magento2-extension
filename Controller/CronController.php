@@ -68,7 +68,7 @@ class CronController
             // go on with single updates
             foreach ($sxShopUloads as $key => $shopUploader) {
 
-                if (!$shopConfig->config['sxIncrementalUpdatesActive']) continue;
+                if (!$shopUploader->config['sxIncrementalUpdatesActive']) continue;
 
                 $shopUploader->sendProductUpdates();
                 continue; // (always just one job per cronrun!)
