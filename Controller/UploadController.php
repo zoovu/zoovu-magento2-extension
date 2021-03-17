@@ -114,13 +114,15 @@ class UploadController {
     public function getUploadProductCollection($storeId = false)
     {
         $productCollection = $this->_collectionFactory->create();
+
+        if($storeId) {
+            $productCollection->addStoreFilter($storeId);
+            $this->appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
+        }
+
         $productCollection->addAttributeToSelect('*');
         $productCollection->addAttributeToFilter('status', ['in' => $this->_productStatus->getVisibleStatusIds()]);
         $productCollection->setVisibility($this->_productVisibility->getVisibleInSearchIds());
-
-        if($storeId){
-            $productCollection->addStoreFilter($storeId);
-        }
 
         if($this->_sxHelper->sxUploadProductsWithStatusOutOfStock()){
             $productCollection->setFlag('has_stock_status_filter', false);
