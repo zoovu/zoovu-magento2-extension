@@ -81,7 +81,8 @@ class UploadController {
                 'productResourceModel' => $this->_productModel,
                 'imageHelper' => $this->mageImageHelper,
                 'assetsRepos' => $this->mageAssetsRepos,
-                'appEmulation' => $this->appEmulation
+                'appEmulation' => $this->appEmulation,
+                'sxHelper' =>  $this->_sxHelper
             ];
 
         } catch (DuplicateInstantiationException $e) {
@@ -132,6 +133,8 @@ class UploadController {
             $productCollection->joinField('qty', 'cataloginventory_stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1', 'left');
             $productCollection->addAttributeToFilter('qty',['gt'=>0]);
         }
+
+        $this->appEmulation->stopEnvironmentEmulation();
 
         return $productCollection;
     }

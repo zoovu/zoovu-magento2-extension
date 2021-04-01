@@ -14,7 +14,8 @@ class ArticleTransformer extends AbstractProductTransformer
      * Class constructor.
      */
     public function __construct(
-        $mageProduct)
+        $mageProduct
+        )
     {
         $this->_product = $mageProduct;
     }
@@ -224,6 +225,8 @@ class ArticleTransformer extends AbstractProductTransformer
             'key' => $key,
             'value' => $value
         ];
+
+        //$transformerArgs['sxHelper']->log("$code: $key: $value");
 
         return $attributes;
     }
