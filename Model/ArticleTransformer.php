@@ -190,7 +190,11 @@ class ArticleTransformer extends AbstractProductTransformer
 
             if ($doNotAdd) continue;
 
+            $appEmulation = $transformerArgs['appEmulation'];
+            $storeId = $transformerArgs['sxConfig']->get('shopId');
+            $appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
             $attributes = $this->_transformAttribute($code, $value, $transformerArgs, $attributes);
+            $appEmulation->stopEnvironmentEmulation();
         }
 
         return array_values($attributes);
