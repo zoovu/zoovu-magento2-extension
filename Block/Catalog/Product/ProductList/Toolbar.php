@@ -64,6 +64,21 @@ class Toolbar extends CatalogSearchToolbar
         return $availableOrders;           
     }
 
+    /**
+     * Get order field
+     *
+     * @return null|string
+     */
+    protected function getOrderField()
+    {
+        if (!$this->_isSxSearch || !$this->_collection->_isSxSearch) return parent::getOrderField();
+
+        if ($this->_orderField === null) {
+            $this->_orderField = 'position';
+        }
+        return $this->_orderField;
+    }
+
 
     /**
      * Set Available order fields list
