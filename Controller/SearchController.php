@@ -28,7 +28,6 @@ class SearchController
             return false;
         }
 
-
         if($this->_sxSearchResponse){
             return $this->_sxSearchResponse;
         }
@@ -152,6 +151,8 @@ class SearchController
 
     public function getContentResults()
     {
+        if (!$this->_getSearchResponse()) return [];
+        
         $contentResults = $this->_getSearchResponse()->getResults('custom');
         if(!$contentResults) return $contentResults;
 
