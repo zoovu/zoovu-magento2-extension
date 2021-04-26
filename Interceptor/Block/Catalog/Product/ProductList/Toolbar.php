@@ -106,5 +106,24 @@ class Toolbar
         return $result;
     }
 
+    /**
+     * Get grid products sort order field
+     *
+     * @return string
+     */
+    public function afterGetCurrentOrder(\Magento\Catalog\Block\Product\ProductList\Toolbar $parent, $result)
+    {
+        if ($this->_isNotSxSearch($parent)) return $result;
+
+        if (!$result || $result == 'relevance') {
+            $result = 'position'; 
+        }
+
+        $parent->setData('_current_grid_order', $result);
+        return $result;
+
+    }
+
+
 
 }
