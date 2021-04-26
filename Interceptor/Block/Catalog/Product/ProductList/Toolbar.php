@@ -20,7 +20,7 @@ class Toolbar
     {
         $this->_collection = $parent->getCollection();
 
-        return !$this->_isSxSearch || !is_object($this->_collection) || !$this->_collection->_isSxSearch;
+        return !$this->_isSxSearch || !is_object($this->_collection) || !isset($this->_collection->_isSxSearch) || !$this->_collection->_isSxSearch;
     }
 
 
