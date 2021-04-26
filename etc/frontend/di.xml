@@ -3,22 +3,15 @@
     
     <!--preference for="Magento\CatalogSearch\Block\Result" type="Semknox\Productsearch\Block\CatalogSearch\Result" />
     <preference for="Magento\CatalogSearch\Block\SearchResult\ListProduct" type="Semknox\Productsearch\Block\CatalogSearch\SearchResult\ListProduct" />
-    <preference for="Magento\Catalog\Block\Product\ProductList\Toolbar" type="Semknox\Productsearch\Block\Catalog\Product\ProductList\Toolbar" />
-    
-    
+    <preference for="Magento\Catalog\Block\Product\ProductList\Toolbar" type="Semknox\Productsearch\Block\Catalog\Product\ProductList\Toolbar" />    
     <preference for="Magento\Theme\Block\Html\Pager" type="Semknox\Productsearch\Block\Theme\Html\Pager" />
     <preference for="Magento\LayeredNavigation\Block\Navigation\Search"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\Search" />
+
     <preference for="Magento\Catalog\Model\Layer\FilterableAttributeListInterface" type="Magento\Catalog\Model\Layer\Category\FilterableAttributeList"/>
-
     <preference for="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer" />
-
     <preference for="Magento\Catalog\Model\Layer\State"  type="Semknox\Productsearch\Model\Catalog\Layer\State" />
     <preference for="Magento\LayeredNavigation\Block\Navigation\State"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\State" />
-
     <preference for="Amasty\Shopby\Model\Request"  type="Semknox\Productsearch\Model\Amasty\Shopby\Request" /-->
-
-
-
 
 
     <!-- VIRTUAL Magento\CatalogSearch\Block\SearchResult\ListProduct --> 
@@ -39,6 +32,19 @@
     <type name="Magento\Theme\Block\Html\Pager">
         <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Block\Theme\Html\Pager" sortOrder="1" disabled="false" />
     </type>
+
+    <!-- Magento\LayeredNavigation\Block\Navigation\Search -->
+    <type name="Magento\LayeredNavigation\Block\Navigation">
+        <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Block\LayeredNavigation\Navigation" sortOrder="1" disabled="false" />
+    </type>
+
+    <!-- Magento\LayeredNavigation\Block\Navigation\FilterRenderer -->
+    <!-- todo: improve -->
+    <preference for="Magento\Catalog\Model\Layer\FilterableAttributeListInterface" type="Magento\Catalog\Model\Layer\Category\FilterableAttributeList"/>
+    <preference for="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer" />
+    <preference for="Magento\Catalog\Model\Layer\State"  type="Semknox\Productsearch\Model\Catalog\Layer\State" />
+    <preference for="Magento\LayeredNavigation\Block\Navigation\State"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\State" />
+    <preference for="Amasty\Shopby\Model\Request"  type="Semknox\Productsearch\Model\Amasty\Shopby\Request" />
 
 
 </config>

@@ -53,6 +53,7 @@ class SearchController
         
         foreach($this->_sxHelper->getSetFilters() as $filter => $value)
         {
+            var_dump($value);
             $sxSearch->addFilter($filter,[$value]);
         }
 

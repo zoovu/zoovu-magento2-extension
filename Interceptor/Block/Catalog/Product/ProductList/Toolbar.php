@@ -8,11 +8,10 @@ class Toolbar
 {
 
     public function __construct(
-        \Magento\Framework\App\Request\Http $request,
         SxHelper $sxHelper
     ) {
         $this->_sxHelper = $sxHelper;
-        $this->_isSxSearch = ($request->getFullActionName() == 'catalogsearch_result_index') && $this->_sxHelper->isSxSearchFrontendActive();
+        $this->_isSxSearch = $sxHelper->isSearch() && $sxHelper->isSxSearchFrontendActive();
 
         $this->_collection = null;
     }
