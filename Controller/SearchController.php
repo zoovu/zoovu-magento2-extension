@@ -53,8 +53,8 @@ class SearchController
         
         foreach($this->_sxHelper->getSetFilters() as $filter => $value)
         {
-            var_dump($value);
-            $sxSearch->addFilter($filter,[$value]);
+            $value = explode('___', $value, 2);
+            $sxSearch->addFilter($filter,$value);
         }
 
         if($order = $this->_sxHelper->getSetOrder()){

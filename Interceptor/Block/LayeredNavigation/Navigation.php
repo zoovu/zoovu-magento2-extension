@@ -7,13 +7,6 @@ use Semknox\Productsearch\Helper\SxHelper;
 class Navigation 
 {
 
-    /**
-     * @param Template\Context $context
-     * @param \Magento\Catalog\Model\Layer\Resolver $layerResolver
-     * @param \Magento\Catalog\Model\Layer\FilterList $filterList
-     * @param \Magento\Catalog\Model\Layer\AvailabilityFlagInterface $visibilityFlag
-     * @param array $data
-     */
     public function __construct(
         SxHelper $sxHelper,
         \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory

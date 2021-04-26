@@ -38,12 +38,21 @@
         <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Block\LayeredNavigation\Navigation" sortOrder="1" disabled="false" />
     </type>
 
-    <!-- Magento\LayeredNavigation\Block\Navigation\FilterRenderer -->
+    <!-- Magento\LayeredNavigation\Block\Navigation\State -->
+    <type name="Magento\LayeredNavigation\Block\Navigation\State">
+        <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Block\LayeredNavigation\Navigation\State" sortOrder="1" disabled="false" />
+    </type>
+
+    <!-- Magento\Catalog\Model\Layer\State -->
+    <type name="Magento\Catalog\Model\Layer\State">
+        <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Model\Catalog\Layer\State" sortOrder="1" disabled="false" />
+    </type>
+
+
+
     <!-- todo: improve -->
     <preference for="Magento\Catalog\Model\Layer\FilterableAttributeListInterface" type="Magento\Catalog\Model\Layer\Category\FilterableAttributeList"/>
     <preference for="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer" />
-    <preference for="Magento\Catalog\Model\Layer\State"  type="Semknox\Productsearch\Model\Catalog\Layer\State" />
-    <preference for="Magento\LayeredNavigation\Block\Navigation\State"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\State" />
     <preference for="Amasty\Shopby\Model\Request"  type="Semknox\Productsearch\Model\Amasty\Shopby\Request" />
 
 

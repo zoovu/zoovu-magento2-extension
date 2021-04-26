@@ -1,29 +1,28 @@
 <?php
 
-namespace Semknox\Productsearch\Model\Catalog\Layer;
+namespace Semknox\Productsearch\Interceptor\Model\Catalog\Layer;
 
 use Semknox\Productsearch\Helper\SxHelper;
-use Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterItemAdapterFactory;
 
-class State extends \Magento\Catalog\Model\Layer\State
+class State 
 {
 
     public function __construct(
         SxHelper $sxHelper,
-        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory,
-        array $data = []
-    )
-    {
-        $this->_sxHelper = $sxHelper;  
+        \Magento\Framework\View\Element\Context $context,
+        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory
+    ) {
+        $this->_sxHelper = $sxHelper;
+        $this->_isSxSearch = $sxHelper->isSearch() && $sxHelper->isSxSearchFrontendActive();
+
+        $this->_urlBuilder = $context->getUrlBuilder();
         $this->_filterRenderer = $filterRendererFactory; 
-        parent::__construct($data);
     }
 
 
-
-    public function getFilters()
+    public function afterGetFilters(\Magento\Catalog\Model\Layer\State $parent, $result)
     {
-        if (!$this->_sxHelper->isSxSearchFrontendActive()) return parent::getFilters();
+        if (!$this->_isSxSearch) return $result;
 
         $filterList = [];
 
