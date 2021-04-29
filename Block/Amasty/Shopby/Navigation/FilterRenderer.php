@@ -1,5 +1,6 @@
 <?php
 
+/*
 namespace Semknox\Productsearch\Block\Amasty\Shopby\Navigation;
 
 use Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer as ParentFilterRenderer;
@@ -88,3 +89,5 @@ if (class_exists('\Amasty\Shopby\Block\Navigation\FilterRenderer')) {
     {
     }
 }
+
+*/

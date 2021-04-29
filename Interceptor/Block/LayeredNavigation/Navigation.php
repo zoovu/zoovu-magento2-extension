@@ -9,12 +9,13 @@ class Navigation
 
     public function __construct(
         SxHelper $sxHelper,
-        \Magento\LayeredNavigation\Block\Navigation\FilterRendererFactory $filterRendererFactory
+        \Semknox\Productsearch\Model\Filter\Factory $filterFactory,
+        \Magento\Framework\View\Element\Context $context
     ) {
         $this->_sxHelper = $sxHelper;
         $this->_isSxSearch = $sxHelper->isSearch() && $sxHelper->isSxSearchFrontendActive();
-
-        $this->_filterRenderer = $filterRendererFactory;
+        $this->_filterFactory = $filterFactory;
+        $this->_urlBuilder = $context->getUrlBuilder();
     }
 
     /**
@@ -34,7 +35,7 @@ class Navigation
     /**
      * Get all layer filters
      *
-     * @return array
+     * @return array|Filter\AbstractFilter[]
      */
     public function afterGetFilters(\Magento\LayeredNavigation\Block\Navigation $parent, $result)
     {
@@ -44,12 +45,11 @@ class Navigation
         
         foreach($this->_sxHelper->getSxResponseStore('filterList',[]) as $sxFilter)
         {
-            $filter = $this->_filterRenderer->create();
-            $filter->_sxFilter = $sxFilter;
-            $filterList[] = $filter;
+            $filterList[] = $this->_filterFactory->create($sxFilter, ['data' => ['sxFilter' => $sxFilter]]);
         }
 
         return $filterList;
     }
+
 
 }

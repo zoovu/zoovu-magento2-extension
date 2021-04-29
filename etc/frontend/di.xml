@@ -36,14 +36,8 @@
         <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Model\Catalog\Layer\State" sortOrder="1" disabled="false" />
     </type>
 
-    <!-- Magento\LayeredNavigation\Block\Navigation\FilterRenderer -->
-    <preference for="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer" />
-
-    <!-- Magento\Catalog\Model\Layer\Filter\Item -->
-    <preference for="Magento\Catalog\Model\Layer\Filter\Item"  type="Semknox\Productsearch\Model\Catalog\Layer\Filter\Item" />
-
     <!-- Amasty\Shopby -->
     <preference for="Amasty\Shopby\Model\Request"  type="Semknox\Productsearch\Model\Amasty\Shopby\Request" />
-    <preference for="Amasty\Shopby\Block\Navigation\FilterRenderer" type="Semknox\Productsearch\Block\Amasty\Shopby\Navigation\FilterRenderer"/>
+    <!--preference for="Amasty\Shopby\Block\Navigation\FilterRenderer" type="Semknox\Productsearch\Block\Amasty\Shopby\Navigation\FilterRenderer"/-->
 
 </config>

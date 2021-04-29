@@ -123,9 +123,14 @@ class SearchController
 
     public function getActiveFilters()
     {
-        if (!$this->_getSearchResponse() || !$this->getResultsCount()) return [];
+        $activeFilters = array();
+        foreach($this->getAvailableFilters() as $filter){
 
-        return $this->_getSearchResponse()->getActiveFilters();
+            if(!$filter->isActive()) continue;
+            $activeFilters[] = $filter;
+        }
+        
+        return $activeFilters;
     }
 
     public function getLastPageNum()

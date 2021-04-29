@@ -85,7 +85,7 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         // availabe range filters
         $rangeFilter = [];
         foreach ($this->sxSearch->getAvailableFilters() as $filter) {
-            $rangeFilter = [];
+            //$rangeFilter = [];
             if ($filter->getType() == 'RANGE') {
 
                 $activeMin = $filter->getActiveMin();
@@ -104,6 +104,16 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         $activeFilters = [];
         foreach($this->sxSearch->getActiveFilters() as $filter){
 
+            if ($filter->getType() == 'RANGE') {
+
+                $activeMin = $filter->getActiveMin();
+                if (is_array($activeMin) && isset($activeMin['value'])) {
+                    $activeOptions = explode('___', $filter->getActiveMin()['value'], 2);
+                    $filter->setActiveOptions($activeOptions);
+                }
+            }
+            /*
+            continue;
             if(isset($filter['max'])){
                 //range
                 
@@ -115,8 +125,11 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                 ];
             }
 
+            
+            */
             $activeFilters[] = $filter;
         }
+        
         $this->_sxHelper->setSxResponseStore('activeFilters', $activeFilters);
 
 

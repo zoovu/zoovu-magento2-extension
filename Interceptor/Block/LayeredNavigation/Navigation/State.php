@@ -9,12 +9,33 @@ class State
 
     public function __construct(
         SxHelper $sxHelper,
+        \Semknox\Productsearch\Model\Filter\Factory $filterFactory,
         \Magento\Framework\View\Element\Context $context
     ) {
         $this->_sxHelper = $sxHelper;
         $this->_isSxSearch = $sxHelper->isSearch() && $sxHelper->isSxSearchFrontendActive();
 
+        $this->_filterFactory = $filterFactory;
         $this->_urlBuilder = $context->getUrlBuilder();
+    }
+
+
+    /**
+     * Get all layer filters
+     *
+     * @return array|Filter\AbstractFilter[]
+     */
+    public function afterGetActiveFilters(\Magento\LayeredNavigation\Block\Navigation\State $parent, $result)
+    {
+        if (!$this->_isSxSearch) return $result;
+
+        $filterList = [];
+
+        foreach ($this->_sxHelper->getSxResponseStore('activeFilters', []) as $sxFilter) {
+            $filterList[] = $this->_filterFactory->create($sxFilter, ['data' => ['sxFilter' => $sxFilter]]);
+        }
+
+        return $filterList;
     }
 
 
@@ -25,13 +46,14 @@ class State
      */
     public function aroundGetClearUrl(\Magento\LayeredNavigation\Block\Navigation\State $parent, callable $proceed)
     {
-        if (!$this->_isSxSearch){
+        if (!$this->_isSxSearch) {
             return $proceed();
         }
 
         $filterState = [];
 
-        foreach ($parent->getActiveFilters() as $item) {
+        foreach ($this->_sxHelper->getSxResponseStore('activeFilters', []) as $sxFilter) {
+            $item = $this->_filterFactory->create($sxFilter, ['data' => ['sxFilter' => $sxFilter]]);
             $filterState[$item->getRequestVar()] = $item->getCleanValue();
         }
 
