@@ -45,7 +45,7 @@ class Navigation
         foreach($this->_sxHelper->getSxResponseStore('filterList',[]) as $sxFilter)
         {
             $filter = $this->_filterRenderer->create();
-            $filter->setSxFilter($sxFilter);
+            $filter->_sxFilter = $sxFilter;
             $filterList[] = $filter;
         }
 

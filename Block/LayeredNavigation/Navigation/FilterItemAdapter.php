@@ -18,15 +18,19 @@ class FilterItemAdapter extends \Magento\Catalog\Model\Layer\Filter\Item
     }
 
 
+    /*
     public function setSxOption($sxOption)
     {
         $this->_sxOption = $sxOption;
     }
+    */
 
+    /*
     public function setSxFilter($sxFilter)
     {
         $this->_sxFilter = $sxFilter;
     }
+    */
 
     public function getCount()
     {

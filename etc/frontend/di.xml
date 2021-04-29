@@ -37,7 +37,7 @@
     </type>
 
     <!-- Magento\LayeredNavigation\Block\Navigation\FilterRenderer -->
-    <!--preference for="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer" /-->
+    <preference for="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"  type="Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer" />
     <type name="Magento\LayeredNavigation\Block\Navigation\FilterRenderer">
         <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Block\LayeredNavigation\Navigation\FilterRenderer" sortOrder="1" disabled="false" />
     </type>

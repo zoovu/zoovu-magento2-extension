@@ -33,7 +33,7 @@ class State
             
             foreach($sxFilter['values'] as $value){
                 $sxFilter['value'] = $value;
-                $filter->setSxFilter($sxFilter);
+                $filter->_sxFilter = $sxFilter;
                 $filterList[] = $filter;
             }
         }
