@@ -1,9 +1,9 @@
 <?php
 
-/*
+
 namespace Semknox\Productsearch\Block\Amasty\Shopby\Navigation;
 
-use Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterRenderer as ParentFilterRenderer;
+use Magento\LayeredNavigation\Block\Navigation\FilterRenderer as ParentFilterRenderer;
 
 if (class_exists('\Amasty\Shopby\Block\Navigation\FilterRenderer')) {
 
@@ -46,48 +46,47 @@ if (class_exists('\Amasty\Shopby\Block\Navigation\FilterRenderer')) {
 
         public function render($filter)
         {
-            if(!$this->_isSxSearch){
+            if (!$this->_isSxSearch) {
                 return parent::render($filter);
             }
 
             $semknoxParent = new ParentFilterRenderer(
-                $this->_sxHelper,
-                $this->_filterItem,
-                $this->_context ,
+                $this->_context,
                 $this->_data
             );
 
-            return $semknoxParent->render($filter);
-
+            return $semknoxParent::render($filter);
         }
 
         protected function getTemplateByFilterSetting($filterSetting)
         {
             $template = parent::getTemplateByFilterSetting($filterSetting);
 
-            if(!$this->_isSxSearch){
-                return 'Amasty_Shopby::'.$template;
+            if (!$this->_isSxSearch) {
+                return 'Amasty_Shopby::' . $template;
             }
 
             return $template;
         }
 
         protected function getCustomTemplateForCategoryFilter($filterSetting)
-        {   
+        {
             $template = parent::getCustomTemplateForCategoryFilter($filterSetting);
 
-            if(!$this->_isSxSearch){
-                return 'Amasty_Shopby::'.$template;
+            if (!$this->_isSxSearch) {
+                return 'Amasty_Shopby::' . $template;
             }
 
             return $template;
         }
-    }
 
+        public function checkedFilter($arg)
+        {
+            return parent::checkedFilter($arg);
+        }
+    }
 } else {
     class FilterRenderer extends ParentFilterRenderer
     {
     }
 }
-
-*/
