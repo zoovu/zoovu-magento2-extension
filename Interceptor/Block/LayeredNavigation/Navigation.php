@@ -45,6 +45,10 @@ class Navigation
         
         foreach($this->_sxHelper->getSxResponseStore('filterList',[]) as $sxFilter)
         {
+            $filter = $this->_filterFactory->create($sxFilter, ['data' => ['sxFilter' => $sxFilter]]);
+
+            if(!$filter) continue;
+            
             $filterList[] = $this->_filterFactory->create($sxFilter, ['data' => ['sxFilter' => $sxFilter]]);
         }
 

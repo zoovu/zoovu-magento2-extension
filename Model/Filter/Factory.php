@@ -29,8 +29,11 @@ class Factory
     {
         $path = explode('\\', get_class($sxClass));
         $className = array_pop($path);
+        $className = '\Semknox\Productsearch\Model\Filter\\' . $className;
 
-        $filter = $this->_objectManager->create('\Semknox\Productsearch\Model\Filter\\'.$className, $data);
+        if(!class_exists($className)) return false;
+
+        $filter = $this->_objectManager->create($className, $data);
 
         if (stripos('Option', $className) === false && !$filter instanceof \Semknox\Productsearch\Model\Filter\AbstractFilter) {
             throw new \Magento\Framework\Exception\LocalizedException(
