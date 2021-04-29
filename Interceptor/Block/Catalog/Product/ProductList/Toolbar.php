@@ -99,7 +99,7 @@ class Toolbar
     {
         if ($this->_isNotSxSearch($parent)) return $result;
 
-        if(!$this->_sxHelper->getSetOrder()){
+        if(!$this->_sxHelper->getSetOrder() || $this->_sxHelper->getSetOrder() == 'position'){
             $result .= '<style>.action.sorter-action{ display: none;}</style>';
         }
 
@@ -123,7 +123,5 @@ class Toolbar
         return $result;
 
     }
-
-
 
 }

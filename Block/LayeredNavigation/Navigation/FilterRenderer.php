@@ -36,6 +36,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      * @param FilterInterface $filter
      * @return string
      */
+    /*
     public function render(FilterInterface $filter)
     {
         // if range.. do nouislider
@@ -69,6 +70,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
         }
 
     }
+    */
 
 
 
