@@ -2,9 +2,9 @@
 
 namespace Semknox\Productsearch\Block\LayeredNavigation\Navigation;
 
-use Semknox\Productsearch\Helper\SxHelper;
-use Magento\Catalog\Model\Layer\Filter\FilterInterface;
-use Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterItemAdapterFactory;
+use \Semknox\Productsearch\Helper\SxHelper;
+use \Magento\Catalog\Model\Layer\Filter\FilterInterface;
+use \Magento\Catalog\Model\Layer\Filter\ItemFactory;
 
 
 class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterRenderer implements FilterInterface
@@ -19,15 +19,16 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      * @param Template\Context $context
      * @param array $data
      */
+    
     public function __construct(
         SxHelper $sxHelper,
-        FilterItemAdapterFactory $filterItemAdapterFactory,
+        ItemFactory $filterItemFactory,
         \Magento\Framework\View\Element\Template\Context $context,
         array $data = []
     )
     {
         $this->_sxHelper = $sxHelper;
-        $this->_filterItemAdapter = $filterItemAdapterFactory;
+        $this->_filterItem = $filterItemFactory;
 
         $this->_sxFilters = $this->_sxHelper->getSxResponseStore('filterList', []);
         parent::__construct($context, $data);
@@ -91,7 +92,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
      * @return int
      */
     public function getItemsCount()
-    {
+    {   
         return count($this->_sxFilter->getOptions());
     }
 
@@ -105,7 +106,7 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
         $items = [];
 
         foreach($this->_sxFilter->getOptions() as $option){
-            $item = $this->_filterItemAdapter->create(['data' => ['filter' => $this]]);
+            $item = $this->_filterItem->create(['data' => ['filter' => $this]]);
             $item->_sxOption = $option;
             $items[] = $item;
         }

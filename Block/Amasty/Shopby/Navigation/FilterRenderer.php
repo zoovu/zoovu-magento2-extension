@@ -18,16 +18,18 @@ if (class_exists('\Amasty\Shopby\Block\Navigation\FilterRenderer')) {
             \Magento\Catalog\Model\Layer\Resolver $resolver,
             \Amasty\ShopbyBase\Helper\Data $baseHelper,
             \Semknox\Productsearch\Helper\SxHelper $sxHelper,
-            \Semknox\Productsearch\Block\LayeredNavigation\Navigation\FilterItemAdapterFactory $filterItemAdapterFactory,
+            \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory,
             array $data = []
         ) {
 
             $this->_sxHelper = $sxHelper;
-            $this->_filterItemAdapter = $filterItemAdapterFactory;
+            $this->_filterItem = $filterItemFactory;
             $this->_context = $context;
             $this->_data = $data;
 
             $this->_isSxSearch = $sxHelper->isSearch() && $sxHelper->isSxSearchFrontendActive();
+
+            $this->_sxFilters = $this->_sxHelper->getSxResponseStore('filterList', []);
 
             parent::__construct(
                 $context,
@@ -49,7 +51,7 @@ if (class_exists('\Amasty\Shopby\Block\Navigation\FilterRenderer')) {
 
             $semknoxParent = new ParentFilterRenderer(
                 $this->_sxHelper,
-                $this->_filterItemAdapter,
+                $this->_filterItem,
                 $this->_context ,
                 $this->_data
             );
