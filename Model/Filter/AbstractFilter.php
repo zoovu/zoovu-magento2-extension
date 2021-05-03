@@ -55,18 +55,15 @@ abstract class AbstractFilter extends \Magento\Catalog\Model\Layer\Filter\Abstra
         $sxFilter = $this->_sxFilter;
         $label = false;
 
-        if($sxFilter->getActiveOptions()){
+        $activeValues = [];
+        foreach ($sxFilter->getOptions() as $sxOption) {
 
-            $activeValues = [];
-            foreach($sxFilter->getActiveOptions() as $option){
-                $activeValues[] = $option['name'];
+            if ($sxOption->isActive()) {
+                $activeValues[] = $sxOption->getName();
             }
-            $label = implode(', ', $activeValues);
-        } elseif($sxFilter->getType() == 'RANGE')
-        {
-            $label = $sxFilter->getActiveMin().' - '. $sxFilter->getActiveMax();
-            $label .= $sxFilter->getUnit() ? ' '. $sxFilter->getUnit() : '';
-        }
+        };
+
+        $label = implode(', ', $activeValues);
 
         return $label ?? '...';
     }
@@ -111,10 +108,12 @@ abstract class AbstractFilter extends \Magento\Catalog\Model\Layer\Filter\Abstra
         $filterState = [];
 
         foreach ($this->_sxHelper->getSetFilters() as $key => $value) {
-            $key = 'sx_'. $key;
-            if($key == $this->getRequestVar()) $value = '';
+            $key = 'sx_' . $key;
+            if ($key == $this->getRequestVar()) continue;
             $filterState[$key] = $value;
         }
+
+        $filterState[$this->getRequestVar()] = '';
 
         $params['_current'] = true;
         $params['_use_rewrite'] = true;
@@ -123,10 +122,9 @@ abstract class AbstractFilter extends \Magento\Catalog\Model\Layer\Filter\Abstra
         return $this->_urlBuilder->getUrl('*/*/*', $params);
     }
 
-    
+
     public function getFilter()
     {
         return $this;
     }
-
 }

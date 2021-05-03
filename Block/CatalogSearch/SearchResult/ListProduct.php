@@ -123,10 +123,9 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                     'key' => $filter['min'] . '___' . $filter['max'],
                     'name' => $filter['min'] . " $unit - " . $filter['max'] . " $unit"            
                 ];
-            }
-
-            
+            }            
             */
+            
             $activeFilters[] = $filter;
         }
         
