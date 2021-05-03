@@ -39,5 +39,8 @@
     <!-- Amasty\Shopby -->
     <preference for="Amasty\Shopby\Model\Request"  type="Semknox\Productsearch\Model\Amasty\Shopby\Request" />
     <preference for="Amasty\Shopby\Block\Navigation\FilterRenderer" type="Semknox\Productsearch\Block\Amasty\Shopby\Navigation\FilterRenderer"/>
+    <type name="Amasty\Shopby\Block\Navigation\State">
+        <plugin name="Semknox_Productsearch" type="Semknox\Productsearch\Interceptor\Block\Amasty\LayeredNavigation\Navigation\State" sortOrder="1" disabled="false" />
+    </type>
 
 </config>

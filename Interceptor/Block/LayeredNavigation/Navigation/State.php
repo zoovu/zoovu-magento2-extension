@@ -65,4 +65,21 @@ class State
     }
 
 
+
+    /**
+     * Get Amasty viewLabel
+     *
+     * @return string
+     */
+    public function afterGetViewLabel(\Magento\LayeredNavigation\Block\Navigation\State $parent, $result)
+    {
+        if (!$this->_isSxSearch) return $result;
+
+        return 'test';
+    }
+
+
+
+
+
 }

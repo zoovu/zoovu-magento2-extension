@@ -123,7 +123,10 @@ abstract class AbstractFilter extends \Magento\Catalog\Model\Layer\Filter\Abstra
         return $this->_urlBuilder->getUrl('*/*/*', $params);
     }
 
-
-
+    
+    public function getFilter()
+    {
+        return $this;
+    }
 
 }
