@@ -116,12 +116,15 @@ class Toolbar
         if ($this->_isNotSxSearch($parent)) return $result;
 
         if (!$result || $result == 'relevance') {
-            $result = 'position'; 
+            $result = 'position';
+        }
+
+        if ($this->_sxHelper->getSetOrder() && $this->_sxHelper->getSetOrder() !== $result) {
+            $result = $this->_sxHelper->getSetOrder();
         }
 
         $parent->setData('_current_grid_order', $result);
         return $result;
-
     }
 
 }

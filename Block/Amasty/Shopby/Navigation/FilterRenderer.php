@@ -65,26 +65,6 @@ if (class_exists('\Amasty\Shopby\Block\Navigation\FilterRenderer')) {
                 $icFilterRenderer = new InterceptorFilterRenderer($this->_sxHelper);
 
                 return $icFilterRenderer->afterRender($semknoxParent, '', $filter);
-
-                /*
-                // todo: move to template file
-                return "<div class='slider-wrapper'>
-                                <div class='slider sxRangeFilter' id='sx_" . $filter->getName() . "' 
-                                    data-start='" . $sxFilter->getActiveMin() . "'
-                                    data-end='" . $sxFilter->getActiveMax() . "'
-                                    data-range-min='" . $sxFilter->getMin() . "'
-                                    data-range-max='" . $sxFilter->getMax() . "'
-                                    data-url='" . $filter->getRemoveUrl() . "'
-                                ></div>
-                                <div class='slider-helper'>
-                                    <input class='start' value='' min='' type='number' name='num1'>
-                                    <span>-</span>
-                                    <input class='end' value='' max='' type='number' name='num2'>
-                                    <span class='unit'>" . $sxFilter->getUnit() . "</span>
-                                    <button class='' type='button'><i class='fa fa-angle-right'></i></button>
-                                </div>
-                        </div>";
-                        */
             }
         }
 

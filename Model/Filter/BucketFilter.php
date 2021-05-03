@@ -13,6 +13,8 @@ class BucketFilter extends AbstractFilter
 
             $activeValues = [];
             foreach ($sxFilter->getActiveOptions() as $option) {
+                
+                // todo: improve core
                 $activeValues[] = $option['key'];
             }
             $label = implode(', ', $activeValues);
