@@ -4,8 +4,6 @@ namespace Semknox\Productsearch\Model\Filter;
 
 use Semknox\Productsearch\Helper\SxHelper;
 
-
-//abstract class AbstractFilter extends \Magento\Framework\DataObject implements \Magento\Catalog\Model\Layer\Filter\FilterInterface
 abstract class AbstractFilter extends \Magento\Catalog\Model\Layer\Filter\AbstractFilter implements \Magento\Catalog\Model\Layer\Filter\FilterInterface
 {
 
