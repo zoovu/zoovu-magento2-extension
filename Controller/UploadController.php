@@ -5,6 +5,8 @@ namespace Semknox\Productsearch\Controller;
 
 use Semknox\Productsearch\Model\ArticleTransformer;
 use Semknox\Productsearch\Helper\SxHelper;
+use Semknox\Productsearch\Helper\SxLogger;
+
 
 use Semknox\Core\SxConfig;
 use Semknox\Core\SxCore;
@@ -18,8 +20,10 @@ use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCo
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Helper\ImageFactory as ImageHelper;
 use Magento\Framework\View\Asset\Repository as AssetRepos;
+use Magento\CatalogInventory\Model\Stock\StockItemRepository;
 use Magento\Store\Model\App\Emulation as AppEmulation;
 use Magento\Catalog\Model\Product\Visibility;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class UploadController {
 
@@ -33,7 +37,10 @@ class UploadController {
         AppEmulation $appEmulation,
         ImageHelper $imageHelper,
         AssetRepos $assetRepos,
+        StockItemRepository $stockItemRepository,
+        Configurable $configurable,
         SxHelper $helper,
+        SxLogger $logger,
         StoreManagerInterface $storeManagerInterface,
         CollectionFactory $collectionFactory,
         ProductRepository $productRepository,
@@ -45,7 +52,10 @@ class UploadController {
         $this->appEmulation = $appEmulation;
         $this->mageImageHelper = $imageHelper;
         $this->mageAssetsRepos = $assetRepos;
+        $this->mageStockItem = $stockItemRepository;
+        $this->mageConfigurableProduct = $configurable;
         $this->_sxHelper = $helper;
+        $this->_sxLogger = $logger;
         $this->_storeManager = $storeManagerInterface;
         $this->_collectionFactory = $collectionFactory;
         $this->_productRepository = $productRepository;
@@ -59,6 +69,7 @@ class UploadController {
     public function setConfig($configValues = [])
     {
         // really needed 
+        $configValues['loggingService'] = $this->_sxLogger;
         $configValues['productTransformer'] = ArticleTransformer::class;
         $defaultValues['storagePath'] = $this->_sxHelper->get('sxFolder');
 
@@ -86,7 +97,7 @@ class UploadController {
             ];
 
         } catch (DuplicateInstantiationException $e) {
-            $this->_sxHelper->log('Duplicate instantiation of uploader. Cronjob execution to close?', 'error');
+            $this->_sxLogger->log('Duplicate instantiation of uploader. Cronjob execution to close?', 'error');
             exit();
         }
 
@@ -106,9 +117,12 @@ class UploadController {
         $mageArticleQty = $productCollection->getSize();
 
         if ($mageArticleQty) {
+
             $this->_sxUploader->startCollecting([
                 'expectedNumberOfProducts' => $mageArticleQty
             ]);
+
+            $this->_sxLogger->log("+/- $mageArticleQty products in this upload expected");
         }
     }
 
@@ -122,18 +136,6 @@ class UploadController {
         }
 
         $productCollection->addAttributeToSelect('*');
-        $productCollection->addAttributeToFilter('status', ['in' => $this->_productStatus->getVisibleStatusIds()]);
-        $productCollection->setVisibility($this->_productVisibility->getVisibleInSearchIds());
-
-        if($this->_sxHelper->sxUploadProductsWithStatusOutOfStock()){
-            $productCollection->setFlag('has_stock_status_filter', false);
-        }
-        
-        if(!$this->_sxHelper->sxUploadProductsWithZeroQuantity()){
-            $productCollection->joinField('qty', 'cataloginventory_stock_item', 'qty', 'product_id=entity_id', '{{table}}.stock_id=1', 'left');
-            $productCollection->addAttributeToFilter('qty',['gt'=>0]);
-        }
-
         $this->appEmulation->stopEnvironmentEmulation();
 
         return $productCollection;
@@ -149,30 +151,110 @@ class UploadController {
 
         if ($this->_sxUploader->isCollecting()) {
 
+            $startUploading = false;
+
             // collecting
             $storeId = $this->_sxConfig->get('shopId');
             $collectBatchSize = $this->_sxConfig->get('collectBatchSize');
-            $page = ((int) $this->_sxUploader->getNumberOfCollected() / $collectBatchSize) + 1;
+            $page = (int) ($this->_sxUploader->getNumberOfCollected() / $collectBatchSize) + 1;
 
             $productCollection = $this->getUploadProductCollection($storeId);
             $productCollection->setPageSize($collectBatchSize);
             $productCollection->setCurPage($page);
 
+            $ignoreQuantity = $this->_sxHelper->sxUploadProductsWithZeroQuantity();
+            $ignoreOutOfStockStatus = $this->_sxHelper->sxUploadProductsWithStatusOutOfStock();
+
+            $cachedParents = [];
+
             $productCounter = 0;
+            $productsSortedOut = 0;
             foreach ($productCollection as $product) {
-                $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
-                $this->_sxUploader->addProduct($mageProduct, $this->_sxTransformerArgs);
+
                 $productCounter++;
+                
+                $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
+                $mageProductType = $mageProduct->getTypeInstance();
+
+                // get parent if is child of configurable
+                $parentId = $this->mageConfigurableProduct->getParentIdsByChild($product->getId());
+                $mageProduct->sxGroupIdenifier = isset($parentId[0]) ? $parentId[0] : false;
+
+                $parent = false;
+                if($mageProduct->sxGroupIdenifier){
+
+                    if(!array_key_exists($mageProduct->sxGroupIdenifier,$cachedParents)){
+                        $cachedParents[$mageProduct->sxGroupIdenifier] = $this->_productRepository->getById($mageProduct->sxGroupIdenifier, false, $storeId) ?? false;
+                    }
+                    $parent = $cachedParents[$mageProduct->sxGroupIdenifier];
+                }
+
+                // todo: for group and bundle products
+                // ...
+
+
+                // check visibility
+                $productVisible = stripos($mageProduct->getAttributeText('visibility'),'Search') !== false;
+                if($parent){
+
+                    $parentVisible = stripos($parent->getAttributeText('visibility'),'Search') !== false;
+                    
+                    if($productVisible){
+                        $mageProduct->sxGroupIdenifier = $mageProduct->getId();
+                    }
+
+                    if(!$parentVisible && !$productVisible){
+                        $productsSortedOut++;
+                        continue;
+                    }
+                    
+                } elseif(!$productVisible) {
+                    $productsSortedOut++;
+                    continue;
+                }
+
+                
+                // check stock status just for simple products
+                if((!$ignoreOutOfStockStatus || !$ignoreQuantity) && $mageProduct->getTypeId() == 'simple') {
+
+                    $stock = $this->mageStockItem->get($product->getId());
+                    // check stock status
+                    if(!$ignoreOutOfStockStatus && $stock->getIsInStock()){
+                        $productsSortedOut++;
+                        continue;
+                    }
+
+                    // check stock quantity
+                    if(!$ignoreQuantity && !$stock->getQty()){
+                        $productsSortedOut++;
+                        continue; 
+                    }
+                }
+
+                $this->_sxUploader->addProduct($mageProduct, $this->_sxTransformerArgs);
+
             }
 
+            //increase collected products (with products that has not been sent)
+            if($productsSortedOut){
+                $this->_sxUploader->getStatus()->increaseNumberOfSortedOut($productsSortedOut);
+            }
+
+            $startUploading = $productCounter < $collectBatchSize;
+
             // if ready, start uploading
-            if ($productCounter < $collectBatchSize) {
+            if ($startUploading) {
+
+                $productsSortedOut = $this->_sxUploader->getStatus()->getNumberOfSortedOut();
+                $productsPrepared = $this->_sxUploader->getStatus()->getNumberOfCollected() - $productsSortedOut;
+
+                $this->_sxLogger->log("$productsPrepared products prepared for upload, $productsSortedOut products sorted out");
 
                 $response = $this->_sxUploader->startUploading();
 
                 if (isset($response['status']) && $response['status'] !== 'success') {
-                    $this->_sxHelper->log($response['status'] . ' - ' . $response['message'], 'error');
-                }
+                    $this->_sxLogger->log($response['status'] . ' - ' . $response['message'], 'error');
+                } 
             }
 
         } else {
@@ -184,11 +266,11 @@ class UploadController {
 
             
             if (isset($response['validation'][0]['schemaErrors'][0])) {
-                $this->_sxHelper->log(json_encode($response), 'error');
+                $this->_sxLogger->log(json_encode($response), 'error');
             }
 
             if (isset($response['status']) && $response['status'] !== 'success') {
-                $this->_sxHelper->log(json_encode($response), 'error');
+                $this->_sxLogger->log(json_encode($response), 'error');
             }
 
         }
@@ -204,7 +286,7 @@ class UploadController {
         $response = $this->_sxUploader->finalizeUpload($signalApi);
 
         if (isset($response['status']) && $response['status'] !== 'success') {
-            $this->_sxHelper->log(json_encode($response), 'error');
+            $this->_sxLogger->log(json_encode($response), 'error');
         }
     }
 
@@ -302,7 +384,7 @@ class UploadController {
         }
 
         if($productCounterTotal){
-            $this->_sxHelper->log("$productCounterTotal products added to update-queue", 'success');
+            $this->_sxLogger->log("$productCounterTotal products added to update-queue", 'success');
         }
         
     }
@@ -313,7 +395,7 @@ class UploadController {
     public function sendProductUpdates()
     {
         if($this->_sxUpdater->sendUploadBatch()){
-            $this->_sxHelper->log("product updates from queue sent", 'success');
+            $this->_sxLogger->log("product updates from queue sent", 'success');
         }
 
     }

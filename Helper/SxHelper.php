@@ -11,16 +11,13 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
 
-use Psr\Log\LoggerInterface;
-
-
 class SxHelper extends AbstractHelper
 {
 
     protected $_sxFolder = "semknox/";
 
     protected $_sxUploadBatchSize = 1000;
-    protected $_sxCollectBatchSize = 500;
+    protected $_sxCollectBatchSize = 250;
     protected $_sxRequestTimeout = 15;
 
     protected $_sxSandboxApiUrl = "https://stage-magento-v3.semknox.com/";
@@ -37,7 +34,6 @@ class SxHelper extends AbstractHelper
 
     public function __construct(
         ScopeConfigInterface $scopeConfig, 
-        LoggerInterface $logger,
         DirectoryList $dir,
         StoreManagerInterface $storeManagerInterface,
         Http $request,
@@ -46,7 +42,6 @@ class SxHelper extends AbstractHelper
     )
     {
         $this->_scopeConfig = $scopeConfig;
-        $this->_logger = $logger;
         $this->_dir = $dir;
         $this->_storeManager = $storeManagerInterface;
         $this->_request = $request;
@@ -104,10 +99,36 @@ class SxHelper extends AbstractHelper
     public function log($message, $logLevel = 'info')
     {
         // todo: improve
-        $this->_logger->info($message);
+        // OLD: $this->_logger->info($message);
+
+        // todo: still improve
+        // NEW:
+        $writer = new SemknoxWriterStreamBridge(BP . '/var/log/semknox.log');
+        $logger = new SemknoxLoggerBridge();
+        $logger->addWriter($writer);
+
+        $logLevel = \strtolower($logLevel);
+        switch($logLevel){
+            case 'error':
+                $logLevel = 'err';
+                break;
+            case 'warning':
+                $logLevel = 'warn';
+                break;
+            case 'debug':
+                $logLevel = 'debug';
+                break;
+            default:
+                if (!in_array($logLevel, ['info', 'alert', 'notice'])) {
+                    $logLevel = 'info';
+                }
+                break;
+
+        }
+
+        $logger->$logLevel($message);
     }
 
-    
     
     protected function _getStoreIdentifier($store)
     {

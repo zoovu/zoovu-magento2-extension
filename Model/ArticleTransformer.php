@@ -29,7 +29,7 @@ class ArticleTransformer extends AbstractProductTransformer
         $sxArticle = array();
 
         $sxArticle['identifier'] = $this->_product->getId();
-        $sxArticle['groupIdentifier'] = $this->_product->getParentId() ? $this->_product->getParentId() : $this->_product->getId();
+        $sxArticle['groupIdentifier'] = isset($this->_produc->sxGroupIdenifier) ? $this->_produc->sxGroupIdenifier : $this->_product->getId();
 
         $sxArticle['name'] = $this->_product->getName();
 

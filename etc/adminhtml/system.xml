@@ -61,11 +61,11 @@
                 </field-->
 
                 <field id="sxCollectBatchSize" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Number of products per package (upload)</label>
+                    <label>Number of products per package (reading)</label>
                 </field>
 
                 <field id="sxUploadBatchSize" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Number of products per package (reading)</label>
+                    <label>Number of products per package (upload)</label>
                 </field>
 
                 <field id="sxRequestTimeout" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
