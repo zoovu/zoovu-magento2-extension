@@ -123,8 +123,6 @@ class UploadController {
             $this->_sxUploader->startCollecting([
                 'expectedNumberOfProducts' => $mageArticleQty
             ]);
-
-            $this->_sxLogger->log("+/- $mageArticleQty products in this upload expected");
         }
     }
 
@@ -150,8 +148,9 @@ class UploadController {
      */
     public function continueFullUpload()
     {
+        // todo: make configurable
         $maxTime = 45; // seconds 
-        $maxMemory = 512; // MB
+        $maxMemory = 256; // MB
 
         if ($this->_sxUploader->isCollecting()) {
 
@@ -260,16 +259,7 @@ class UploadController {
             // if ready, start uploading
             if ($startUploading) {
 
-                $productsSortedOut = $this->_sxUploader->getStatus()->getNumberOfSortedOut();
-                $productsPrepared = $this->_sxUploader->getStatus()->getNumberOfCollected() - $productsSortedOut;
-
-                $this->_sxLogger->log("$productsPrepared products prepared for upload, $productsSortedOut products sorted out");
-
-                $response = $this->_sxUploader->startUploading();
-
-                if (isset($response['status']) && $response['status'] !== 'success') {
-                    $this->_sxLogger->log($response['status'] . ' - ' . $response['message'], 'error');
-                } 
+                $this->_sxUploader->startUploading();
             }
 
         } else {
@@ -277,17 +267,7 @@ class UploadController {
             // uploading
 
             // continue uploading...
-            $response = $this->_sxUploader->sendUploadBatch(true);
-
-            
-            if (isset($response['validation'][0]['schemaErrors'][0])) {
-                $this->_sxLogger->log(json_encode($response), 'error');
-            }
-
-            if (isset($response['status']) && $response['status'] !== 'success') {
-                $this->_sxLogger->log(json_encode($response), 'error');
-            }
-
+            $this->_sxUploader->sendUploadBatch(true);
         }
 
     }
@@ -299,10 +279,6 @@ class UploadController {
     public function finalizeFullUpload($signalApi = true)
     {
         $response = $this->_sxUploader->finalizeUpload($signalApi);
-
-        if (isset($response['status']) && $response['status'] !== 'success') {
-            $this->_sxLogger->log(json_encode($response), 'error');
-        }
     }
 
     /**
