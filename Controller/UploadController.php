@@ -63,6 +63,8 @@ class UploadController {
         $this->_productModel = $productModel;
         $this->_productStatus = $productStatus;
         $this->_productVisibility = $productVisibility;
+
+        $this->startTime = microtime(true); 
     }
 
 
@@ -148,6 +150,8 @@ class UploadController {
      */
     public function continueFullUpload()
     {
+        $maxTime = 45; // seconds 
+        $maxMemory = 512; // MB
 
         if ($this->_sxUploader->isCollecting()) {
 
@@ -157,10 +161,12 @@ class UploadController {
             $storeId = $this->_sxConfig->get('shopId');
             $collectBatchSize = $this->_sxConfig->get('collectBatchSize');
             $page = (int) ($this->_sxUploader->getNumberOfCollected() / $collectBatchSize) + 1;
+            $offset = $this->_sxUploader->getNumberOfCollected();
 
             $productCollection = $this->getUploadProductCollection($storeId);
-            $productCollection->setPageSize($collectBatchSize);
-            $productCollection->setCurPage($page);
+            $productCollection->getSelect()->limit($collectBatchSize, $offset);
+            //$productCollection->setPageSize($collectBatchSize);
+            //$productCollection->setCurPage($page);
 
             $ignoreQuantity = $this->_sxHelper->sxUploadProductsWithZeroQuantity();
             $ignoreOutOfStockStatus = $this->_sxHelper->sxUploadProductsWithStatusOutOfStock();
@@ -168,8 +174,21 @@ class UploadController {
             $cachedParents = [];
 
             $productCounter = 0;
-            $productsSortedOut = 0;
             foreach ($productCollection as $product) {
+
+                $memoryUsage = memory_get_usage();
+                $memoryUsage = round($memoryUsage/1048576,2);// in MB
+
+                if($memoryUsage >= $maxMemory){
+                    $this->_sxLogger->log("memory limit reached: $memoryUsage MB (Limit: $maxMemory MB), collected $productCounter products instead of $collectBatchSize", 'warning');
+                    return;
+                } 
+
+                $runningTime = round(microtime(true) - $this->startTime);
+                if($runningTime > $maxTime){
+                    $this->_sxLogger->log("script time limit reached: $runningTime s (Limit: $maxTime s), collected $productCounter products instead of $collectBatchSize", 'warning');
+                    return;
+                } 
 
                 $productCounter++;
                 
@@ -194,22 +213,23 @@ class UploadController {
 
 
                 // check visibility
-                $productVisible = stripos($mageProduct->getAttributeText('visibility'),'Search') !== false;
+                $productVisible = $mageProduct->getVisibility() >= 3;
+
                 if($parent){
 
-                    $parentVisible = stripos($parent->getAttributeText('visibility'),'Search') !== false;
+                    $parentVisible = $parent->getVisibility() >= 3;
                     
                     if($productVisible){
                         $mageProduct->sxGroupIdenifier = $mageProduct->getId();
                     }
 
                     if(!$parentVisible && !$productVisible){
-                        $productsSortedOut++;
+                        $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
                         continue;
                     }
                     
                 } elseif(!$productVisible) {
-                    $productsSortedOut++;
+                    $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
                     continue;
                 }
 
@@ -219,25 +239,20 @@ class UploadController {
 
                     $stock = $this->mageStockItem->get($product->getId());
                     // check stock status
-                    if(!$ignoreOutOfStockStatus && $stock->getIsInStock()){
-                        $productsSortedOut++;
+                    if(!$ignoreOutOfStockStatus && !$stock->getIsInStock()){
+                        $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
                         continue;
                     }
 
-                    // check stock quantity
+                    // check stock 
                     if(!$ignoreQuantity && !$stock->getQty()){
-                        $productsSortedOut++;
+                        $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
                         continue; 
                     }
                 }
 
                 $this->_sxUploader->addProduct($mageProduct, $this->_sxTransformerArgs);
 
-            }
-
-            //increase collected products (with products that has not been sent)
-            if($productsSortedOut){
-                $this->_sxUploader->getStatus()->increaseNumberOfSortedOut($productsSortedOut);
             }
 
             $startUploading = $productCounter < $collectBatchSize;
