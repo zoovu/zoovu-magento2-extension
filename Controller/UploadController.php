@@ -216,16 +216,21 @@ class UploadController {
 
                 if($parent){
 
-                    $parentVisible = $parent->getVisibility() >= 3;
-                    
+                    // if simple product VISIBLE, send it not as part of the parent
                     if($productVisible){
                         $mageProduct->sxGroupIdenifier = $mageProduct->getId();
                     }
 
+                    $parentVisible = $parent->getVisibility() >= 3;
+                    // if simple product AND parent NOT VISIBLE, do not send at all
                     if(!$parentVisible && !$productVisible){
                         $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
                         continue;
                     }
+
+                    // ELSE
+                    // if parent VISIBLE but simple product NOT VISIBLE, send simple product es part of parent
+                    // -> done in the upper part!
                     
                 } elseif(!$productVisible) {
                     $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
