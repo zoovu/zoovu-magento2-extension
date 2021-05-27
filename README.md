@@ -1,6 +1,6 @@
 # SEMKNOX SiteSearch360 Magento 2.x Module
 
-This is the SEMKNOX SiteSearch360 module for Magento 2
+This is the SEMKNOX SiteSearch360 module for Magento 2.x
 
 1. [Installation](#installation-via-composer)
 2. [Update Installation](#update-via-composer)
@@ -61,7 +61,7 @@ This is the SEMKNOX SiteSearch360 module for Magento 2
     ~~~
 
 
-## Troubleshooting and usefull magento 2 cli commands
+## Troubleshooting and usefull Magento 2.x cli commands
 
 *  run semknox cronjob only:
     ~~~shell
