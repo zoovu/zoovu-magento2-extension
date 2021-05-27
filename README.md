@@ -1,6 +1,9 @@
+# SEMKNOX Magento 2.x Module
 
-Installation via composer
-*************************
+This is the SEMKNOX SiteSearch360 module for Magento 2
+
+
+## Installation via composer
 
 Step 1:
 unpack Extension archive in magento 2 root folder
@@ -33,23 +36,25 @@ bin/magento cache:clean
 
 
 
-Update via composer
-*******************
+## Update via composer
 
 Step 1:
 composer update semknox/semknox-magento2
 
 Step 2:
+~~~php
 bin/magento setup:upgrade --keep-generated
 bin/magento setup:static-content:deploy
 bin/magento cache:clean
+~~~
 
 
-usefull magento cli commands
-***************************
+## offtopic: usefull magento cli commands
 
 run semknox cronjob only:
+~~~php
 php bin/magento cron:run --group=semknox_productsearch
+~~~
 
 compile without memory limit:
 php bin/magento -d memory_limit=-1 setup:di:compile
