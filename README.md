@@ -9,21 +9,29 @@ This is the SEMKNOX SiteSearch360 module for Magento 2.x
 
 ## Installation via composer
 
-1.  unpack Extension archive in magento 2 root folder
+1.  log in to your server via a command line and navigate to your magento 2 root folder
 
-2.  log in to your server via a command line and navigate to your magento 2 root folder
+2. add/update semknox-extension repository in your composer.json:
+    1.  as **LOCAL** composer repository:
+        1.   download the latest module version from http://semknox-magento2.goes.digital/latest
+        2.  unpack Extension archive in magento 2 root folder
+        3.  add repository to composer json
+            ~~~shell
+            composer config repositories.semknox path "extensions/semknox/*"
+            ~~~
 
-3.  add/update semknox-extension repository in your composer.json:
-    ~~~shell
-    composer config repositories.semknox path "extensions/semknox/*"
-    ~~~
-
-4.  requires semknox-extension and all of its dependencies in your magento 2 Installation
+    2.  as **REMOTE** composer repository:
+        ~~~shell
+        composer config repositories.semknox-api-core vcs "https://bitbucket.org/SEMKNOX/semknox-php-extension-core.git"
+        composer config repositories.semknox-magento2 vcs "https://bitbucket.org/SEMKNOX/semknox-magento2-extension.git"
+        ~~~
+        
+3.  requires semknox-extension and all of its dependencies in your magento 2 Installation
     ~~~shell
     composer require semknox/semknox-magento2
     ~~~
 
-5.  enable semknox-extension:
+4.  enable semknox-extension:
     ~~~shell
     bin/magento module:enable Semknox_Productsearch
     ~~~
@@ -33,12 +41,12 @@ This is the SEMKNOX SiteSearch360 module for Magento 2.x
     bin/magento module:disable Semknox_Productsearch
     ~~~
 
-6.  upgrade
+5.  upgrade
     ~~~shell
     bin/magento setup:upgrade
     ~~~
 
-7.  compile frontend and empty cache:
+6.  compile frontend and empty cache:
     ~~~shell
     bin/magento setup:di:compile
     bin/magento cache:clean
