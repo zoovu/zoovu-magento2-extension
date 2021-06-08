@@ -2,7 +2,7 @@
 
 use Semknox\Core\Services\Logging\NullLoggingService;
 
-if (class_exists('\Laminas\Log\Writer\Stream')) {
+if (class_exists('\Laminas\Log\Writer\Stream',true)) {
     // Magento >= 2.3.5
     class SemknoxWriterStreamBridge extends \Laminas\Log\Writer\Stream
     {
@@ -13,7 +13,7 @@ if (class_exists('\Laminas\Log\Writer\Stream')) {
     }
 }
 
-if (class_exists('\Laminas\Log\Logger')) {
+if (class_exists('\Laminas\Log\Logger',true)) {
     // Magento >= 2.3.5
     class SemknoxLoggerBridge extends \Laminas\Log\Logger
     {
