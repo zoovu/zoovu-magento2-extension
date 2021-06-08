@@ -78,7 +78,7 @@ This is the SEMKNOX SiteSearch360 module for Magento 2.x
 
 *  compile without memory limit:
     ~~~shell
-    php bin/magento -d memory_limit=-1 setup:di:compile
+    php bin/magento -dmemory_limit=-1 setup:di:compile
     ~~~
 
 *  empty cache:
