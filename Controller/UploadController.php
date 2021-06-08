@@ -241,18 +241,26 @@ class UploadController {
                 // check stock status just for simple products
                 if((!$ignoreOutOfStockStatus || !$ignoreQuantity) && $mageProduct->getTypeId() == 'simple') {
 
-                    $stock = $this->mageStockItem->get($product->getId());
-                    // check stock status
-                    if(!$ignoreOutOfStockStatus && !$stock->getIsInStock()){
-                        $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
-                        continue;
+                    try {
+                        // try, because: if article does not have "stock-article" 
+                        $stock = $this->mageStockItem->get($product->getId());
+
+                        // check stock status
+                        if (!$ignoreOutOfStockStatus && !$stock->getIsInStock()) {
+                            $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
+                            continue;
+                        }
+
+                        // check stock 
+                        if (!$ignoreQuantity && !$stock->getQty()) {
+                            $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
+                            continue;
+                        }
+
+                    } catch (\Exception $e) {
+                        // do nothing
                     }
 
-                    // check stock 
-                    if(!$ignoreQuantity && !$stock->getQty()){
-                        $this->_sxUploader->getStatus()->increaseNumberOfSortedOut();
-                        continue; 
-                    }
                 }
 
                 $this->_sxUploader->addProduct($mageProduct, $this->_sxTransformerArgs);
