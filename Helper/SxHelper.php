@@ -10,6 +10,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
+use Semknox\Productsearch\Helper\SxLogger;
 
 class SxHelper extends AbstractHelper
 {
@@ -38,7 +39,8 @@ class SxHelper extends AbstractHelper
         StoreManagerInterface $storeManagerInterface,
         Http $request,
         ProductMetadataInterface $productMetadata,
-        ModuleListInterface $moduleList
+        ModuleListInterface $moduleList,
+        SxLogger $sxLogger
     )
     {
         $this->_scopeConfig = $scopeConfig;
@@ -47,6 +49,7 @@ class SxHelper extends AbstractHelper
         $this->_request = $request;
         $this->productMetadata = $productMetadata;
         $this->_moduleList = $moduleList;
+        $this->_logger = $sxLogger;
 
         $this->_sxFolder = $this->_dir->getPath('var') . '/' . $this->_sxFolder;
 
@@ -98,35 +101,7 @@ class SxHelper extends AbstractHelper
 
     public function log($message, $logLevel = 'info')
     {
-        // todo: improve
-        // OLD: $this->_logger->info($message);
-
-        // todo: still improve
-        // NEW:
-        $writer = new SemknoxWriterStreamBridge(BP . '/var/log/semknox.log');
-        $logger = new SemknoxLoggerBridge();
-        $logger->addWriter($writer);
-
-        $logLevel = \strtolower($logLevel);
-        switch($logLevel){
-            case 'error':
-                $logLevel = 'err';
-                break;
-            case 'warning':
-                $logLevel = 'warn';
-                break;
-            case 'debug':
-                $logLevel = 'debug';
-                break;
-            default:
-                if (!in_array($logLevel, ['info', 'alert', 'notice'])) {
-                    $logLevel = 'info';
-                }
-                break;
-
-        }
-
-        $logger->$logLevel($message);
+        $this->_logger->log($message, $logLevel);
     }
 
     
