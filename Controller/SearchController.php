@@ -102,7 +102,7 @@ class SearchController
             $availableOrders[$option->getKey()] = $option->getName();
         };
 
-        if(!$availableOrders) $availableOrders = ['sxName' => 'sxName', 'sxPrice' => 'sxPrice']; // for testing
+        //if(!$availableOrders) $availableOrders = ['sxName' => 'sxName', 'sxPrice' => 'sxPrice']; // for testing
 
         return $availableOrders;
     }
