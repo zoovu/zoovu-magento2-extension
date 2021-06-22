@@ -111,6 +111,7 @@ class ArticleTransformer extends AbstractProductTransformer
     protected function _getImages($transformerArgs = [])
     {
         $mageImages = $this->_product->getMediaGalleryImages();
+        $removeFromImageUrl = $transformerArgs['sxConfig']->get('removeFromImageUrl');
         $images = [];
 
         $imageTypes = [];
@@ -129,7 +130,7 @@ class ArticleTransformer extends AbstractProductTransformer
             if(isset($imageTypes[$image->getFile()])){
                 foreach($imageTypes[$image->getFile()] as $type){
                     $images[$image->getFile().'_'. $type] = [
-                        'url' => $image->getUrl(),
+                        'url' => str_replace($removeFromImageUrl,'',$image->getUrl()),
                         'type' => $type,
                     ];
                 }
@@ -138,7 +139,7 @@ class ArticleTransformer extends AbstractProductTransformer
             $images = array_values($images);
             
             $images[] = [
-                'url' => $image->getUrl(), 
+                'url' => str_replace($removeFromImageUrl, '', $image->getUrl()),
                 'type' => 'LARGE',
             ];
         }
@@ -154,7 +155,7 @@ class ArticleTransformer extends AbstractProductTransformer
 
             $imagePlaceholder = $imageHelper->create();
             $images[] = [
-                'url' => $assetsRepos->getUrl($imagePlaceholder->getPlaceholder('image')),
+                'url' => str_replace($removeFromImageUrl, '', $assetsRepos->getUrl($imagePlaceholder->getPlaceholder('image'))),
                 'type' => 'LARGE',
             ];
             $appEmulation->stopEnvironmentEmulation();

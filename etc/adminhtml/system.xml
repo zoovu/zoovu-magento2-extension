@@ -69,7 +69,15 @@
                 </field>
 
                 <field id="sxRequestTimeout" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Request timeout</label>
+                    <label>Request timeout for Upload</label>
+                </field>
+
+                <field id="sxRequestTimeoutFrontend" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Request timeout for Search</label>
+                </field>
+
+                <field id="sxRemoveFromImageUrl" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Remove from Image URL (example: "/pub")</label>
                 </field>
 
             </group>

@@ -11,6 +11,7 @@
                 <sxCollectBatchSize>200</sxCollectBatchSize>
                 <sxUploadBatchSize>200</sxUploadBatchSize>
                 <sxRequestTimeout>15</sxRequestTimeout>
+                <sxRequestTimeoutFrontend>5</sxRequestTimeoutFrontend>
             </semknox_productsearch_settings>
         </semknox_productsearch>
     </default>

@@ -37,7 +37,8 @@ class SearchController
         $shopConfig = $this->_sxHelper->getConfig();
         if (!$shopConfig) return [];
 
-        $shopConfig['requestTimeout'] = '5'; // for search request should not be longer
+        //$shopConfig['requestTimeout'] = '5'; // for search request should not be longer
+        $shopConfig['requestTimeout'] = $shopConfig['requestTimeoutFrontend'];
 
         $this->_sxConfig = new SxConfig($shopConfig);
         $this->_sxCore = new SxCore($this->_sxConfig);

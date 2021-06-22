@@ -20,6 +20,7 @@ class SxHelper extends AbstractHelper
     protected $_sxUploadBatchSize = 1000;
     protected $_sxCollectBatchSize = 250;
     protected $_sxRequestTimeout = 15;
+    protected $_sxRequestTimeoutFrontend = 5;
 
     protected $_sxSandboxApiUrl = "https://stage-magento-v3.semknox.com/";
     protected $_sxApiUrl = "https://api-magento-v3.semknox.com/";
@@ -180,6 +181,8 @@ class SxHelper extends AbstractHelper
             'collectBatchSize' => (int) $this->get('sxCollectBatchSize', $storeId),
             'uploadBatchSize' => (int) $this->get('sxUploadBatchSize', $storeId),
             'requestTimeout' => (int) $this->get('sxRequestTimeout', $storeId),
+            'requestTimeoutFrontend' => (int) $this->get('sxRequestTimeoutFrontend', $storeId),
+            'removeFromImageUrl' => $this->get('sxRemoveFromImageUrl', $storeId,''),
 
             'storeIdentifier' => $storeIdentifier,
             'storeRootCategory' => $store->getRootCategoryId(),
