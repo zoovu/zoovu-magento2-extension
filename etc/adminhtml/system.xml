@@ -80,6 +80,10 @@
                     <label>Remove from Image URL (example: "/pub")</label>
                 </field>
 
+                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of content results per Page(0 = disabled)</label>
+                </field>
+
             </group>
 
             <group id="semknox_productsearch_cronjob" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">

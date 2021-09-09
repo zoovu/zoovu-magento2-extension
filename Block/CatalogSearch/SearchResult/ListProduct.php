@@ -162,6 +162,7 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
             $product->setRequestPath($contentResult->getLink());
             $product->setShortDescription('in '. $contentResult->getSectionName());
             $product->setData('salable', false);
+            $product->setData('image', '/test.jpg');
             $collection->addItem($product);
         }
 
