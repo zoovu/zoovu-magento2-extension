@@ -162,13 +162,72 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
             $product->setRequestPath($contentResult->getLink());
             $product->setShortDescription('in '. $contentResult->getSectionName());
             $product->setData('salable', false);
-            $product->setData('image', '/test.jpg');
             $collection->addItem($product);
         }
 
 
+
         return $collection;
 
+    }
+
+     /**
+     * Retrieve additional blocks html
+     *
+     * @return string
+     */
+    public function getAdditionalHtml()
+    {
+        $collection = $this->_getProductCollection();
+
+        $contentBoxesCount = count($collection->_sxContentResults);
+        if(!$contentBoxesCount) return parent::getAdditionalHtml();
+
+        $productBoxesCount = count($collection) - $contentBoxesCount; 
+        $contentBoxEvery = ceil(($productBoxesCount / $contentBoxesCount) -1);
+
+        $html = '<script>document.addEventListener("DOMContentLoaded", function() {';
+
+        foreach ($collection->_sxContentResults as $idx => $contentResult) {
+            $html .= "var sxContent". $idx. " = document.getElementById('product-item-info_sxcontent-" . $idx . "');";
+
+            // set Url
+            $html .= "sxContent" . $idx . ".getElementsByTagName('a')[0].href = '".$contentResult->getLink()."';";
+
+            // remove product actions
+            $html .= "sxContent" . $idx . ".getElementsByClassName('product-item-actions')[0].remove();";
+            
+            // remove price container
+            $html .= "document.getElementById('product-price-sxcontent-" . $idx . "').remove();";
+            
+            // set image
+            $html .= "sxContent" . $idx . ".getElementsByClassName('product-image-photo')[0].src = '".$contentResult->getImage()."';";
+
+        }
+
+        // move boxes
+        $html .= "var mageProductList = document.getElementsByClassName('product-item');";
+        $html .= "
+                var contentBoxCounter = 0;
+                var contentResultIdx = 0;
+                for (var i = $contentBoxesCount; i < mageProductList.length; i++) {
+
+                    if(contentBoxCounter == ".$contentBoxEvery. " && document.getElementById('product-item-info_sxcontent-' + contentResultIdx)){
+                        contentBox = document.getElementById('product-item-info_sxcontent-' + contentResultIdx);
+                        mageProductList[i].parentNode.insertBefore(contentBox.parentNode, mageProductList[i]);
+                        contentBoxCounter = 0;
+                        i--;
+                        contentResultIdx++;
+                    } else {
+                        contentBoxCounter++;
+                    }
+
+                }";
+        
+        $html .= '});</script>';
+
+
+        return $html.parent::getChildHtml('additional');
     }
 
 }
