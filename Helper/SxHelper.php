@@ -22,8 +22,8 @@ class SxHelper extends AbstractHelper
     protected $_sxRequestTimeout = 15;
     protected $_sxRequestTimeoutFrontend = 5;
 
-    protected $_sxSandboxApiUrl = "https://stage-magento-v3.semknox.com/";
-    protected $_sxApiUrl = "https://api-magento-v3.semknox.com/";
+    protected $_sxSandboxApiUrl = "https://api-magento.sitesearch360.com/";
+    protected $_sxApiUrl = "https://api-magento.sitesearch360.com/";
 
     protected $_sxMasterConfig = false;
     protected $_sxMasterConfigPath = "masterConfig%s.json";
