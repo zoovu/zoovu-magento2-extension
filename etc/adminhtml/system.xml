@@ -31,12 +31,12 @@
                 </field>
 
                 <field id="sxUploadActive" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Productupload to SEMKNOX active</label>
+                    <label>Productupload to SiteSearch360 active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
                 <field id="sxIncrementalUpdatesActive" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>incremental Productupdates to SEMKNOX active</label>
+                    <label>incremental Productupdates to SiteSearch360 active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
@@ -51,7 +51,7 @@
                 </field>
 
                 <field id="sxAnswerActive" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>show SEMKNOX search interpretation sentence</label>
+                    <label>show SiteSearch360 search interpretation sentence</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 

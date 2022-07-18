@@ -171,17 +171,26 @@ class SxHelper extends AbstractHelper
         $currentShopConfig = [
             'projectId' => $projectId,
             'apiKey' => $apiKey,
-            'sandbox' => $this->get('sxIsSandbox', $storeId),
 
+            /*
+            'sandbox' => $this->get('sxIsSandbox', $storeId),
             'apiUrl' => $this->get('sxIsSandbox', $storeId) ? $this->get('sxSandboxApiUrl', $storeId) : $this->get('sxApiUrl', $storeId),
+            */
+            'sandbox' => false,
+            'apiUrl' => $this->get('sxApiUrl', $storeId),
+            
+            
             'shopId' => $storeId,
             'cronjobHour' => (int) $this->get('sxCronjobHour', $storeId),
             'cronjobMinute' => (int) $this->get('sxCronjobMinute', $storeId),
 
             'collectBatchSize' => (int) $this->get('sxCollectBatchSize', $storeId),
             'uploadBatchSize' => (int) $this->get('sxUploadBatchSize', $storeId),
-            'requestTimeout' => (int) $this->get('sxRequestTimeout', $storeId),
-            'requestTimeoutFrontend' => (int) $this->get('sxRequestTimeoutFrontend', $storeId),
+
+            // Ticket 2021-03-26: timeout min. 5s
+            'requestTimeout' => ((int) $this->get('sxRequestTimeout', $storeId) >= 5) ?  (int) $this->get('sxRequestTimeout', $storeId) : 5,
+            'requestTimeoutFrontend' => ((int) $this->get('sxRequestTimeoutFrontend', $storeId) >= 5) ? (int) $this->get('sxRequestTimeoutFrontend', $storeId) : 5,
+
             'removeFromImageUrl' => $this->get('sxRemoveFromImageUrl', $storeId,''),
 
             'storeIdentifier' => $storeIdentifier,

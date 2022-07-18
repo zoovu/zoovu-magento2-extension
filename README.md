@@ -1,6 +1,6 @@
-# SEMKNOX SiteSearch360 Magento 2.x Module
+# SiteSearch360 Magento 2.x Module
 
-This is the SEMKNOX SiteSearch360 module for Magento 2.x
+This is the SiteSearch360 module for Magento 2.x
 
 1. [Installation](#installation-via-composer)
 2. [Update Installation](#update-via-composer)

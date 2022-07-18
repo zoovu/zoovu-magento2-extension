@@ -1,8 +1,8 @@
 {
     "name": "semknox/semknox-magento2",
-    "description": "This is the SEMKNOX SiteSearch360 module for Magento 2",
-    "homepage": "https://www.semknox.com",
-    "version": "3.1.13",
+    "description": "This is the SiteSearch360 module for Magento 2",
+    "homepage": "https://www.sitesearch360.com/",
+    "version": "3.1.14",
     "type": "magento2-module",
     "keywords": [
         "semknox",
@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.6",
         "magento/framework": ">=100.0.4",
-        "semknox/semknox-core": ">=3.2.8"
+        "semknox/semknox-core": ">=3.2.11"
     },
     "repositories": [
         {
