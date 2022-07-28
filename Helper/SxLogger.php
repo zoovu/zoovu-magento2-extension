@@ -7,8 +7,14 @@ if (class_exists('\Laminas\Log\Writer\Stream',true)) {
     class SemknoxWriterStreamBridge extends \Laminas\Log\Writer\Stream
     {
     }
-} else {
+} elseif (class_exists('\Zend\Log\Writer\Stream', true)) {
+    // Magento < 2.3.5
     class SemknoxWriterStreamBridge extends \Zend\Log\Writer\Stream
+    {
+    }
+} else {
+    // Magento >= 2.4.3
+    class SemknoxWriterStreamBridge extends \Zend_Log_Writer_Stream
     {
     }
 }
@@ -18,8 +24,14 @@ if (class_exists('\Laminas\Log\Logger',true)) {
     class SemknoxLoggerBridge extends \Laminas\Log\Logger
     {
     }
-} else {
+} elseif (class_exists('\Zend\Log\Logger', true)) {
+    // Magento < 2.3.5
     class SemknoxLoggerBridge extends \Zend\Log\Logger
+    {
+    }
+} else {
+    // Magento >= 2.4.3
+    class SemknoxLoggerBridge extends \Zend_Log
     {
     }
 }
