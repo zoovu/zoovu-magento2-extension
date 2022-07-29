@@ -32,7 +32,7 @@ class SxHelper extends AbstractHelper
     protected $_sxUpdateQueuePath = "update-queue/";
 
 
-    protected $_sxShopConfigs = false;
+    protected $_sxShopConfigs = [];
 
     public function __construct(
         ScopeConfigInterface $scopeConfig, 
@@ -125,7 +125,7 @@ class SxHelper extends AbstractHelper
 
             $storeIdentifier = $this->_getStoreIdentifier($store);
 
-            if (is_array($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier])){
+            if (!empty($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier])){
                 continue;
             }
 
@@ -154,7 +154,7 @@ class SxHelper extends AbstractHelper
 
         $storeIdentifier = $this->_getStoreIdentifier($store);
 
-        if(is_array($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier]))
+        if(!empty($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier]))
         {
             return $this->_sxShopConfigs[$storeIdentifier];
         }
