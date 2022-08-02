@@ -22,6 +22,11 @@ class SearchController
         $this->_toolbar = $toolbar;
     }
 
+    public function isSxSearchAvailable()
+    {
+        return !!$this->_getSearchResponse();
+    }
+
     private function _getSearchResponse()
     {
         if(!$this->_sxHelper->isSxSearchFrontendActive()){

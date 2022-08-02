@@ -55,11 +55,11 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 
     private function initializeProductCollection() 
     {
-        if(!$this->_sxHelper->isSxSearchFrontendActive()){
+        if(!$this->_sxHelper->isSxSearchFrontendActive() || !$this->sxSearch->isSxSearchAvailable()){
             $collection = parent::_getProductCollection();
             $collection->_isSxSearch = false;
             return $collection;
-        } 
+        }
 
         $productIds = $this->sxSearch->getArticles();
 
