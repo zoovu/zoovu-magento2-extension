@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <semknox_productsearch>
+        <semknox_productsearch_general>
             <semknox_productsearch_settings>
                 <sxFrontendActive>1</sxFrontendActive>
                 <sxUploadActive>1</sxUploadActive>
@@ -13,6 +13,6 @@
                 <sxRequestTimeout>15</sxRequestTimeout>
                 <sxRequestTimeoutFrontend>5</sxRequestTimeoutFrontend>
             </semknox_productsearch_settings>
-        </semknox_productsearch>
+        </semknox_productsearch_general>
     </default>
 </config>

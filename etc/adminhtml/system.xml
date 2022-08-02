@@ -23,10 +23,10 @@
                     <label>API Key</label>
                 </field>
 
-                <field id="sxIsSandbox" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <!--field id="sxIsSandbox" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sandbox-Mode active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
+                </field-->
 
                 <field id="sxFrontendActive" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SiteSearch360 in frontend active</label>
