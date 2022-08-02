@@ -73,6 +73,10 @@ class SxHelper extends AbstractHelper
     public function get($key, $storeId = null, $default = null)
     {
         $configGroupsToCheck = [
+            'semknox_productsearch_general/semknox_productsearch_settings/',
+            'semknox_productsearch_scheduler/semknox_productsearch_cronjob/',
+
+            // fallback for older extension versions
             'semknox_productsearch/semknox_productsearch_settings/',
             'semknox_productsearch/semknox_productsearch_cronjob/'
         ];

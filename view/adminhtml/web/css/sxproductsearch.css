@@ -1,0 +1,13 @@
+.admin__menu .level-0.item-sitesearch360>a:before {
+    content: url('../images/sitesearch360.svg');
+    height: 28px;
+    margin: 0 auto;
+    /*width: 30px;*/
+}
+
+.config-nav .sitesearch360-tab .admin__page-nav-title>strong {
+    content: url('../images/sitesearch360_big.svg');
+    height: 22px;
+    margin: 0 auto;
+    /*width: 30px;*/
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    
+    <menu>
+       <add id="Semknox_Productsearch::sitesearch360" title="SiteSearch360" module="Semknox_Productsearch" sortOrder="70" action="admin/system_config/edit/section/semknox_productsearch_general" resource="Semknox_Productsearch::config" />
+    </menu>
+
+</config>
