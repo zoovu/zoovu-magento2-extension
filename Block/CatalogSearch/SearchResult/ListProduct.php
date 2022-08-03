@@ -43,11 +43,17 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         );
     }
 
-
     protected function _getProductCollection() 
     {
         if ($this->_productCollection === null) {
-            $this->_productCollection = $this->initializeProductCollection();
+
+            if (!$this->_sxHelper->isSxSearchFrontendActive() || !$this->sxSearch->isSxSearchAvailable()) {
+                $this->_productCollection = parent::_getProductCollection();
+                $this->_productCollection->_isSxSearch = false;
+            } else {
+                $this->_productCollection = $this->initializeProductCollection();
+                $this->_productCollection->_isSxSearch = true;
+            }
         }
 
         return $this->_productCollection;
@@ -55,12 +61,6 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 
     private function initializeProductCollection() 
     {
-        if(!$this->_sxHelper->isSxSearchFrontendActive() || !$this->sxSearch->isSxSearchAvailable()){
-            $collection = parent::_getProductCollection();
-            $collection->_isSxSearch = false;
-            return $collection;
-        }
-
         $productIds = $this->sxSearch->getArticles();
 
         // get collection
@@ -178,15 +178,24 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
      */
     public function getAdditionalHtml()
     {
-        $collection = $this->_getProductCollection();
+        $html = parent::getAdditionalHtml();
+        if (!$this->_productCollection->_isSxSearch) {
+            $html .= "<script type=\"text/javascript\">var sxSearchAvailable = false; console.info('SiteSearch360 Magento2-Module FALLBACK MODE');</script>";
+            return $html;
+        }
 
+        $html .= "<script type=\"text/javascript\">var sxSearchAvailable = true;</script>";
+
+        $collection = $this->_productCollection;
         $contentBoxesCount = count($collection->_sxContentResults);
-        if(!$contentBoxesCount) return parent::getAdditionalHtml();
+        if ($this->_productCollection->_isSxSearch && !$contentBoxesCount) {
+            return $html;
+        }
 
         $productBoxesCount = count($collection) - $contentBoxesCount; 
         $contentBoxEvery = ceil(($productBoxesCount / $contentBoxesCount) -1);
 
-        $html = '<script>document.addEventListener("DOMContentLoaded", function() {';
+        $html .= '<script>document.addEventListener("DOMContentLoaded", function() {';
 
         foreach ($collection->_sxContentResults as $idx => $contentResult) {
             $html .= "var sxContent". $idx. " = document.getElementById('product-item-info_sxcontent-" . $idx . "');";
@@ -227,7 +236,7 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         $html .= '});</script>';
 
 
-        return $html.parent::getChildHtml('additional');
+        return $html;
     }
 
 }
