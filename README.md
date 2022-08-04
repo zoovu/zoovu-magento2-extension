@@ -13,8 +13,8 @@ This is the SiteSearch360 module for Magento 2.x
 
 2. add/update semknox-extension repository in your composer.json:
     1.  as **LOCAL** composer repository:
-        1.   download the latest module version from http://semknox-magento2.goes.digital/latest
-        2.  unpack Extension archive in magento 2 root folder
+        1.  download the latest versions from https://bitbucket.org/SEMKNOX/semknox-magento2-extension and https://bitbucket.org/SEMKNOX/semknox-php-extension-core and 
+        2.  unpack both project archives in "extensions" folder (create if not exists) in your magento 2 root folder
         3.  add repository to composer json
             ~~~shell
             composer config repositories.semknox path "extensions/semknox/*"
