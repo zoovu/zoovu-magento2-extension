@@ -1,6 +1,10 @@
 <?php if ($block->getConfigValue("sxFrontendActive")) : ?>
     <script type="text/javascript">
-        if(sxSearchAvailable){
+        if (typeof sxSearchAvailable === 'undefined') {
+            sxSearchAvailable = true;
+        }
+
+        if (sxSearchAvailable) {
             /* eslint-disable */
             (function() {
                 var siteId = '<?= $block->getConfigValue("projectId") ?>'; // the project id
