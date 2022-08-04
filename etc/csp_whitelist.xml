@@ -5,30 +5,40 @@
             <values>
                 <value id="sitesearch360-script" type="host">*.sitesearch360.com</value>
                 <value id="semknox-script" type="host">*.semknox.com</value>
+                <value id="ddev-script" type="host" >*.ddev.site</value>
+                <value id="youbilab-script" type="host" >*.youbilab.com</value>
             </values>
         </policy>
         <policy id="style-src">
             <values>
                 <value id="sitesearch360-style" type="host">*.sitesearch360.com</value>
                 <value id="semknox-style" type="host">*.semknox.com</value>
+                <value id="ddev-style" type="host" >*.ddev.site</value>
+                <value id="youbilab-style" type="host" >*.youbilab.com</value>
             </values>
         </policy>
         <policy id="connect-src">
             <values>
                 <value id="sitesearch360-connect" type="host">*.sitesearch360.com</value>
                 <value id="semknox-connect" type="host">*.semknox.com</value>
+                <value id="ddev-connect" type="host" >*.ddev.site</value>
+                <value id="youbilab-connect" type="host" >*.youbilab.com</value>
             </values>
         </policy>
         <policy id="media-src">
             <values>
                 <value id="sitesearch360-media" type="host">*.sitesearch360.com</value>
                 <value id="semknox-media" type="host">*.semknox.com</value>
+                <value id="ddev-media" type="host" >*.ddev.site</value>
+                <value id="youbilab-media" type="host" >*.youbilab.com</value>
             </values>
         </policy>
         <policy id="img-src">
             <values>
                 <value id="sitesearch360-img" type="host">*.sitesearch360.com</value>
                 <value id="semknox-img" type="host">*.semknox.com</value>
+                <value id="ddev-img" type="host" >*.ddev.site</value>
+                <value id="youbilab-img" type="host" >*.youbilab.com</value>
             </values>
         </policy>
     </policies>
