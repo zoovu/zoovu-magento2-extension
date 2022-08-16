@@ -29,8 +29,10 @@
                     callbacks: {
                         preSearch: function(query) { // handle query suggestions
                             var searchForm = document.getElementsByName('search')[0];
-                            var searchBox = document.getElementsByName('search')[0];
-                            searchBox.value = query;
+                            if (typeof query != "undefined" && query != null) {
+                                var searchBox = document.getElementsByName('search')[0];
+                                searchBox.value = query;
+                            }
                             searchForm.submit();
                             return false; // prevent search
                         }
