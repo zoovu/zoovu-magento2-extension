@@ -10,12 +10,18 @@
                 var siteId = '<?= $block->getConfigValue("projectId") ?>'; // the project id
                 window.ss360Config = {
                     siteId: siteId,
+                    language: '<?= $block->getCurrentLanguage() ?>',
                     baseUrl: '<?= $block->getConfigValue("apiUrl") ?>search?projectId=' + siteId + '&userGroup=<?= $block->getConfigValue("userGroup") ?>',
                     suggestBaseUrl: '<?= $block->getConfigValue("apiUrl") ?>search/suggestions?projectId=' + siteId + '&userGroup=<?= $block->getConfigValue("userGroup") ?>',
                     searchBox: {
                         selector: 'input[name="q"]', // search box css selector
                         searchButton: 'button.action.search', // search button css selector (makes the search suggestions extend over the full search form width)
-                        preventFormParentSubmit: false // prevents the search plugin from preventing search form submit
+                        preventFormParentSubmit: false, // prevents the search plugin from preventing search form submit
+                        autofocus: false,
+                        focusLayer: false
+                    },
+                    suggestions: {
+                        querySuggestionHeadline: '<?= __("Did you mean") ?>'
                     },
                     results: {
                         ignoreEnter: true // search plugin will ignore enter keys (won't submit search on enter)
@@ -31,7 +37,7 @@
                     }
                 };
                 var e = document.createElement('script');
-                e.src = 'https://cdn.sitesearch360.com/v13/sitesearch360-v13.min.js';
+                e.src = 'https://cdn.sitesearch360.com/v14/sitesearch360-v14.min.js';
                 document.getElementsByTagName('body')[0].appendChild(e);
             }());
 

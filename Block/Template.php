@@ -13,10 +13,12 @@ class Template extends \Magento\Framework\View\Element\Template
         SxHelper $sxHelper,
         ModuleListInterface $moduleList,
         \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Framework\Locale\Resolver $store,
         array $data = []
     ) {
         $this->_sxHelper = $sxHelper;
         $this->_moduleList = $moduleList;
+        $this->_store = $store;
 
         parent::__construct($context, $data);
     }
@@ -31,6 +33,13 @@ class Template extends \Magento\Framework\View\Element\Template
 
         return isset($this->_sxConfig[$key]) ? $this->_sxConfig[$key] : '';
         
+    }
+
+    public function getCurrentLanguage()
+    {
+        $fullLanguageCode = $this->_store->getLocale() ?? 'en';
+        $language = explode('_', $fullLanguageCode,2);
+        return $language[0];
     }
 
     public function getExtensionVersion()

@@ -53,3 +53,7 @@
         font-family: 'luma-icons';
         content: '\e608';
 }
+#unibox-suggest-box {
+    border-radius: 0px;
+    padding: 0;
+}
