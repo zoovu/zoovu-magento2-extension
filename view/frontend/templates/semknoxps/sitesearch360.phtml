@@ -28,11 +28,9 @@
                     },
                     callbacks: {
                         preSearch: function(query) { // handle query suggestions
-                            var searchForm = document.getElementsByName('search')[0];
-                            if (typeof query != "undefined" && query != null) {
-                                var searchBox = document.getElementsByName('search')[0];
-                                searchBox.value = query;
-                            }
+                            var searchForm = document.getElementById('search_mini_form');
+                            var searchBox = document.getElementsByName('q')[0];
+                            searchBox.value = query;
                             searchForm.submit();
                             return false; // prevent search
                         }
