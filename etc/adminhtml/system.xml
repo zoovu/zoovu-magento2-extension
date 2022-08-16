@@ -12,8 +12,13 @@
 
             <resource>Semknox_Productsearch::config</resource>
 
-            <group id="semknox_productsearch_settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="semknox_productsearch_settings" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
+
+                 <field id="sxCreateAccount" translate="" type="text" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <frontend_model>Semknox\Productsearch\Block\System\Config\Account</frontend_model>
+                    <label>Create Account</label>
+                </field>
 
                 <field id="sxProjectId" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Project ID</label>

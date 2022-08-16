@@ -1,0 +1,112 @@
+<?php /* @var $block \Semknox\Productsearch\Block\System\Config\Account */ ?>
+
+<script>
+    require([
+        'jquery',
+        'prototype'
+    ], function(jQuery) {
+
+        $projectId = jQuery('#semknox_productsearch_general_semknox_productsearch_settings_sxProjectId');
+        $apiKey = jQuery('#semknox_productsearch_general_semknox_productsearch_settings_sxApiKey');
+        $projectIdRow = jQuery('#semknox_productsearch_general_semknox_productsearch_settings_sxProjectId').parent().parent().hide();
+        $apiKeyRow = jQuery('#semknox_productsearch_general_semknox_productsearch_settings_sxApiKey').parent().parent().hide();
+        $createAccount = jQuery('#create_sitesearch_project').hide();
+        $buttonsRow = jQuery('#row_semknox_productsearch_general_semknox_productsearch_settings_sxCreateAccount').hide();
+        $createButton = jQuery('#create_account_button');
+        $loginButton = jQuery('#login_button');
+        $saveButton = jQuery('#save');
+
+        if ($projectId.val() && $apiKey.val()) {
+            $projectIdRow.show();
+            $apiKeyRow.show();
+        } else {
+            $buttonsRow.show()
+        }
+
+        $loginButton.click(function() {
+            $projectIdRow.show();
+            $projectId.prop("required", true);
+            $apiKeyRow.show();
+            $apiKey.prop("required", true);
+            $createAccount.hide();
+
+            $loginButton.prop("disabled", true);
+            $createButton.prop("disabled", false);
+            $saveButton.prop("disabled", false);
+
+            $createAccount.text('');
+        });
+
+        $createButton.click(function() {
+
+            $saveButton.prop("disabled", true);
+
+            $projectIdRow.hide();
+            $projectId.prop("required", false);
+            $apiKeyRow.hide();
+            $apiKey.prop("required", false);
+            $createAccount.show();
+
+            $createButton.prop("disabled", true);
+            $loginButton.prop("disabled", false);
+
+            var e = document.createElement('script');
+            e.id = 'sitesearch360_account_script';
+            e.src = 'https://cdn.sitesearch360.com/shop-extension/sitesearch360-shop-accounting-extension.min.js';
+            document.getElementsByTagName('body')[0].appendChild(e);
+        });
+
+
+        <?php $accountData = $block->getAccountData(); ?>
+        window.ss360ShopPluginConfig = {
+            contentBlock: '#create_sitesearch_project',
+            storeView: [{
+                lang: 'de',
+                name: 'myshop.com_de',
+                domain: 'myshop.com'
+            }],
+            companyName: 'My Shop',
+            email: '',
+            shopSystem: 'MAGENTO',
+            shopSystemVersion: '<?= $accountData['shopSystemVersion'] ?>',
+            extensionVersion: '<?= $accountData['extensionVersion'] ?>',
+            success: function(data) {
+                $createAccount.text('');
+                $projectIdRow.show();
+                $apiKeyRow.show();
+                $createAccount.hide();
+
+                createdStore = data.data.data[0];
+                console.log(createdStore);
+
+                $projectId.val(createdStore.projectId);
+                $apiKey.val(createdStore.apiKey);
+
+                $saveButton.prop("disabled", false);
+                $saveButton.click();
+            },
+            error: function(status, statusText, event) {
+                console.error(status, statusText, event);
+            }
+        }
+
+    });
+</script>
+
+<?php echo $block->getAccountHtml() ?>
+<div id="create_sitesearch_project"></div>
+
+<style>
+    #create_sitesearch_project {
+        padding: 20px 0 20px 0;
+    }
+
+    #create_sitesearch_project div {
+        padding: 10px 0 10px 0;
+    }
+
+    #create_sitesearch_project input#ss360-email {
+        display: block;
+        width: 100%
+    }
+</style>

@@ -294,4 +294,9 @@ class SxHelper extends AbstractHelper
         return $this->_moduleList->getOne('Semknox_Productsearch')['setup_version'];
     }
 
+    public function getSystemVersion()
+    {
+        return $this->productMetadata->getVersion();
+    }
+
 }
