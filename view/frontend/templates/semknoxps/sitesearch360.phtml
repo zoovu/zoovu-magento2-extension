@@ -4,13 +4,20 @@
             sxSearchAvailable = true;
         }
 
+        <?php
+        $currentLanguage = $block->getCurrentLanguage();
+        $supportedLanguages = ['en', 'de', 'fr', 'nl', 'pl', 'it', 'es', 'mx', 'tr', 'pt'];
+        $currentLanguage = in_array($currentLanguage, $supportedLanguages) ? $currentLanguage : 'en';
+        ?>
+
         if (sxSearchAvailable) {
             /* eslint-disable */
             (function() {
                 var siteId = '<?= $block->getConfigValue("projectId") ?>'; // the project id
                 window.ss360Config = {
                     siteId: siteId,
-                    language: '<?= $block->getCurrentLanguage() ?>',
+                    ecom: true,
+                    language: '<?= $currentLanguage ?>',
                     baseUrl: '<?= $block->getConfigValue("apiUrl") ?>search?projectId=' + siteId + '&userGroup=<?= $block->getConfigValue("userGroup") ?>',
                     suggestBaseUrl: '<?= $block->getConfigValue("apiUrl") ?>search/suggestions?projectId=' + siteId + '&userGroup=<?= $block->getConfigValue("userGroup") ?>',
                     searchBox: {

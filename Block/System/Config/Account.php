@@ -72,7 +72,7 @@ class Account extends Field
             'Magento\Backend\Block\Widget\Button')->setData(
             [
                 'id' => 'create_account_button',
-                'label' => __('Create Project Account'),
+                'label' => __('Create SS360 project for this Store View'),
             ]
         );
 
@@ -81,7 +81,7 @@ class Account extends Field
         )->setData(
             [
                 'id' => 'login_button',
-                'label' => __('Login with existing Project'),
+                'label' => __('Login with existing SS360 Project'),
                 'class' => 'primary'
             ]
         );
