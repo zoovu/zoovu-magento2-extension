@@ -28,14 +28,15 @@ class ArticleTransformer extends AbstractProductTransformer
     {
         $sxArticle = array();
 
-        $sxArticle['identifier'] = $this->_product->getId();
+        $sxArticle['identifier'] = (string) $this->_product->getId();
         $sxArticle['groupIdentifier'] = (isset($this->_product->sxGroupIdenifier) && $this->_product->sxGroupIdenifier) ? $this->_product->sxGroupIdenifier : $this->_product->getId();
+        $sxArticle['groupIdentifier'] = (string) $sxArticle['groupIdentifier'];
 
-        $sxArticle['name'] = $this->_product->getName();
+        $sxArticle['name'] = (string) $this->_product->getName();
 
         $sxArticle['productUrl'] = $this->_product->getUrlModel()->getProductUrl($this->_product, ['_escape' => true]);
         $sxArticle['productUrl'] = explode('?', $sxArticle['productUrl']);
-        $sxArticle['productUrl'] = $sxArticle['productUrl'][0];
+        $sxArticle['productUrl'] = (string) $sxArticle['productUrl'][0];
 
         $categories = array();
         if (!isset($transformerArgs['disableCategories']) || !$transformerArgs['disableCategories']) {
@@ -227,8 +228,8 @@ class ArticleTransformer extends AbstractProductTransformer
         if (is_array($value) || is_object($value)) return $attributes;
 
         $attributes[] = [
-            'key' => $key,
-            'value' => $value
+            'key' => (string) $key,
+            'value' => (string) $value
         ];
 
         //$transformerArgs['sxHelper']->log("$code: $key: $value");
