@@ -2,17 +2,36 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <semknox_productsearch_general>
+
             <semknox_productsearch_settings>
-                <sxFrontendActive>1</sxFrontendActive>
-                <sxUploadActive>1</sxUploadActive>
+                <sxFrontendActive>0</sxFrontendActive>
                 <sxAnswerActive>1</sxAnswerActive>
                 <sxUploadProductsWithStatusOutOfStock>1</sxUploadProductsWithStatusOutOfStock>
                 <sxUploadProductsWithZeroQuantity>1</sxUploadProductsWithZeroQuantity>
+            </semknox_productsearch_settings>
+
+            <semknox_productsearch_advanced>
+                <sxRequestTimeoutFrontend>8</sxRequestTimeoutFrontend>
+            </semknox_productsearch_advanced>
+
+        </semknox_productsearch_general>
+        <semknox_productsearch_sync>
+
+            <semknox_productsearch_sync>
+                <sxUploadActive>1</sxUploadActive>
+                <sxIncrementalUpdatesActive>0</sxIncrementalUpdatesActive>
                 <sxCollectBatchSize>200</sxCollectBatchSize>
                 <sxUploadBatchSize>200</sxUploadBatchSize>
-                <sxRequestTimeout>15</sxRequestTimeout>
-                <sxRequestTimeoutFrontend>5</sxRequestTimeoutFrontend>
-            </semknox_productsearch_settings>
-        </semknox_productsearch_general>
+                <sxRequestTimeout>100</sxRequestTimeout>
+                <sxMemoryLimit>512</sxMemoryLimit>
+                <sxMaxExecutionTime>45</sxMaxExecutionTime>
+            </semknox_productsearch_sync>
+
+            <semknox_productsearch_cronjob>
+                <sxCronjobHour>02</sxCronjobHour>
+                <sxCronjobMinute>00</sxCronjobMinute>
+            </semknox_productsearch_cronjob>
+
+        </semknox_productsearch_sync>
     </default>
 </config>

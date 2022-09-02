@@ -74,11 +74,15 @@ class SxHelper extends AbstractHelper
     {
         $configGroupsToCheck = [
             'semknox_productsearch_general/semknox_productsearch_settings/',
-            'semknox_productsearch_scheduler/semknox_productsearch_cronjob/',
+            'semknox_productsearch_general/semknox_productsearch_advanced/', 
+            'semknox_productsearch_sync/semknox_productsearch_cronjob/',
+            'semknox_productsearch_sync/semknox_productsearch_sync/',
 
             // fallback for older extension versions
             'semknox_productsearch/semknox_productsearch_settings/',
-            'semknox_productsearch/semknox_productsearch_cronjob/'
+            'semknox_productsearch/semknox_productsearch_cronjob/',
+            'semknox_productsearch_general/semknox_productsearch_settings/',
+            'semknox_productsearch_scheduler/semknox_productsearch_cronjob/'
         ];
 
         foreach($configGroupsToCheck as $group){

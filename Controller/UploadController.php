@@ -136,6 +136,8 @@ class UploadController {
         }
 
         $productCollection->addAttributeToSelect('*');
+        $productCollection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+
         $this->appEmulation->stopEnvironmentEmulation();
 
         return $productCollection;
@@ -148,9 +150,8 @@ class UploadController {
      */
     public function continueFullUpload()
     {
-        // todo: make configurable
-        $maxTime = 45; // seconds 
-        $maxMemory = 256; // MB
+        $maxTime = $this->_sxHelper->get('sxMaxExecutionTime', $this->_sxConfig->get('shopId'), 45); // seconds 
+        $maxMemory = $this->_sxHelper->get('sxMemoryLimit', $this->_sxConfig->get('shopId'), 256); // MB
 
         if ($this->_sxUploader->isCollecting()) {
 
@@ -176,18 +177,27 @@ class UploadController {
             foreach ($productCollection as $product) {
 
                 $memoryUsage = memory_get_usage();
-                $memoryUsage = round($memoryUsage/1048576,2);// in MB
-
-                if($memoryUsage >= $maxMemory){
-                    $this->_sxLogger->log("memory limit reached: $memoryUsage MB (Limit: $maxMemory MB), collected $productCounter products instead of $collectBatchSize", 'warning');
-                    return;
-                } 
+                $memoryUsage = round($memoryUsage/1048576,2); // in MB
 
                 $runningTime = round(microtime(true) - $this->startTime);
-                if($runningTime > $maxTime){
-                    $this->_sxLogger->log("script time limit reached: $runningTime s (Limit: $maxTime s), collected $productCounter products instead of $collectBatchSize", 'warning');
+
+                if($memoryUsage >= $maxMemory || $runningTime > $maxTime){
+
+                    $msg = "limit reached [Memory: ".$memoryUsage."MB / ".$maxMemory."MB | ExecutionTime: ".$runningTime."s / ".$maxTime."s]";
+                    $msg .= " => collected $productCounter products instead of $collectBatchSize";
+
+                    $logLevel = $productCounter ? 'info' : 'error';
+
+                    $this->_sxLogger->log($msg, $logLevel);
+
+                    if($productCounter){
+                        $this->_sxLogger->log("=> No products will be lost! This is just an info that your configuration could be optimised", $logLevel);
+                    } else {
+                        $this->_sxLogger->log("=> Your configuration must be optimised!", $logLevel);
+                    }
+
                     return;
-                } 
+                }
 
                 $productCounter++;
                 
@@ -206,9 +216,6 @@ class UploadController {
                     }
                     $parent = $cachedParents[$mageProduct->sxGroupIdenifier];
                 }
-
-                // todo: for group and bundle products
-                // ...
 
 
                 // check visibility

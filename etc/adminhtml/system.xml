@@ -15,7 +15,7 @@
             <group id="semknox_productsearch_settings" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
 
-                 <field id="sxCreateAccount" translate="" type="text" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                <field id="sxCreateAccount" translate="" type="text" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
                     <frontend_model>Semknox\Productsearch\Block\System\Config\Account</frontend_model>
                     <label>Create Account</label>
                 </field>
@@ -34,83 +34,118 @@
                 </field-->
 
                 <field id="sxFrontendActive" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>SiteSearch360 in frontend active</label>
+                    <label>Activate Site Search 360</label>
+                    <tooltip>Enable Site Search 360 smart semantic search to return relevant results out-of-the-box to help your customers find what they need, fast.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxUploadActive" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Productupload to SiteSearch360 active</label>
+                <field id="sxAnswerActive" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use SS360 search captions</label>
+                    <tooltip>Show contextual captions such as "We found the following X products for you".</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxIncrementalUpdatesActive" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>incremental Productupdates to SiteSearch360 active</label>
+                <field id="sxUploadProductsWithStatusOutOfStock" translate="label" type="select" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show "out of stock" products</label>
+                    <tooltip>If you disable this setting, products with the "out of stock" status will not be uploaded to Site Search 360 and will be therefore hidden from the results.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxUploadProductsWithStatusOutOfStock" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>upload/show products that are status "out of stock"</label>
+                <field id="sxUploadProductsWithZeroQuantity" translate="label" type="select" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show products with quantity below 0</label>
+                    <tooltip>Keep this setting active if you have enabled Backorders and you would like your customers to find products even if their quantity falls below 0. Disabling the setting hides such products from search results.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxUploadProductsWithZeroQuantity" translate="label" type="select" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>upload/show products that are out of stock by quantity</label>
+            </group>
+
+            <group id="semknox_productsearch_advanced" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Advanced</label>
+
+                <field id="sxRequestTimeoutFrontend" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Search request timeout (in seconds)</label>
+                    <tooltip>The longest the system will wait for Site Search 360 to return results. When the timeout is reached, the system will fall back to the default search engine.</tooltip>
+                </field>
+
+                <field id="sxRemoveFromImageUrl" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Remove from image URLs</label>
+                    <tooltip>If you need to clean up image URLs in your results, you can provide a regular expression to remove a part of them ﻿(example: "/pub")</tooltip>
+                </field>
+
+            </group>
+
+        </section>
+        <section id="semknox_productsearch_sync" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+           
+            <label>Product sync</label>
+            <tab>semknox_productsearch</tab>
+            <resource>Semknox_Productsearch::config</resource>
+
+            <group id="semknox_productsearch_cronjob" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Time of Daily product upload</label>
+
+                <field id="sxCronjobHour" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Hour</label>
+                    <tooltip>We recommend scheduling full updates overnight or whenever your system load is minimal</tooltip>
+                </field>
+
+                <field id="sxCronjobMinute" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Minute</label>
+                    <tooltip>We recommend scheduling full updates overnight or whenever your system load is minimal</tooltip>
+                </field>
+
+            </group>
+
+            <group id="semknox_productsearch_sync" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Settings</label>
+
+                <field id="sxUploadActive" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable product sync</label>
+                    <tooltip>For your search results to be fully in sync with your product catalog, Site Search 360 runs a full automatic catalog update once a day. You can specify the exact time for the update process below.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxAnswerActive" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>show SiteSearch360 search interpretation sentence</label>
+                <field id="sxIncrementalUpdatesActive" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label> Incremental updates</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Incremental updates allow ﻿Site Search 360 results to stay up to date with your catalog changes. When you add, edit, or remove products in bulk, consider disabling this setting and running a full update instead.</tooltip>
                 </field>
+
+                <field id="sxCollectBatchSize" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label> How many products per read request per min</label>
+                    <tooltip>The maximum number of products per package collected locally before uploading them to Site Search 360. If your server performance allows, try setting it to 500 or 1,000 to speed up the product sync.</tooltip>
+                </field>
+
+                <field id="sxUploadBatchSize" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>How many products per upload request</label>
+                    <tooltip> The maximum number of products per HTTP package when uploading to Site Search 360. Increase the number to speed up the product sync and decrease the number if HTTP requests fail due to too many products being included in a batch or the request being too large.</tooltip>
+                </field>
+
+                <field id="sxRequestTimeout" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Upload request timeout</label>
+                    <tooltip>The longest the system will wait for Site Search 360 to upload your catalog data. If the timeout is reached, we'll stop the product sync and try again later.﻿﻿</tooltip>
+                </field>
+
 
                 <!--field id="sxFilterOptionCounterActive" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>show expected number of results behind filter options</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field-->
 
-                <field id="sxCollectBatchSize" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Number of products per package (reading)</label>
-                </field>
-
-                <field id="sxUploadBatchSize" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Number of products per package (upload)</label>
-                </field>
-
-                <field id="sxRequestTimeout" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Request timeout for Upload</label>
-                </field>
-
-                <field id="sxRequestTimeoutFrontend" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Request timeout for Search</label>
-                </field>
-
-                <field id="sxRemoveFromImageUrl" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Remove from Image URL (example: "/pub")</label>
-                </field>
-
-                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Number of content results per Page(0 = disabled)</label>
                 </field>
 
-            </group>
-
-        </section>
-        <section id="semknox_productsearch_scheduler" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
-           
-            <label>Scheduler</label>
-            <tab>semknox_productsearch</tab>
-
-            <resource>Semknox_Productsearch::config</resource>
-            <group id="semknox_productsearch_cronjob" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Time of Daily product upload</label>
-
-                <field id="sxCronjobHour" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Hour</label>
+                <field id="sxMemoryLimit" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Memory Limit in MB</label>
+                    <tooltip>PHP script memory limit in MB</tooltip>
                 </field>
 
-                <field id="sxCronjobMinute" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Minute</label>
+                <field id="sxMaxExecutionTime" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum execution time in s</label>
+                    <tooltip>PHP script maximum execution time in s</tooltip>
                 </field>
+
             </group>
             
         </section>
