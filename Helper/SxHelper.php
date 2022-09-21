@@ -2,6 +2,7 @@
 
 namespace Semknox\Productsearch\Helper;
 
+use Laminas\Validator\Explode;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -114,8 +115,12 @@ class SxHelper extends AbstractHelper
     }
 
     
-    protected function _getStoreIdentifier($store)
+    public function getStoreIdentifier($store=null)
     {
+        if (!$store) {
+            $store = $this->_storeManager->getStore();
+        }
+        
         $storeId = $store->getId();
         return $storeId . '-' . $store->getCode();
     }
@@ -131,7 +136,7 @@ class SxHelper extends AbstractHelper
         $sxShopConfigs = array();
         foreach ($this->_storeManager->getStores() as $store) {
 
-            $storeIdentifier = $this->_getStoreIdentifier($store);
+            $storeIdentifier = $this->getStoreIdentifier($store);
 
             if (!empty($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier])){
                 continue;
@@ -160,7 +165,7 @@ class SxHelper extends AbstractHelper
             $store = $this->_storeManager->getStore();
         }
 
-        $storeIdentifier = $this->_getStoreIdentifier($store);
+        $storeIdentifier = $this->getStoreIdentifier($store);
 
         if(!empty($this->_sxShopConfigs) && isset($this->_sxShopConfigs[$storeIdentifier]))
         {
@@ -312,9 +317,28 @@ class SxHelper extends AbstractHelper
     {
         $value = $this->_scopeConfig->getValue('general/store_information/name', ScopeInterface::SCOPE_STORE);
         if(!$value){
-            $value = $this->_scopeConfig->getValue('web/secure/base_url', ScopeInterface::SCOPE_STORE);
+            $value = $this->getSystemProjectUrl();
         }
         return $value;
+    }
+
+    public function getSystemStoreName($store=null)
+    {
+        if(!$store){
+            $store = $this->_storeManager->getStore();
+        }
+        return $store->getName();
+    }
+
+    public function getSystemProjectUrl()
+    {
+        return $this->_scopeConfig->getValue('web/secure/base_url', ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getSystemLanguage()
+    {
+        $isoCode = $this->_scopeConfig->getValue('general/locale/code', ScopeInterface::SCOPE_STORE);
+        return explode('_', $isoCode,2)[0];
     }
 
 }

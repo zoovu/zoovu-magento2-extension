@@ -58,7 +58,11 @@ class Account extends Field
             'extensionVersion' => $this->_sxHelper->getExtensionVersion(),
             'shopSystemVersion' => $this->_sxHelper->getSystemVersion(),
             'shopSystemEmail' => $this->_sxHelper->getSystemEmail(),
-            'shopSystemCompany' => $this->_sxHelper->getSystemCompanyName()
+            'shopSystemCompany' => $this->_sxHelper->getSystemCompanyName(),
+            'shopSystemProjectUrl' => $this->_sxHelper->getSystemProjectUrl(),
+            'shopSystemLanguage'=> $this->_sxHelper->getSystemLanguage(),
+            'shopSystemStoreName' => $this->_sxHelper->getSystemStoreName(),
+            'shopSystemStoreIdentifier' => $this->_sxHelper->getStoreIdentifier()
         ];
 
     }
@@ -89,7 +93,6 @@ class Account extends Field
     public function getBackendButtonHtml()
     {
         $currentConfig = $this->_sxHelper->getConfig();
-
         if(!isset($currentConfig['projectId'])) return '';
 
         $backendButton = $this->getLayout()->createBlock(

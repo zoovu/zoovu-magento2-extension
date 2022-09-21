@@ -63,9 +63,10 @@
         window.ss360ShopPluginConfig = {
             contentBlock: '#create_sitesearch_project',
             storeView: [{
-                lang: 'de',
-                name: 'myshop.com_de',
-                domain: 'myshop.com'
+                lang: '<?= $accountData['shopSystemLanguage'] ?>',
+                name: '<?= $accountData['shopSystemStoreName'] ?>',
+                storeIdentifier: '<?= $accountData['shopSystemStoreIdentifier'] ?>',
+                domain: '<?= $accountData['shopSystemProjectUrl'] ?>'
             }],
             companyName: '<?= $accountData['shopSystemCompany'] ?>',
             email: '<?= $accountData['shopSystemEmail'] ?>',
