@@ -120,7 +120,7 @@ class SxHelper extends AbstractHelper
         if (!$store) {
             $store = $this->_storeManager->getStore();
         }
-        
+
         $storeId = $store->getId();
         return $storeId . '-' . $store->getCode();
     }
@@ -194,9 +194,8 @@ class SxHelper extends AbstractHelper
             
             
             'shopId' => $storeId,
-            'cronjobHour' => (int) $this->get('sxCronjobHour', $storeId),
-            'cronjobMinute' => (int) $this->get('sxCronjobMinute', $storeId),
-
+            'cronjobHour' => $this->getSxCronjobHour($storeId),
+            'cronjobMinute' => $this->getSxCronjobMinute($storeId),
             'collectBatchSize' => (int) $this->get('sxCollectBatchSize', $storeId),
             'uploadBatchSize' => (int) $this->get('sxUploadBatchSize', $storeId),
 
@@ -230,6 +229,21 @@ class SxHelper extends AbstractHelper
         return $currentShopConfig;
     }
 
+    protected function getSxCronjobHour($storeId)
+    {
+        $fallback = (int) $this->get('sxCronjobHour', $storeId, "02"); // Compatibility with previous versions
+        
+        $cronjobTime = $this->get('sxCronjobTime', $storeId, "$fallback,00,00");
+        return (int) explode(',', $cronjobTime,3)[0];
+    }
+
+    protected function getSxCronjobMinute($storeId)
+    {
+        $fallback = (int) $this->get('sxCronjobMinute', $storeId, "00"); // Compatibility with previous versions
+
+        $cronjobTime = $this->get('sxCronjobTime', $storeId, "00,$fallback,00");
+        return (int) explode(',', $cronjobTime, 3)[1];
+    }
 
     public function setSxResponseStore($key, $value)
     {

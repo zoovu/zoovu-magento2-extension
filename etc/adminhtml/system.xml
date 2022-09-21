@@ -84,15 +84,21 @@
             <group id="semknox_productsearch_cronjob" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Time of Daily product upload</label>
 
-                <field id="sxCronjobHour" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!--field id="sxCronjobHour" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Hour</label>
+                    <tooltip>We recommend scheduling full updates overnight or whenever your system load is minimal</tooltip>
+                </field-->
+
+                <!--field id="sxCronjobMinute" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Minute</label>
+                    <tooltip>We recommend scheduling full updates overnight or whenever your system load is minimal</tooltip>
+                </field-->
+
+                <field id="sxCronjobTime" translate="label" type="time" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>daily sync</label>
                     <tooltip>We recommend scheduling full updates overnight or whenever your system load is minimal</tooltip>
                 </field>
 
-                <field id="sxCronjobMinute" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Minute</label>
-                    <tooltip>We recommend scheduling full updates overnight or whenever your system load is minimal</tooltip>
-                </field>
 
             </group>
 

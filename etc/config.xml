@@ -30,6 +30,7 @@
             <semknox_productsearch_cronjob>
                 <sxCronjobHour>02</sxCronjobHour>
                 <sxCronjobMinute>00</sxCronjobMinute>
+                <sxCronjobTime>02,00,00</sxCronjobTime>
             </semknox_productsearch_cronjob>
 
         </semknox_productsearch_sync>
