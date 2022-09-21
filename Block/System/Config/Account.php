@@ -61,12 +61,7 @@ class Account extends Field
 
     }
 
-    /**
-     * Generate collect button html
-     *
-     * @return string
-     */
-    public function getAccountHtml()
+    public function getAccountButtonHtml()
     {
         $createButton = $this->getLayout()->createBlock(
             'Magento\Backend\Block\Widget\Button')->setData(
@@ -88,5 +83,28 @@ class Account extends Field
 
         return $createButton->toHtml(). $loginButton->toHtml();
     }
+
+    public function getBackendButtonHtml()
+    {
+        $currentConfig = $this->_sxHelper->getConfig();
+
+        if(!isset($currentConfig['projectId'])) return '';
+
+        $backendButton = $this->getLayout()->createBlock(
+            'Magento\Backend\Block\Widget\Button'
+        )->setData(
+            [
+                'id' => 'backend_button',
+                'label' => __('Open Site Search 360 Dashboard'),
+                'class' => 'primary',
+                'type' => 'button',
+                'onclick' => "window.open('https://app.sitesearch360.com/dashboard/query-logs?projectId=". $currentConfig['projectId']."', '_blank')"
+            ]
+        );
+
+        return $backendButton->toHtml();
+    }
+
+
 }
 ?>

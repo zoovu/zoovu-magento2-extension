@@ -11,7 +11,8 @@
         $projectIdRow = jQuery('#semknox_productsearch_general_semknox_productsearch_settings_sxProjectId').parent().parent().hide();
         $apiKeyRow = jQuery('#semknox_productsearch_general_semknox_productsearch_settings_sxApiKey').parent().parent().hide();
         $createAccount = jQuery('#create_sitesearch_project').hide();
-        $buttonsRow = jQuery('#row_semknox_productsearch_general_semknox_productsearch_settings_sxCreateAccount').hide();
+        $accountButtonsRow = jQuery('#sitesearch_account_buttons').hide();
+        $backendButtonsRow = jQuery('#sitesearch_backend_buttons').show();
         $createButton = jQuery('#create_account_button');
         $loginButton = jQuery('#login_button');
         $saveButton = jQuery('#save');
@@ -20,7 +21,8 @@
             $projectIdRow.show();
             $apiKeyRow.show();
         } else {
-            $buttonsRow.show()
+            $accountButtonsRow.show();
+            $backendButtonsRow.hide();
         }
 
         $loginButton.click(function() {
@@ -93,7 +95,8 @@
     });
 </script>
 
-<?php echo $block->getAccountHtml() ?>
+<div id="sitesearch_account_buttons"><?php echo $block->getAccountButtonHtml() ?></div>
+<div id="sitesearch_backend_buttons"><?php echo $block->getBackendButtonHtml() ?></div>
 <div id="create_sitesearch_project"></div>
 
 <style>
