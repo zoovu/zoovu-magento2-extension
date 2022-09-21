@@ -17,6 +17,7 @@
         $loginButton = jQuery('#login_button');
         $saveButton = jQuery('#save');
 
+
         if ($projectId.val() && $apiKey.val()) {
             $projectIdRow.show();
             $apiKeyRow.show();
@@ -37,6 +38,9 @@
             $saveButton.prop("disabled", false);
 
             $createAccount.text('');
+
+            jQuery('#row_semknox_productsearch_general_semknox_productsearch_settings_sxApiKey label').css('color', '#eb5202');
+            jQuery('#row_semknox_productsearch_general_semknox_productsearch_settings_sxProjectId label').css('color', '#eb5202');
         });
 
         $createButton.click(function() {
