@@ -67,8 +67,8 @@
                 name: 'myshop.com_de',
                 domain: 'myshop.com'
             }],
-            companyName: 'My Shop',
-            email: '',
+            companyName: '<?= $accountData['shopSystemCompany'] ?>',
+            email: '<?= $accountData['shopSystemEmail'] ?>',
             shopSystem: 'MAGENTO',
             shopSystemVersion: '<?= $accountData['shopSystemVersion'] ?>',
             extensionVersion: '<?= $accountData['extensionVersion'] ?>',

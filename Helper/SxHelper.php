@@ -303,4 +303,18 @@ class SxHelper extends AbstractHelper
         return $this->productMetadata->getVersion();
     }
 
+    public function getSystemEmail()
+    {
+        return $this->_scopeConfig->getValue('trans_email/ident_general/email', ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getSystemCompanyName()
+    {
+        $value = $this->_scopeConfig->getValue('general/store_information/name', ScopeInterface::SCOPE_STORE);
+        if(!$value){
+            $value = $this->_scopeConfig->getValue('web/secure/base_url', ScopeInterface::SCOPE_STORE);
+        }
+        return $value;
+    }
+
 }

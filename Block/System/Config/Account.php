@@ -56,7 +56,9 @@ class Account extends Field
     {
         return [
             'extensionVersion' => $this->_sxHelper->getExtensionVersion(),
-            'shopSystemVersion' => $this->_sxHelper->getSystemVersion()
+            'shopSystemVersion' => $this->_sxHelper->getSystemVersion(),
+            'shopSystemEmail' => $this->_sxHelper->getSystemEmail(),
+            'shopSystemCompany' => $this->_sxHelper->getSystemCompanyName()
         ];
 
     }
