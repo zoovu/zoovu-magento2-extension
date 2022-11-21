@@ -34,8 +34,6 @@ class CronController
         $startTime = time(); // for logging duration
         $flags = array();
 
-        $sxUpload = $this->_uploadControllerFactoy->create();
-
         $sxShopUloads = array();
 
         foreach($this->_sxHelper->getShopConfigs() as $key => $shopConfig){

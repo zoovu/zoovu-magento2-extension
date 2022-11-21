@@ -206,6 +206,7 @@ class ArticleTransformer extends AbstractProductTransformer
     protected function _transformAttribute($code, $value, $transformerArgs, $attributes)
     {
         $productModel = $transformerArgs['productResourceModel'];
+        $storeId  = $transformerArgs['sxConfig']->get('shopId');
 
         if ((is_array($value) && !empty($value)) || is_object($value)) {
 
@@ -216,7 +217,7 @@ class ArticleTransformer extends AbstractProductTransformer
         }
 
         $key = $code;
-        if($attributeModel =$productModel->getAttribute($code)){
+        if($attributeModel = $productModel->getAttribute($code)->setStoreId($storeId)){
             $value = $attributeModel->getFrontend()->getValue($this->_product);
             $key = $attributeModel->getStoreLabel() ? $attributeModel->getStoreLabel() : $key;
         }

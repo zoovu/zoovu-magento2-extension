@@ -165,8 +165,6 @@ class UploadController {
 
             $productCollection = $this->getUploadProductCollection($storeId);
             $productCollection->getSelect()->limit($collectBatchSize, $offset);
-            //$productCollection->setPageSize($collectBatchSize);
-            //$productCollection->setCurPage($page);
 
             $ignoreQuantity = $this->_sxHelper->sxUploadProductsWithZeroQuantity();
             $ignoreOutOfStockStatus = $this->_sxHelper->sxUploadProductsWithStatusOutOfStock();
@@ -174,7 +172,7 @@ class UploadController {
             $cachedParents = [];
 
             $productCounter = 0;
-            foreach ($productCollection as $product) {
+            foreach ($productCollection as $mageProduct) {
 
                 $memoryUsage = memory_get_usage();
                 $memoryUsage = round($memoryUsage/1048576,2); // in MB
@@ -200,12 +198,9 @@ class UploadController {
                 }
 
                 $productCounter++;
-                
-                $mageProduct = $this->_productRepository->getById($product->getId(), false, $storeId);
-                $mageProductType = $mageProduct->getTypeInstance();
 
                 // get parent if is child of configurable
-                $parentId = $this->mageConfigurableProduct->getParentIdsByChild($product->getId());
+                $parentId = $this->mageConfigurableProduct->getParentIdsByChild($mageProduct->getId());
                 $mageProduct->sxGroupIdenifier = isset($parentId[0]) ? $parentId[0] : false;
 
                 $parent = false;
@@ -250,7 +245,7 @@ class UploadController {
 
                     try {
                         // try, because: if article does not have "stock-article" 
-                        $stock = $this->mageStockItem->get($product->getId());
+                        $stock = $this->mageStockItem->get($mageProduct->getId());
 
                         // check stock status
                         if (!$ignoreOutOfStockStatus && !$stock->getIsInStock()) {
