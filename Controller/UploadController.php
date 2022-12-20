@@ -137,6 +137,7 @@ class UploadController {
 
         $productCollection->addAttributeToSelect('*');
         $productCollection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+        $productCollection->addMediaGalleryData();
 
         $this->appEmulation->stopEnvironmentEmulation();
 
