@@ -73,6 +73,10 @@ class SxHelper extends AbstractHelper
      */
     public function get($key, $storeId = null, $default = null)
     {
+        if(!$storeId){
+            $storeId = (int) $this->_request->getParam('store', 0);
+        }
+
         $configGroupsToCheck = [
             'semknox_productsearch_general/semknox_productsearch_settings/',
             'semknox_productsearch_general/semknox_productsearch_advanced/', 
@@ -172,7 +176,6 @@ class SxHelper extends AbstractHelper
             return $this->_sxShopConfigs[$storeIdentifier];
         }
 
-        $storeId = $store->getId();
         $projectId = $this->get('sxProjectId', $storeId, null);
         $apiKey = $this->get('sxApiKey', $storeId, null);
 
@@ -210,6 +213,7 @@ class SxHelper extends AbstractHelper
 
             // shopsystem settings
             'sxFrontendActive' => $this->get('sxFrontendActive', $storeId, 1),
+            'sxFrontendOutputType' => $this->get('sxFrontendOutputType', $storeId, 0),
             'sxUploadActive' => $this->get('sxUploadActive', $storeId, 1),
             'sxIncrementalUpdatesActive' => $this->get('sxIncrementalUpdatesActive', $storeId, 1),
             'sxAnswerActive' => $this->get('sxAnswerActive', $storeId, 1),

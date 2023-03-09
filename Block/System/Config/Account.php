@@ -92,8 +92,8 @@ class Account extends Field
 
     public function getBackendButtonHtml()
     {
-        $currentConfig = $this->_sxHelper->getConfig();
-        if(!isset($currentConfig['projectId'])) return '';
+        $projectId = $this->_sxHelper->get('sxProjectId');
+        if(!$projectId) return '';
 
         $backendButton = $this->getLayout()->createBlock(
             'Magento\Backend\Block\Widget\Button'
@@ -103,7 +103,7 @@ class Account extends Field
                 'label' => __('Open Site Search 360 Dashboard'),
                 'class' => 'primary',
                 'type' => 'button',
-                'onclick' => "window.open('https://app.sitesearch360.com/dashboard/query-logs?projectId=". $currentConfig['projectId']."', '_blank')"
+                'onclick' => "window.open('https://app.sitesearch360.com/dashboard/query-logs?projectId=". $projectId."', '_blank')"
             ]
         );
 
