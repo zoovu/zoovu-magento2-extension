@@ -25,6 +25,8 @@ class SxHelper extends AbstractHelper
 
     protected $_sxSandboxApiUrl = "https://api-magento.sitesearch360.com/";
     protected $_sxApiUrl = "https://api-magento.sitesearch360.com/";
+    protected $_jsSearchConfigUrl = "https://api.sitesearch360.com/plugin?token=%s";
+    protected $_jsSearchFrontendUrl = "https://js.sitesearch360.com/plugin/bundle/%s.js";
 
     protected $_sxMasterConfig = false;
     protected $_sxMasterConfigPath = "masterConfig%s.json";
@@ -176,6 +178,7 @@ class SxHelper extends AbstractHelper
             return $this->_sxShopConfigs[$storeIdentifier];
         }
 
+        $storeId = $store->getId();
         $projectId = $this->get('sxProjectId', $storeId, null);
         $apiKey = $this->get('sxApiKey', $storeId, null);
 
@@ -227,6 +230,11 @@ class SxHelper extends AbstractHelper
  
 
         ];
+
+        $jsSearchConfigId = $this->get('sxFrontendOutputType', $storeId, 0);
+        if($jsSearchConfigId != 0){
+            $currentShopConfig['jsSearchUrl'] = sprintf($this->_jsSearchFrontendUrl, $jsSearchConfigId);
+        }
 
         $this->_sxShopConfigs[$storeIdentifier] = $currentShopConfig;
 
@@ -359,4 +367,25 @@ class SxHelper extends AbstractHelper
         return explode('_', $isoCode,2)[0];
     }
 
+    public function getJsSearchConfigIds()
+    {
+        $token = 'a15jlt8dqv25pi6mk1363e3i0553432q'; //$this->get('sxApiKey');
+        $url = sprintf($this->_jsSearchConfigUrl, $token);
+
+        try {
+            $response = file_get_contents($url);
+        } catch (\Exception $e) {
+            $response = false;
+        }
+
+        if($response === false) return [];
+
+        $response = \json_decode($response, true);
+
+        if($response && isset($response['status']) && isset($response['ids']) && $response['status'] == 'success'){
+            return $response['ids'];
+        }
+
+        return [];
+    }
 }

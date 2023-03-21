@@ -126,16 +126,21 @@
 
             </group>
 
-            <group id="semknox_productsearch_sync" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                <label>Settings</label>
+            <group id="semknox_productsearch_sync" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Sync Settings</label>
 
-                <field id="sxUploadActive" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sxProductSyncNote" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="1">
+                    <label>Note</label>
+                    <frontend_model>Semknox\Productsearch\Block\System\Config\ProductSyncNote</frontend_model>
+                </field>
+
+                <field id="sxUploadActive" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enable product sync</label>
                     <tooltip>For your search results to be fully in sync with your product catalog, Site Search 360 runs a full automatic catalog update once a day. You can specify the exact time for the update process below.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="sxIncrementalUpdatesActive" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sxIncrementalUpdatesActive" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label> Incremental updates</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <tooltip>Incremental updates allow ﻿Site Search 360 results to stay up to date with your catalog changes. When you add, edit, or remove products in bulk, consider disabling this setting and running a full update instead.</tooltip>
@@ -157,12 +162,12 @@
                 </field>
 
 
-                <!--field id="sxFilterOptionCounterActive" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <!--field id="sxFilterOptionCounterActive" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>show expected number of results behind filter options</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field-->
 
-                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sxContentSearchResultsNumber" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Number of content results per Page(0 = disabled)</label>
                 </field>
 

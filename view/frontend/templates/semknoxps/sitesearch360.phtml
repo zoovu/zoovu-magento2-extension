@@ -1,5 +1,6 @@
+<?php $addtionalConsoleInfo = "" ?>
 <?php if ($block->getConfigValue("sxFrontendActive")) : ?>
-    <script type="text/javascript">
+    <!--script type="text/javascript">
         if (typeof sxSearchAvailable === 'undefined') {
             sxSearchAvailable = true;
         }
@@ -53,7 +54,7 @@
                 mageAutoSuggestion.remove();
             }
         }
-    </script>
+    </!--script-->
     <script type="text/javascript">
         require(['noUiSlider'], function(noUiSlider) {
 
@@ -99,7 +100,12 @@
             };
         });
     </script>
+    <?php $addtionalConsoleInfo = " (Mode: Magento Search Integration)" ?>
+    <?php if ($block->getConfigValue("sxFrontendOutputType") != 0 && $block->getConfigValue("jsSearchUrl")) : ?>
+        <?php $addtionalConsoleInfo = " (Mode: SiteSearch JS-Search, ID: " . $block->getConfigValue("sxFrontendOutputType") . ")" ?>
+        <?= '<script async src="' . $block->getConfigValue("jsSearchUrl")  . '"></script>'; ?>
+    <?php endif; ?>
 <?php endif; ?>
 <script type="text/javascript">
-    console.info('SiteSearch360 Magento2-Module: Version <?= $block->getExtensionVersion() ?>');
+    console.info("SiteSearch360 Magento2-Module: Version <?= $block->getExtensionVersion() ?> <?= $addtionalConsoleInfo ?>");
 </script>

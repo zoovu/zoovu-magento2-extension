@@ -28,10 +28,9 @@ class FrontendOutputType implements \Magento\Framework\Option\ArrayInterface
             '0' => 'Magento Search integration',
         ];
 
-        // get all js configs:
-        // todo:....
-        $jsId = rand();
-        $options[$jsId] = "JS-Search $jsId";
+        foreach($this->_sxHelper->getJsSearchConfigIds() as $configId){
+            $options[$configId] = "SiteSearch JS-Search (ID: $configId)";
+        }
 
         return $options;
     }
