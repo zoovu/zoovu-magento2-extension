@@ -17,7 +17,7 @@ class ProductSyncNote extends Field
      */
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-        $message = "Product synchronisation can only be configured in the highest scope.<br><b>Use the button to change the Scope and access the configuration.</b>";
+        $message = __("Product synchronisation can only be configured in the highest scope.<br><b>Use the button to change the Scope and access the configuration.</b>");
         $info = '<div id="messages"><div class="messages"><div class="message message-notice notice"><div data-ui-id="messages-message-notice">'.$message.'</div></div></div></div>';
         
         $button = $this->getProductSyncButtonHtml();

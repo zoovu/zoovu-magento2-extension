@@ -369,7 +369,7 @@ class SxHelper extends AbstractHelper
 
     public function getJsSearchConfigIds()
     {
-        $token = 'a15jlt8dqv25pi6mk1363e3i0553432q'; //$this->get('sxApiKey');
+        $token = $this->get('sxApiKey');
         $url = sprintf($this->_jsSearchConfigUrl, $token);
 
         try {

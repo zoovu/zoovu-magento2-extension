@@ -15,6 +15,11 @@
             <group id="semknox_productsearch_settings" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
 
+                <field id="sxGeneralSettingsNote" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Note</label>
+                    <frontend_model>Semknox\Productsearch\Block\System\Config\GeneralSettingsNote</frontend_model>
+                </field>
+
                 <field id="sxCreateAccount" translate="" type="text" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
                     <frontend_model>Semknox\Productsearch\Block\System\Config\Account</frontend_model>
                     <label>Create Account</label>
