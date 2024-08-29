@@ -217,7 +217,8 @@ class ArticleTransformer extends AbstractProductTransformer
         }
 
         $key = $code;
-        if($attributeModel = $productModel->getAttribute($code)->setStoreId($storeId)){
+        if($productModel->getAttribute($code) && $productModel->getAttribute($code)->setStoreId($storeId)){
+            $attributeModel = $productModel->getAttribute($code)->setStoreId($storeId);
             $value = $attributeModel->getFrontend()->getValue($this->_product);
             $key = $attributeModel->getStoreLabel() ? $attributeModel->getStoreLabel() : $key;
         }
