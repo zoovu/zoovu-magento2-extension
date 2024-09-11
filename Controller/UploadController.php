@@ -28,7 +28,7 @@ use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 class UploadController {
 
    
-    private $_sxHelper, $_sxCore, $_sxConfig, $_sxUploader, $_sxUpdater;
+    private $_sxHelper, $_sxCore, $_sxConfig, $_sxUploader, $_sxUpdater, $_sxLogger, $appEmulation;
 
     private $_sxTransformerArgs = [];
 
@@ -134,12 +134,16 @@ class UploadController {
             $productCollection->addStoreFilter($storeId);
             $this->appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
         }
-
+        
         $productCollection->addAttributeToSelect('*');
         $productCollection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-        $productCollection->addMediaGalleryData();
 
-        $this->appEmulation->stopEnvironmentEmulation();
+        // getting media gallery here destroys limit/offset. 
+        //$productCollection->addMediaGalleryData();
+            
+        if ($storeId) {
+            $this->appEmulation->stopEnvironmentEmulation();
+        }
 
         return $productCollection;
     }
@@ -152,7 +156,10 @@ class UploadController {
     public function continueFullUpload()
     {
         $maxTime = $this->_sxHelper->get('sxMaxExecutionTime', $this->_sxConfig->get('shopId'), 45); // seconds 
+        $maxTimeBreak = $maxTime - (0.1 * $maxTime);
+
         $maxMemory = $this->_sxHelper->get('sxMemoryLimit', $this->_sxConfig->get('shopId'), 256); // MB
+        $maxMemoryBreak =  $maxMemory - (0.1 * $maxMemory);
 
         if ($this->_sxUploader->isCollecting()) {
 
@@ -161,10 +168,17 @@ class UploadController {
             // collecting
             $storeId = $this->_sxConfig->get('shopId');
             $collectBatchSize = $this->_sxConfig->get('collectBatchSize');
-            $page = (int) ($this->_sxUploader->getNumberOfCollected() / $collectBatchSize) + 1;
-            $offset = $this->_sxUploader->getNumberOfCollected();
 
             $productCollection = $this->getUploadProductCollection($storeId);
+
+            
+            $currentPage = floor((int) ($this->_sxUploader->getNumberOfCollected() / $collectBatchSize)) + 1;
+            /*
+            $productCollection->setPageSize($collectBatchSize);
+            $productCollection->setCurPage($currentPage);
+            */
+
+            $offset = $this->_sxUploader->getNumberOfCollected();
             $productCollection->getSelect()->limit($collectBatchSize, $offset);
 
             $ignoreQuantity = $this->_sxHelper->sxUploadProductsWithZeroQuantity();
@@ -173,14 +187,25 @@ class UploadController {
             $cachedParents = [];
 
             $productCounter = 0;
+            $continue = false;
+
+            // to check query
+            //$this->_sxLogger->log($productCollection->getSelect()->__toString(), 'success');
+
             foreach ($productCollection as $mageProduct) {
+
+                if ($continue) continue;
+
+                // we need to load product here, because we cant load mediagallery in getUploadProductCollection anymore
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $mageProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($mageProduct->getId()); 
 
                 $memoryUsage = memory_get_usage();
                 $memoryUsage = round($memoryUsage/1048576,2); // in MB
 
                 $runningTime = round(microtime(true) - $this->startTime);
 
-                if($memoryUsage >= $maxMemory || $runningTime > $maxTime){
+                if($memoryUsage >= $maxMemoryBreak || $runningTime > $maxTimeBreak){
 
                     $msg = "limit reached [Memory: ".$memoryUsage."MB / ".$maxMemory."MB | ExecutionTime: ".$runningTime."s / ".$maxTime."s]";
                     $msg .= " => collected $productCounter products instead of $collectBatchSize";
@@ -195,14 +220,16 @@ class UploadController {
                         $this->_sxLogger->log("=> Your configuration must be optimised!", $logLevel);
                     }
 
-                    return;
+                    //return
+                    $continue = true;
+                    continue;
                 }
 
                 $productCounter++;
 
                 // get parent if is child of configurable
                 $parentId = $this->mageConfigurableProduct->getParentIdsByChild($mageProduct->getId());
-                $mageProduct->sxGroupIdenifier = isset($parentId[0]) ? $parentId[0] : false;
+                $mageProduct->sxGroupIdenifier = array_shift($parentId) ?? false;
 
                 $parent = false;
                 if($mageProduct->sxGroupIdenifier){
@@ -269,6 +296,8 @@ class UploadController {
                 $this->_sxUploader->addProduct($mageProduct, $this->_sxTransformerArgs);
 
             }
+
+            //$this->_sxLogger->log("productCounter: $productCounter, collectBatchSizte: $collectBatchSize, currentPage: $currentPage, offset: $offset", 'success');
 
             $startUploading = $productCounter < $collectBatchSize;
 
