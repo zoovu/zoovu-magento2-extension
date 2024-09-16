@@ -57,6 +57,10 @@ class ArticleTransformer extends AbstractProductTransformer
 
         $sxArticle['attributes'] = $this->_getAttributes($transformerArgs);
 
+        $sxArticle['name'] = (strlen($sxArticle['name']) == 0 && isset($sxArticle['attributes']['name'])) ? $sxArticle['attributes']['name']['value'] : '';
+        $sxArticle['name'] = (strlen($sxArticle['name']) == 0 && isset($sxArticle['attributes']['sku'])) ? $sxArticle['attributes']['sku']['value'] : '';
+        $sxArticle['name'] = (strlen($sxArticle['name']) == 0) ?  $sxArticle['identifier'] : '';
+
         return $sxArticle;
     }
 
@@ -228,6 +232,13 @@ class ArticleTransformer extends AbstractProductTransformer
         if(!is_array($value) && stripos($code,'price') !== false && strlen($value)>5 ) $value .= ' ' . $transformerArgs['currency'];
 
         if (is_array($value) || is_object($value)) return $attributes;
+
+        if(in_array($code, ['name', 'sku'])){
+            $attributes[$code] = [
+                'key' => (string) $code,
+                'value' => (string) $value
+            ];
+        }
 
         $attributes[] = [
             'key' => (string) $key,
