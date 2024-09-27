@@ -35,8 +35,8 @@ class ArticleTransformer extends AbstractProductTransformer
         $sxArticle['name'] = (string) $this->_product->getName();
 
         $sxArticle['productUrl'] = $this->_product->getUrlModel()->getProductUrl($this->_product, ['_escape' => true]);
-        $sxArticle['productUrl'] = explode('?', $sxArticle['productUrl']);
-        $sxArticle['productUrl'] = (string) $sxArticle['productUrl'][0];
+        //$sxArticle['productUrl'] = explode('?', $sxArticle['productUrl']);
+        //$sxArticle['productUrl'] = (string) $sxArticle['productUrl'][0];
 
         $categories = array();
         if (!isset($transformerArgs['disableCategories']) || !$transformerArgs['disableCategories']) {

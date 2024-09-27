@@ -198,7 +198,11 @@ class UploadController {
 
                 // we need to load product here, because we cant load mediagallery in getUploadProductCollection anymore
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                $mageProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($mageProduct->getId()); 
+                $mageProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($mageProduct->getId());
+
+                if ($storeId) {
+                    $mageProduct->setStoreId($storeId);
+                }
 
                 $memoryUsage = memory_get_usage();
                 $memoryUsage = round($memoryUsage/1048576,2); // in MB
