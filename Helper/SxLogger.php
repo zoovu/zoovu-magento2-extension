@@ -2,12 +2,12 @@
 
 use Semknox\Core\Services\Logging\NullLoggingService;
 
-if (class_exists('\Laminas\Log\Writer\Stream',true)) {
+if (@class_exists('\Laminas\Log\Writer\Stream',false)) {
     // Magento >= 2.3.5
     class SemknoxWriterStreamBridge extends \Laminas\Log\Writer\Stream
     {
     }
-} elseif (class_exists('\Zend\Log\Writer\Stream', true)) {
+} elseif (@class_exists('\Zend\Log\Writer\Stream', false)) {
     // Magento < 2.3.5
     class SemknoxWriterStreamBridge extends \Zend\Log\Writer\Stream
     {
@@ -19,12 +19,12 @@ if (class_exists('\Laminas\Log\Writer\Stream',true)) {
     }
 }
 
-if (class_exists('\Laminas\Log\Logger',true)) {
+if (@class_exists('\Laminas\Log\Logger',false)) {
     // Magento >= 2.3.5
     class SemknoxLoggerBridge extends \Laminas\Log\Logger
     {
     }
-} elseif (class_exists('\Zend\Log\Logger', true)) {
+} elseif (@class_exists('\Zend\Log\Logger', false)) {
     // Magento < 2.3.5
     class SemknoxLoggerBridge extends \Zend\Log\Logger
     {

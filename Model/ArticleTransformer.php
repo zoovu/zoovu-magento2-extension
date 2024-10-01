@@ -29,12 +29,13 @@ class ArticleTransformer extends AbstractProductTransformer
         $sxArticle = array();
 
         $sxArticle['identifier'] = (string) $this->_product->getId();
-        $sxArticle['groupIdentifier'] = (isset($this->_product->sxGroupIdenifier) && $this->_product->sxGroupIdenifier) ? $this->_product->sxGroupIdenifier : $this->_product->getId();
-        $sxArticle['groupIdentifier'] = (string) $sxArticle['groupIdentifier'];
+
+        $sxGroupIdentifier = ($this->_product->getData('sxGroupIdentifier') && strlen($this->_product->getData('sxGroupIdentifier')) > 0) ? $this->_product->getData('sxGroupIdentifier') : $this->_product->getId();
+        $sxArticle['groupIdentifier'] = (string) $sxGroupIdentifier;
 
         $sxArticle['name'] = (string) $this->_product->getName();
 
-        $sxArticle['productUrl'] = $this->_product->getUrlModel()->getProductUrl($this->_product, ['_escape' => true]);
+        $sxArticle['productUrl'] = $this->_product->getData('sxProductUrl') ?? $this->_product->getUrlModel()->getProductUrl($this->_product, ['_escape' => true]);
         //$sxArticle['productUrl'] = explode('?', $sxArticle['productUrl']);
         //$sxArticle['productUrl'] = (string) $sxArticle['productUrl'][0];
 
@@ -54,12 +55,23 @@ class ArticleTransformer extends AbstractProductTransformer
         $sxArticle['categories'] = $categories;
 
         $sxArticle['images'] = $this->_getImages($transformerArgs);
-
         $sxArticle['attributes'] = $this->_getAttributes($transformerArgs);
 
-        $sxArticle['name'] = (strlen($sxArticle['name']) == 0 && isset($sxArticle['attributes']['name'])) ? $sxArticle['attributes']['name']['value'] : '';
-        $sxArticle['name'] = (strlen($sxArticle['name']) == 0 && isset($sxArticle['attributes']['sku'])) ? $sxArticle['attributes']['sku']['value'] : '';
-        $sxArticle['name'] = (strlen($sxArticle['name']) == 0) ?  $sxArticle['identifier'] : '';
+        if(strlen($sxArticle['name']) == 0){
+
+            if(isset($sxArticle['attributes']['name']) && strlen(isset($sxArticle['attributes']['name']))){
+                $sxArticle['name'] = $sxArticle['attributes']['name'];
+
+            } elseif($this->_product->getData('sxParentName') && strlen($this->_product->getData('sxParentName')) > 0){
+                $sxArticle['name'] = $sxArticle['attributes']['name'] = $this->_product->getData('sxParentName');
+
+            } elseif(isset($sxArticle['attributes']['sku']) && strlen(isset($sxArticle['attributes']['sku']))){
+                $sxArticle['name'] = $sxArticle['attributes']['sku'];
+
+            } else {
+                $sxArticle['name'] = $sxArticle['identifier'];
+            }
+        }
 
         return $sxArticle;
     }

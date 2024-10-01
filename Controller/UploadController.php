@@ -233,26 +233,34 @@ class UploadController {
 
                 // get parent if is child of configurable
                 $parentId = $this->mageConfigurableProduct->getParentIdsByChild($mageProduct->getId());
-                $mageProduct->sxGroupIdenifier = array_shift($parentId) ?? false;
+
+                $sxGroupIdentifier = array_shift($parentId) ?? false;
+                $mageProduct->setData('sxGroupIdentifier', $sxGroupIdentifier);
 
                 $parent = false;
-                if($mageProduct->sxGroupIdenifier){
+                if($sxGroupIdentifier ){
 
-                    if(!array_key_exists($mageProduct->sxGroupIdenifier,$cachedParents)){
-                        $cachedParents[$mageProduct->sxGroupIdenifier] = $this->_productRepository->getById($mageProduct->sxGroupIdenifier, false, $storeId) ?? false;
+                    if(!array_key_exists($sxGroupIdentifier,$cachedParents)){
+                        $cachedParents[$sxGroupIdentifier] = $this->_productRepository->getById($sxGroupIdentifier, false, $storeId) ?? false;
                     }
-                    $parent = $cachedParents[$mageProduct->sxGroupIdenifier];
+                    $parent = $cachedParents[$sxGroupIdentifier];
                 }
 
 
                 // check visibility
                 $productVisible = $mageProduct->getVisibility() >= 3;
 
+                $mageProduct->setData('sxProductUrl', $mageProduct->getUrlModel()->getProductUrl($mageProduct, ['_escape' => true]));
+        
                 if($parent){
+
+                    $mageProduct->setData('sxParentName',(string) $parent->getName());
 
                     // if simple product VISIBLE, send it not as part of the parent
                     if($productVisible){
-                        $mageProduct->sxGroupIdenifier = $mageProduct->getId();
+                        $mageProduct->setData('sxGroupIdentifier', $mageProduct->getId());
+                    } else {
+                        $mageProduct->setData('sxProductUrl', $parent->getUrlModel()->getProductUrl($parent, ['_escape' => true]));
                     }
 
                     $parentVisible = $parent->getVisibility() >= 3;
