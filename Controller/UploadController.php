@@ -200,9 +200,15 @@ class UploadController {
 
                 if ($continue) continue;
 
+                $appEmulation = $this->appEmulation;
+                $storeId = $this->_sxConfig->get('shopId');
+                $appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
+
                 // we need to load product here, because we cant load mediagallery in getUploadProductCollection anymore
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                 $mageProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($mageProduct->getId());
+                
+                $appEmulation->stopEnvironmentEmulation();
 
                 if ($storeId) {
                     $mageProduct->setStoreId($storeId);
