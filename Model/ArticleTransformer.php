@@ -2,7 +2,6 @@
 
 namespace Semknox\Productsearch\Model;
 
-use InvalidArgumentException;
 use Semknox\Core\Transformer\AbstractProductTransformer;
 
 class ArticleTransformer extends AbstractProductTransformer
@@ -191,7 +190,7 @@ class ArticleTransformer extends AbstractProductTransformer
             'image', 'thumbnail', 'media', 'gallery', 'category', // already definded
             'attribute_set_id', 'has_options', 'required_options', 'request_path', 'tier_price_changed',
             'status','url_key','options_container','store_id','msrp_display_actual_price_type', 'gift_message_available',
-            'visibility' // added 16.11.2020
+            //'visibility' // added 16.11.2020 + removed 29.10.2024
         ];
 
         $attributes = [];
@@ -215,9 +214,54 @@ class ArticleTransformer extends AbstractProductTransformer
             $appEmulation->stopEnvironmentEmulation();
         }
 
+        // get prices
+        $attributes = $this->_getPrices($attributes, $transformerArgs);
+
+        // get WYOMIND prices, if exist
+        $attributes = $this->_getPrices($attributes, $transformerArgs, 'catalog_product_index_price_store');
+
         return array_values($attributes);
     }
 
+    protected function _getPrices($attributes, $transformerArgs = array(), $tableName = 'catalog_product_index_price')
+    {
+        $resourceConnection = $transformerArgs['resourceConnection'];
+
+        $connection = $resourceConnection->getConnection();
+
+        $tableName = $resourceConnection->getTableName($tableName);
+
+        if(!$connection->isTableExists($tableName)) return $attributes;
+
+        $select = $connection->select()
+            ->from($tableName)
+            ->where('entity_id = ?', $this->_product->getId());
+
+        foreach($connection->fetchAll($select) as $row){
+
+            $keyArray = [];
+            foreach($row as $columnName => $columnValue){
+                if (\stripos($columnName, "price") !== false || in_array($columnName, ['entity_id','tier_price'])) continue;
+
+                $keyArray[] = implode('', array_map("ucfirst", explode('_',$columnName))).": ".$columnValue;
+            }
+
+            $key = "(".implode(", ", $keyArray).")";
+
+            foreach($row as $columnName => $columnValue){
+
+                if(\stripos($columnName, "price") === false || $columnName == 'tier_price') continue;
+
+                $attributes[] = [
+                    'key' => \sprintf("%s %s", $columnName, $key),
+                    'value' => \sprintf("%s %s", $columnValue, $transformerArgs['currency'])
+                ];
+            }
+           
+        }
+
+        return $attributes;
+    }
 
     protected function _transformAttribute($code, $value, $transformerArgs, $attributes)
     {
