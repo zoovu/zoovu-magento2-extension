@@ -13,7 +13,7 @@ This is the SiteSearch360 module for Magento 2.x
 
 2. add/update semknox-extension repository in your composer.json:
     1.  as **LOCAL** composer repository:
-        1.  download the latest versions from [SiteSearch360 Magento2](https://bitbucket.org/SEMKNOX/semknox-magento2-extension) and [SiteSearch360 PHP-Core](https://bitbucket.org/SEMKNOX/semknox-php-extension-core)
+        1.  download the latest versions from [SiteSearch360 Magento2](https://github.com/zoovu/zoovu-magento2-extension) and [SiteSearch360 PHP-Core](https://github.com/zoovu/zoovu-php-extension-core)
         2.  unpack both project archives in "extensions" folder (create if not exists) in your magento 2 root folder
         3.  add repository to composer json
             ~~~shell
@@ -22,8 +22,8 @@ This is the SiteSearch360 module for Magento 2.x
 
     2.  as **REMOTE** composer repository:
         ~~~shell
-        composer config repositories.semknox-api-core vcs "https://bitbucket.org/SEMKNOX/semknox-php-extension-core.git"
-        composer config repositories.semknox-magento2 vcs "https://bitbucket.org/SEMKNOX/semknox-magento2-extension.git"
+        composer config repositories.semknox-api-core vcs "https://github.com/zoovu/zoovu-php-extension-core.git"
+        composer config repositories.semknox-magento2 vcs "https://github.com/zoovu/zoovu-magento2-extension.git"
         ~~~
         
 3.  requires semknox-extension and all of its dependencies in your magento 2 Installation
