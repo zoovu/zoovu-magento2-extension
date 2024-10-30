@@ -1,5 +1,3 @@
-> :warning: **This repository has been migrated to [Github](https://github.com/zoovu/zoovu-magento2-extension)**
-
 # SiteSearch360 Magento 2.x Module
 
 This is the SiteSearch360 module for Magento 2.x
