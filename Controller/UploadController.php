@@ -24,6 +24,7 @@ use Magento\CatalogInventory\Model\Stock\StockItemRepository;
 use Magento\Store\Model\App\Emulation as AppEmulation;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\App\ResourceConnection;
 
 class UploadController {
 
@@ -47,7 +48,8 @@ class UploadController {
         CategoryCollectionFactory $categoryCollectionFactory,
         Product $productModel,
         Visibility $productVisibility,
-        Status $productStatus
+        Status $productStatus,
+        ResourceConnection $resourceConnection
     ){
         $this->appEmulation = $appEmulation;
         $this->mageImageHelper = $imageHelper;
@@ -63,6 +65,7 @@ class UploadController {
         $this->_productModel = $productModel;
         $this->_productStatus = $productStatus;
         $this->_productVisibility = $productVisibility;
+        $this->resourceConnection = $resourceConnection;
 
         $this->startTime = microtime(true); 
     }
@@ -95,7 +98,8 @@ class UploadController {
                 'imageHelper' => $this->mageImageHelper,
                 'assetsRepos' => $this->mageAssetsRepos,
                 'appEmulation' => $this->appEmulation,
-                'sxHelper' =>  $this->_sxHelper
+                'sxHelper' =>  $this->_sxHelper,
+                'resourceConnection' => $this->resourceConnection
             ];
 
         } catch (DuplicateInstantiationException $e) {
@@ -196,9 +200,15 @@ class UploadController {
 
                 if ($continue) continue;
 
+                $appEmulation = $this->appEmulation;
+                $storeId = $this->_sxConfig->get('shopId');
+                $appEmulation->startEnvironmentEmulation($storeId, \Magento\Framework\App\Area::AREA_FRONTEND, true);
+
                 // we need to load product here, because we cant load mediagallery in getUploadProductCollection anymore
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                 $mageProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($mageProduct->getId());
+                
+                $appEmulation->stopEnvironmentEmulation();
 
                 if ($storeId) {
                     $mageProduct->setStoreId($storeId);
