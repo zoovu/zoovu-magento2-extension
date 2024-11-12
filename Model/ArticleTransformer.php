@@ -214,12 +214,16 @@ class ArticleTransformer extends AbstractProductTransformer
             $appEmulation->stopEnvironmentEmulation();
         }
 
-        // get prices
-        $attributes = $this->_getPrices($attributes, $transformerArgs);
-
         // get WYOMIND prices, if exist
-        $attributes = $this->_getPrices($attributes, $transformerArgs, 'catalog_product_index_price_store');
+        $attributesWithPrices = $this->_getPrices($attributes, $transformerArgs, 'catalog_product_index_price_store');
 
+        // get "normal" prices
+        if(count($attributes) == count($attributesWithPrices)){
+            $attributes = $this->_getPrices($attributes, $transformerArgs);
+        } else {
+            $attributes = $attributesWithPrices;
+        }
+        
         return array_values($attributes);
     }
 
@@ -237,10 +241,24 @@ class ArticleTransformer extends AbstractProductTransformer
             ->from($tableName)
             ->where('entity_id = ?', $this->_product->getId());
 
+        if($transformerArgs['websiteId']) {    
+            $select->where('website_id = ?', $transformerArgs['websiteId']);
+        }
+
+        if($tableName == 'catalog_product_index_price_store' && $transformerArgs['storeId']){
+            $select->where('store_id = ?', $transformerArgs['storeId']);
+        }
+
         foreach($connection->fetchAll($select) as $row){
 
             $keyArray = [];
+            $customerGroupId = 0;
             foreach($row as $columnName => $columnValue){
+
+                if($columnName == 'customer_group_id'){
+                    $customerGroupId = $columnValue;
+                }
+
                 if (\stripos($columnName, "price") !== false || in_array($columnName, ['entity_id','tier_price'])) continue;
 
                 $keyArray[] = implode('', array_map("ucfirst", explode('_',$columnName))).": ".$columnValue;
@@ -252,10 +270,16 @@ class ArticleTransformer extends AbstractProductTransformer
 
                 if(\stripos($columnName, "price") === false || $columnName == 'tier_price') continue;
 
-                $attributes[] = [
-                    'key' => \sprintf("%s %s", $columnName, $key),
+                $attribute = [
+                    'key' => $columnName, //\sprintf("%s %s", $columnName, $key),
                     'value' => \sprintf("%s %s", $columnValue, $transformerArgs['currency'])
                 ];
+
+                if($customerGroupId && strlen("$customerGroupId") > 0){
+                    $attribute["userGroups"][] = "$customerGroupId";
+                }
+
+                $attributes[] = $attribute;
             }
            
         }

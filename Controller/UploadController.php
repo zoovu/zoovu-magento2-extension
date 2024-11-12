@@ -99,7 +99,9 @@ class UploadController {
                 'assetsRepos' => $this->mageAssetsRepos,
                 'appEmulation' => $this->appEmulation,
                 'sxHelper' =>  $this->_sxHelper,
-                'resourceConnection' => $this->resourceConnection
+                'resourceConnection' => $this->resourceConnection,
+                'websiteId' => $store->getWebsiteId(),
+                'storeId' => $storeId
             ];
 
         } catch (DuplicateInstantiationException $e) {
