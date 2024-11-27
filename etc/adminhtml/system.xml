@@ -59,27 +59,21 @@
                     </depends>
                 </field>
 
-                <field id="sxAnswerActive" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Use SS360 search captions</label>
-                    <tooltip>Show contextual captions such as "We found the following X products for you".</tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="sxFrontendActive">1</field>
-                    </depends>
-                </field>
-
                 <field id="sxUploadProductsWithStatusOutOfStock" translate="label" type="select" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show "out of stock" products</label>
                     <tooltip>If you disable this setting, products with the "out of stock" status will not be uploaded to Site Search 360 and will be therefore hidden from the results.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="sxFrontendActive">1</field>
-                    </depends>
                 </field>
 
                 <field id="sxUploadProductsWithZeroQuantity" translate="label" type="select" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show products with quantity below 0</label>
                     <tooltip>Keep this setting active if you have enabled Backorders and you would like your customers to find products even if their quantity falls below 0. Disabling the setting hides such products from search results.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="sxAnswerActive" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use SS360 search captions</label>
+                    <tooltip>Show contextual captions such as "We found the following X products for you".</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="sxFrontendActive">1</field>
